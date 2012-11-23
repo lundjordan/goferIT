@@ -82,42 +82,11 @@ passport.use(new LocalStrategy(function(username, password, done) {
 
 app = module.exports = express();
 
-app.configure(function() {
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', "" + __dirname + "/views");
-  app.set('view engine', 'jade');
-  app.use(express.favicon());
-  app.use(express.cookieParser());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.session({
-    secret: 'keyboard cat'
-  }));
-  app.use(flash());
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(app.router);
-  return app.use(express["static"](path.join(__dirname, 'public')));
-});
+(require('./back_end/configure'))(app);
 
-app.configure('development', function() {
-  return app.use(express.errorHandler());
-});
+(require('./back_end/routes/index'))(app);
 
-app.configure('test', function() {
-  return app.set('port', 3001);
-});
-
-app.get('/', function(req, res) {
-  return res.render('index', {
-    title: 'Gofer',
-    stylesheet: 'index',
-    user: req.user
-  });
-});
-
-(require('./apps/authentication/routes'))(app, passport);
+(require('./back_end/routes/authentication'))(app, passport);
 
 server = app.listen(app.settings.port);
 

@@ -3,7 +3,7 @@ routes = (app, passport) ->
     failureRedirection = {failureRedirect: '/login', failureFlash: true}
 
     app.get '/login', (req, res) ->
-        res.render "#{__dirname}/views/login", { user: req.user, message: req.flash('error') }
+        res.render "#{__dirname}/../views/login", { user: req.user, message: req.flash('error') }
 
     app.post '/login', (passport.authenticate 'local', failureRedirection), (req, res) ->
         res.redirect '/'
