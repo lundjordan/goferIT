@@ -1,8 +1,12 @@
-app_configure = (app) ->
+expressConfig = (app, passport) ->
+
     express = require 'express'
+    mongoose = require 'mongoose'
     path = require 'path'
-    passport = require 'passport'
     flash = require 'connect-flash'
+    mongoStore = require 'connect-mongodb'
+
+    mongodbUrl = 'mongodb://localhost/gofer'
 
     app.configure ->
         app.set 'port', process.env.PORT || 3000
@@ -13,7 +17,10 @@ app_configure = (app) ->
         app.use express.logger 'dev'
         app.use express.bodyParser()
         app.use express.methodOverride()
-        app.use express.session { secret: 'keyboard cat' }
+        app.use express.session secret: 'this is top secret'
+            # store: mongoStore mongodbUrl
+            # secret: 'this is top secret', ->
+            #     app.use app.router
         app.use flash()
         # Initialize Passport! Also use passport.session() middleware, to support
         # persistent login sessions (recommended).
@@ -28,4 +35,9 @@ app_configure = (app) ->
     app.configure 'test', ->
         app.set 'port', 3001
 
-module.exports = app_configure
+    # connect to mongodb
+    mongoose.connect mongodbUrl
+    mongoose.connection.on 'open', ->
+        console.log 'We have connected to mongodb'
+
+module.exports = expressConfig

@@ -16,3 +16,4 @@ npm-debug.log
 
 .vim_bup.vim
 .compiled_javascripts
+.dump
