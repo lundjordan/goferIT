@@ -1,3 +1,4 @@
+User = require '../models/user'
 
 routes = (app, passport) ->
     failureRedirection = {failureRedirect: '/login', failureFlash: true}
@@ -15,6 +16,26 @@ routes = (app, passport) ->
     app.get '/logout', (req, res) ->
         req.logout()
         res.redirect '/'
+
+    app.get '/register', (req, res) ->
+        res.render "#{__dirname}/../views/register",
+            title: 'Register',
+            stylesheet: 'register',
+            user: req.user,
+            message: req.flash('error'),
+
+    app.post '/register', (req, res) ->
+        newUser = new User
+            email: req.body.email
+            name:
+                first: req.body.firstName
+                last: req.body.lastName
+            password: req.body.password
+        newUser.save (err) ->
+            if err
+                throw err
+                res.redirect '/register'
+            res.redirect '/'
 
     #TODO do an account details and ensure authenticated
     # app.get('/account', ensureAuthenticated, function(req, res){

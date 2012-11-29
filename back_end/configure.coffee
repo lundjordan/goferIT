@@ -3,6 +3,7 @@ expressConfig = (app, passport) ->
     express = require 'express'
     mongoose = require 'mongoose'
     path = require 'path'
+    util = require 'util'
     flash = require 'connect-flash'
     mongoStore = require 'connect-mongodb'
 
@@ -17,16 +18,15 @@ expressConfig = (app, passport) ->
         app.use express.logger 'dev'
         app.use express.bodyParser()
         app.use express.methodOverride()
-        app.use express.session secret: 'this is top secret'
-            # store: mongoStore mongodbUrl
-            # secret: 'this is top secret', ->
-            #     app.use app.router
+        app.use express.session
+            store: mongoStore mongodbUrl
+            secret: 'this is top secret', ->
+                app.use app.router
         app.use flash()
         # Initialize Passport! Also use passport.session() middleware, to support
         # persistent login sessions (recommended).
         app.use passport.initialize()
         app.use passport.session()
-        app.use app.router
         app.use express.static path.join __dirname, 'front_end'
 
     app.configure 'development', ->

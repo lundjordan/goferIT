@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  form(action='/register', method='post')
+    label Email
+      input(type='text', name='email')
+    label Password
+      input(type='password', name='password')
+    label Re-Type Password
+      input(type='password', name='password2')
+    label First Name
+      input(type='text', name='firstName')
+    label Last Name
+      input(type='text', name='lastName')
+    input(type='submit', name='Submit')

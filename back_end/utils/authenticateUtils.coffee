@@ -9,10 +9,9 @@ passport = (User, passport) ->
         User.findById id, (err, user) ->
             done err, user
 
-    passport.use new LocalStrategy usernameField: 'email', (username, password, done) ->
+    passport.use new LocalStrategy (username, password, done) ->
         console.log 'made it here!!'
-        # process.nextTick ->
-        User.authenticate username, password, (err, user) ->
-            return done err, user
+        process.nextTick ->
+            User.authenticate username, password, done
 
 module.exports = passport

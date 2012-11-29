@@ -1,10 +1,10 @@
 extends layout
 
 block content
-  // if message
-  //   p= message
+  if message
+    p= message
   form(action='/login', method='post')
-    label Username
+    label Email
       input(type='text', name='username')
     label Password
       input(type='password', name='password')

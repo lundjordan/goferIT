@@ -3,7 +3,7 @@ bcrypt = require 'bcrypt'
 
 UserSchema = new mongoose.Schema
     email:
-        type: String, unique: true
+        type: String, unique: true, required: true
     name :
         first:
             type: String, required: true
@@ -40,7 +40,7 @@ UserSchema.statics.authenticate = (email, password, callback) ->
             console.log 'err: ' + err
             return callback err
         if !user
-            console.log '!user: '
+            console.log '!user: ' + email
             return callback null, false, { message: "Unknown user #{email}" }
         user.verifyPassword password, (err, passwordCorrect) ->
             if err
