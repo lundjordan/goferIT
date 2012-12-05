@@ -2,7 +2,7 @@ extends layout
 
 block content
   if user
-    p Welcome #{user.username}
+    p Welcome #{user.email}
     p
     a(href='/logout', title='log out') Log Out
   else

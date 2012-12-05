@@ -37,17 +37,13 @@ UserSchema.method 'verifyPassword', (password, callback) ->
 UserSchema.statics.authenticate = (email, password, callback) ->
     this.findOne email: email, (err, user) ->
         if err
-            console.log 'err: ' + err
             return callback err
         if !user
-            console.log '!user: ' + email
             return callback null, false, { message: "Unknown user #{email}" }
         user.verifyPassword password, (err, passwordCorrect) ->
             if err
-                console.log 'err under password: ' + err
                 return callback err
             if !passwordCorrect
-                console.log 'incorrect password: '
                 return callback null, false, { message: 'Invalid password' }
             return callback null, user # email and password are correct!
 

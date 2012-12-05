@@ -10,7 +10,6 @@ passport = (User, passport) ->
             done err, user
 
     passport.use new LocalStrategy (username, password, done) ->
-        console.log 'made it here!!'
         process.nextTick ->
             User.authenticate username, password, done
 

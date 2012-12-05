@@ -31,13 +31,13 @@ expressConfig = (app, passport) ->
 
     app.configure 'development', ->
         app.use express.errorHandler()
+        # connect to mongodb
+        mongoose.connect mongodbUrl
+        mongoose.connection.on 'open', ->
+            console.log 'We have connected to mongodb'
 
     app.configure 'test', ->
         app.set 'port', 3001
 
-    # connect to mongodb
-    mongoose.connect mongodbUrl
-    mongoose.connection.on 'open', ->
-        console.log 'We have connected to mongodb'
 
 module.exports = expressConfig
