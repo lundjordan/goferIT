@@ -1,3 +1,16 @@
 #!/usr/bin/env sh
 
-./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/user-test.coffee test/authentication-test.coffee -R spec
+# authentication
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/authentication-test.coffee -R spec
+
+# models
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/employee-test.coffee -R spec
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/customer-test.coffee -R spec
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/supplier-test.coffee -R spec
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/store-test.coffee -R spec
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/order-test.coffee -R spec
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/terminal-test.coffee -R spec
+# ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/product-test.coffee -R spec
+
+
+./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/authentication-test.coffee test/employee-test.coffee test/customer-test.coffee test/supplier-test.coffee test/store-test.coffee test/order-test.coffee test/terminal-test.coffee test/product-test.coffee -R spec

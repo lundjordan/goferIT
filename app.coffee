@@ -5,10 +5,10 @@ passport = require 'passport'
 LocalStrategy = (require 'passport-local').Strategy
 
 ## models
-User = require './back_end/models/user'
+Employee = require './back_end/models/employee'
 
 # authentication setup
-passport = (require './back_end/utils/authenticateUtils') User, passport
+passport = (require './back_end/utils/authenticateUtils') Employee, passport
 
 # kick off the app/express
 app = module.exports = express()

@@ -1,4 +1,4 @@
-User = require '../models/user'
+Employee = require '../models/employee'
 
 routes = (app, passport) ->
     failureRedirection = {failureRedirect: '/login', failureFlash: true}
@@ -25,7 +25,7 @@ routes = (app, passport) ->
             message: req.flash('error'),
 
     app.post '/register', (req, res) ->
-        newUser = new User
+        newUser = new Employee
             email: req.body.email
             name:
                 first: req.body.firstName

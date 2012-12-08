@@ -2,20 +2,20 @@ require './_helper'
 assert  = require 'assert'
 request = require 'request'
 app     = require '../app'
-User = require '../back_end/models/user'
+Employee = require '../back_end/models/employee'
 mongoose = require 'mongoose'
 
 describe "authentication", ->
     mongoUrl = 'mongodb://localhost/gofer-test'
 
-    before (done) -> # create a real user
+    before (done) -> # create a real employee
         mongoose.connect mongoUrl
         mongoose.connection.on 'open', ->
             console.log 'We have connected to mongodb'
-        User.remove done
+        Employee.remove done
 
-    before (done) -> # create a real user
-        user = new User
+    before (done) -> # create a real employee
+        employee = new Employee
             email: 'nadroj@gmail.com'
             password: 'secretpassword'
             name:
@@ -31,10 +31,10 @@ describe "authentication", ->
             title: 'employee'
             startDate: new Date().toISOString()
 
-        user.save (err) ->
+        employee.save (err) ->
             if err
                 throw err
-            console.log 'user nadroj created'
+            console.log 'employee nadroj created'
         done()
 
     describe "GET /login", ->
@@ -48,7 +48,7 @@ describe "authentication", ->
                 done()
         it "has title", ->
             assert.hasTag body, '//head/title', 'Gofer - Login'
-        it "has user field", ->
+        it "has employee field", ->
             assert.hasTag body, '//input[@name="username"]', ''
         it "has password field", ->
             assert.hasTag body, '//input[@name="password"]', ''
@@ -61,14 +61,14 @@ describe "authentication", ->
                 options =
                     uri:"http://localhost:#{app.settings.port}/login"
                     form:
-                        username: 'not_a_user'
+                        username: 'not_a_employee'
                         password: 'password'
                     followAllRedirects: true
                 request.post options, (err, res, _body) ->
                     body = _body
                     done()
             it "will display unknown username flash", ->
-                errorText = 'Unknown user not_a_user'
+                errorText = 'Unknown employee not_a_employee'
                 assert.hasTag body, "//p", errorText
 
         describe "incorrect password", ->
@@ -99,7 +99,7 @@ describe "authentication", ->
                 request.post options, (err, _res, _body) ->
                     [body, res] = [_body,  _res]
                     done()
-            it "shows welcome user flash", ->
+            it "shows welcome employee flash", ->
                 assert.equal res.request.path, '/'
                 assert.hasTag body, "//p", "Welcome nadroj@gmail.com"
 

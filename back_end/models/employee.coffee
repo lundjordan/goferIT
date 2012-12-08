@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
 bcrypt = require 'bcrypt'
 
-UserSchema = new mongoose.Schema
+EmployeeSchema = new mongoose.Schema
     email:
         type: String, unique: true, required: true
     name :
@@ -23,7 +23,7 @@ UserSchema = new mongoose.Schema
     title: String
     startDate: Date
 
-virtualPassword = (UserSchema.virtual 'password').get ->
+virtualPassword = (EmployeeSchema.virtual 'password').get ->
     return this._password
 
 virtualPassword.set (password) ->
@@ -31,20 +31,20 @@ virtualPassword.set (password) ->
     salt = this.salt = bcrypt.genSaltSync 10
     this.hash = bcrypt.hashSync password, salt
 
-UserSchema.method 'verifyPassword', (password, callback) ->
+EmployeeSchema.method 'verifyPassword', (password, callback) ->
     bcrypt.compare password, this.hash, callback
 
-UserSchema.statics.authenticate = (email, password, callback) ->
-    this.findOne email: email, (err, user) ->
+EmployeeSchema.statics.authenticate = (email, password, callback) ->
+    this.findOne email: email, (err, employee) ->
         if err
             return callback err
-        if !user
-            return callback null, false, { message: "Unknown user #{email}" }
-        user.verifyPassword password, (err, passwordCorrect) ->
+        if !employee
+            return callback null, false, { message: "Unknown employee #{email}" }
+        employee.verifyPassword password, (err, passwordCorrect) ->
             if err
                 return callback err
             if !passwordCorrect
                 return callback null, false, { message: 'Invalid password' }
-            return callback null, user # email and password are correct!
+            return callback null, employee # email and password are correct!
 
-module.exports = mongoose.model 'User', UserSchema
+module.exports = mongoose.model 'Employee', EmployeeSchema
