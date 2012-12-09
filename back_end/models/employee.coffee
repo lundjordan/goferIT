@@ -22,6 +22,10 @@ EmployeeSchema = new mongoose.Schema
     dob: String
     title: String
     startDate: Date
+    _store:
+        type: mongoose.Schema.Types.ObjectId
+        ref: 'Store'
+        required: true
 
 virtualPassword = (EmployeeSchema.virtual 'password').get ->
     return this._password

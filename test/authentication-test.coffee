@@ -3,16 +3,34 @@ assert  = require 'assert'
 request = require 'request'
 app     = require '../app'
 Employee = require '../back_end/models/employee'
+Store = require '../back_end/models/store'
 mongoose = require 'mongoose'
 
 describe "authentication", ->
     mongoUrl = 'mongodb://localhost/gofer-test'
+    employee = null
+    store = null
 
     before (done) -> # create a real employee
         mongoose.connect mongoUrl
         mongoose.connection.on 'open', ->
             console.log 'We have connected to mongodb'
-        Employee.remove done
+        (Employee.remove {}).exec()
+        (Store.remove {}).exec()
+        store = new Store
+            name: 'Alpine Place'
+            phone: '16049291111'
+            address:
+                street: '1234 sesame street'
+                postalCode: 'v7w4c9'
+                city: 'West Vancouver'
+                country: 'Canada'
+            dateCreated: new Date().toISOString()
+        store.save (err) ->
+            if err
+                throw err
+            else
+                done()
 
     before (done) -> # create a real employee
         employee = new Employee
@@ -30,6 +48,7 @@ describe "authentication", ->
             dob: '1986-09-20'
             title: 'employee'
             startDate: new Date().toISOString()
+            _store: store.id
 
         employee.save (err) ->
             if err
@@ -107,5 +126,7 @@ describe "authentication", ->
     #     #TODO
 
     after (done) ->
+        (Employee.remove {}).exec()
+        (Store.remove {}).exec()
         mongoose.connection.close()
         done()

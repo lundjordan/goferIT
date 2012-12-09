@@ -12,4 +12,3 @@ StoreSchema = new mongoose.Schema
     dateCreated: Date
 
 module.exports = mongoose.model 'Store', StoreSchema
-

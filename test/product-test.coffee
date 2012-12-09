@@ -45,7 +45,7 @@ describe "product model mongo CRUD", ->
                     else
                         store = new Store
                             name: 'Second Grove'
-                            phone: '16049291111'
+                            phone: 16049291111
                             address:
                                 street: '1234 sesame street'
                                 postalCode: 'v7w4c9'
@@ -55,7 +55,8 @@ describe "product model mongo CRUD", ->
                         store.save (err) ->
                             if err
                                 throw err
-                        done()
+                            else
+                                done()
 
     describe "should create a valid Product", ->
         it "and save newly created product", (done) ->
@@ -75,6 +76,7 @@ describe "product model mongo CRUD", ->
                     throw err
                 else
                     done()
+
         it "then retrieve serial id and name from new product", (done) ->
             Product.findOne _id: product.id, (err, resProduct) ->
                 resProduct.serialID.should.equal '666666666'
@@ -82,13 +84,11 @@ describe "product model mongo CRUD", ->
             done()
         it "then retrieve the product store's name", (done) ->
             Product.findOne _id: product.id, (err, resProduct) ->
-                console.log "here1 " + resProduct._store
                 Store.findOne _id: resProduct._store, (err, resStore) ->
                     resStore.name.should.equal 'Second Grove'
             done()
         it "then retrieve the product order's referenceNum", (done) ->
             Product.findOne _id: product.id, (err, resProduct) ->
-                console.log "here2 " + resProduct._order
                 Order.findOne _id: resProduct._order, (err, resOrder) ->
                     resOrder.referenceNum.should.equal 'aaa111bbb222'
             done()

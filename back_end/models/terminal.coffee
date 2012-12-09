@@ -1,10 +1,14 @@
 mongoose = require 'mongoose'
 
 TerminalSchema = new mongoose.Schema
-    _store: 
+    _store:
         type: mongoose.Schema.Types.ObjectId
         ref: 'Supplier'
         required: true
+    _employee:
+        type: mongoose.Schema.Types.ObjectId
+        ref: 'Employee'
+        required: false
     referenceNum:
         type: Number, required: true
 
