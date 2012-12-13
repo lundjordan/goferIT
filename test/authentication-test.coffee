@@ -2,8 +2,8 @@ require './_helper'
 assert  = require 'assert'
 request = require 'request'
 app     = require '../app'
-Employee = require '../back_end/models/employee'
-Store = require '../back_end/models/store'
+Employee = require '../models/employee'
+Store = require '../models/store'
 mongoose = require 'mongoose'
 
 describe "authentication", ->

@@ -1,12 +1,12 @@
 mongoose = require 'mongoose'
-Customer = require '../back_end/models/customer'
-Terminal = require '../back_end/models/terminal'
-Store = require '../back_end/models/store'
-Product = require '../back_end/models/product'
-Sale = require '../back_end/models/sale'
-Supplier = require '../back_end/models/supplier'
-Order = require '../back_end/models/order'
-Employee = require '../back_end/models/employee'
+Customer = require '../models/customer'
+Terminal = require '../models/terminal'
+Store = require '../models/store'
+Product = require '../models/product'
+Sale = require '../models/sale'
+Supplier = require '../models/supplier'
+Order = require '../models/order'
+Employee = require '../models/employee'
 
 describe "sale model mongo CRUD", ->
     [product, customer, terminal, sale] = [null, null, null, null]

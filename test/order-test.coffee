@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
-Supplier = require '../back_end/models/supplier'
-Order = require '../back_end/models/order'
+Supplier = require '../models/supplier'
+Order = require '../models/order'
 
 describe "order model mongo CRUD", ->
     order = null

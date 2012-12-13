@@ -27,7 +27,7 @@ expressConfig = (app, passport) ->
         # persistent login sessions (recommended).
         app.use passport.initialize()
         app.use passport.session()
-        app.use express.static path.join __dirname, 'front_end'
+        app.use express.static path.join __dirname, 'public'
 
     app.configure 'development', ->
         app.use express.errorHandler()

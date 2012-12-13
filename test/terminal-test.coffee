@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
-Terminal = require '../back_end/models/terminal'
-Store = require '../back_end/models/store'
-Employee = require '../back_end/models/employee'
+Terminal = require '../models/terminal'
+Store = require '../models/store'
+Employee = require '../models/employee'
 
 describe "terminal model mongo CRUD", ->
     terminal = null
