@@ -1,13 +1,57 @@
 extends layout
 
 block content
-  if user
-    p Welcome #{user.email}
-    p
-    a(href='/logout', title='log out') Log Out
-  else
-    p Please Login or Register
-    a(href='/login', title='view login page') Login
-    p
-    a(href='/register', title='register a new account') Register
 
+  div.navbar.navbar-inverse.navbar-fixed-top
+    div.navbar-inner
+      div.container-fluid
+        a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.brand(href="#") Gofer
+        div.nav-collapse.collapse
+        if user
+          p.navbar-text.pull-right Logged in as #{user}
+        else
+          form.navbar-form.pull-right(action='/login', method='post')
+            input.span2(id="username", type="text", name="username", placeholder="Email")
+            input.span2(id="password", type="password", name="password", placeholder="Password")
+            button.btn(type="submit") Sign In
+          p.navbar-text.pull-right Login or <a href="/register"> Sign up &nbsp;&nbsp;</a>
+        ul.nav
+          if user
+            li.active
+              a(href="#") Store Home
+            li
+              a(href="#about") About
+            li
+              a(href="#contact") Contact
+          else
+            li.active
+              a(href="#demo") Demo
+            li
+              a(href="#learn-more") Learn More
+            li
+              a(href="#about") About
+            li
+              a(href="#contact") Contact
+
+  div.container-fluid
+    div.row-fluid
+      div.span3
+        div.well.sidebar-nav
+          ul.nav.nav-list
+            li.nav-header Menu
+            li
+              a.disabled Point Of Sale
+            li
+              a.disabled Inventory
+            li
+              a.disabled Staff
+            li
+              a.disabled Accounting
+      div.span9
+        div.hero-unit
+          h1 Welcome.
+          p Managing your store just got easier.
