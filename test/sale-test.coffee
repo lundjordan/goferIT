@@ -51,7 +51,7 @@ describe "sale model mongo CRUD", ->
             else
                 supplier = new Supplier
                     email: 'abc@gmail.com'
-                    companyName: 'abc suppliers'
+                    name: 'abc suppliers'
                     phone: 16049291111
                     address:
                         street: '1234 sesame street'

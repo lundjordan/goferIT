@@ -1,6 +1,7 @@
 mongoose = require 'mongoose'
 
 CustomerSchema = new mongoose.Schema
+    sales: [{type: mongoose.Schema.Types.ObjectId, ref: 'Sale'}]
     email:
         type: String, unique: true, required: true
     name :

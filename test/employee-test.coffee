@@ -1,26 +1,21 @@
 mongoose = require 'mongoose'
 Employee = require '../models/employee'
-Store = require '../models/store'
+Company = require '../models/company'
 
 describe "employee model CRUD", ->
     employee = null
-    store = null
+    company = null
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
         (mongoose.connect mongoUrl)
         (Employee.remove {}).exec()
-        (Store.remove {}).exec()
-        store = new Store
-            name: 'Second Grove'
-            phone: '16049291111'
-            address:
-                street: '1234 sesame street'
-                postalCode: 'v7w4c9'
-                city: 'West Vancouver'
-                country: 'Canada'
+        (Company.remove {}).exec()
+        company = new Company
+            name: "Nad's Hardware"
+            subscriptionType: "trial"
             dateCreated: new Date().toISOString()
-        store.save (err) ->
+        company.save (err) ->
             if err
                 throw err
             else
@@ -44,7 +39,7 @@ describe "employee model CRUD", ->
                 dob: '1986-09-20'
                 title: 'employee'
                 startDate: new Date().toISOString()
-                _store: store.id
+                _company: company.id
             employee.save (err) ->
                 if err
                     throw err
@@ -55,9 +50,14 @@ describe "employee model CRUD", ->
                 resEmployee.email.should.equal 'nadroj@gmail.com'
                 resEmployee.name.first.should.equal 'Nadroj'
             done()
+        it "then retrieve comp name from new employee", (done) ->
+            (Employee.findOne _id: employee.id)
+                .populate('_company').exec (err, comp) ->
+                    comp.name.should.equal "Nad's Hardware"
+            done()
 
     after (done) ->
         (Employee.remove {}).exec()
-        (Store.remove {}).exec()
+        (Company.remove {}).exec()
         mongoose.connection.close()
         done()

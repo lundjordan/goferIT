@@ -1,9 +1,10 @@
 mongoose = require 'mongoose'
 
 SupplierSchema = new mongoose.Schema
+    orders: [{type: mongoose.Schema.Types.ObjectId, ref: 'Order'}]
     email:
         type: String, unique: true, required: true
-    companyName:
+    name:
         type: String, required: true
     phone: Number
     address:

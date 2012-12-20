@@ -18,7 +18,7 @@ block content
             input.span2(id="username", type="text", name="username", placeholder="Email")
             input.span2(id="password", type="password", name="password", placeholder="Password")
             button.btn(type="submit") Sign In
-          p.navbar-text.pull-right Login or <a href="/register"> Sign up &nbsp;&nbsp;</a>
+          p.navbar-text.pull-right Login or <a href="#register", data-toggle='modal'> Sign up &nbsp;&nbsp;</a>
         ul.nav
           if user
             li.active
@@ -55,3 +55,37 @@ block content
         div.hero-unit
           h1 Welcome.
           p Managing your store just got easier.
+
+    div.modal.hide.fade.in(id='register-modal', style='display:none;')
+      div.modal-header
+        a.close(data-dismiss="modal") ×
+        h3 Sign Up
+      div.modal-body
+        h4 Fill In The Blanks
+        form#register-form.form-horizontal.form-control(action='/register', method='post')
+          div.control-group
+            label.control-label(for="inputEmail") Email
+            div.controls
+              input#inputEmail(type='text', name='email', placeholder='Email')
+          div.control-group
+            label.control-label(for="inputPassword") Password
+            div.controls
+              input#inputPassword(type='text', name='password', placeholder='Password')
+          div.control-group
+            label.control-label(for="inputPassword2") Password2
+            div.controls
+              input#inputPassword2(type='text', name='password2', placeholder='Password2')
+          div.control-group
+            label.control-label(for="inputFirstName") First Name
+            div.controls
+              input#inputFirstName(type='text', name='firstName', placeholder='FirstName')
+          div.control-group
+            label.control-label(for="inputLastName") Last Name
+            div.controls
+              input#inputLastName(type='text', name='lastName', placeholder='Last Name')
+      div.modal-footer
+        a#signupCancel.btn.btn-danger(href='#', data-dismiss="modal") Cancel
+        a#signupConfirm.btn.btn-primary(href='#', data-dismiss="modal") Sign Up
+
+
+  script(type='text/coffeescript', src='javascripts/signup.coffee')

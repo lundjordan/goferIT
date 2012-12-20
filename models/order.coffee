@@ -1,10 +1,11 @@
 mongoose = require 'mongoose'
 
 OrderSchema = new mongoose.Schema
-    _supplier: 
+    _supplier:
         type: mongoose.Schema.Types.ObjectId
         ref: 'Supplier'
         required: true
+    products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}]
     referenceNum:
         type: String, required: true
     shippingInfo:

@@ -14,7 +14,7 @@ describe "supplier model mongo CRUD", ->
         it "and save newly created supplier", (done) ->
             supplier = new Supplier
                 email: 'abc@gmail.com'
-                companyName: 'abc suppliers'
+                name: 'abc suppliers'
                 phone: '16049291111'
                 address:
                     street: '1234 sesame street'

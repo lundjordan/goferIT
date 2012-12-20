@@ -9,6 +9,7 @@ TerminalSchema = new mongoose.Schema
         type: mongoose.Schema.Types.ObjectId
         ref: 'Employee'
         required: false
+    sales: [{type: mongoose.Schema.Types.ObjectId, ref: 'Sale'}]
     referenceNum:
         type: Number, required: true
 

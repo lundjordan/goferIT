@@ -2,6 +2,10 @@ mongoose = require 'mongoose'
 bcrypt = require 'bcrypt'
 
 EmployeeSchema = new mongoose.Schema
+    _company:
+        type: mongoose.Schema.Types.ObjectId
+        ref: 'Company'
+        required: true
     email:
         type: String, unique: true, required: true
     name :
@@ -22,10 +26,6 @@ EmployeeSchema = new mongoose.Schema
     dob: String
     title: String
     startDate: Date
-    _store:
-        type: mongoose.Schema.Types.ObjectId
-        ref: 'Store'
-        required: true
 
 virtualPassword = (EmployeeSchema.virtual 'password').get ->
     return this._password
