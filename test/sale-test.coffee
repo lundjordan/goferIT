@@ -1,4 +1,5 @@
 mongoose = require 'mongoose'
+Company = require '../models/company'
 Customer = require '../models/customer'
 Terminal = require '../models/terminal'
 Store = require '../models/store'
@@ -10,16 +11,8 @@ Employee = require '../models/employee'
 
 describe "sale model mongo CRUD", ->
     [product, customer, terminal, sale] = [null, null, null, null]
-    [employee, store, order, supplier] = [null, null, null, null]
+    [company, employee, store, order, supplier] = [null, null, null, null, null]
     mongoUrl = 'mongodb://localhost/gofer-test'
-
-    # customer = createCustomer ->
-    # supplier = createSupplier ->
-    # store = createStore ->
-    # order = createOrder ->
-    # employee = createEmployee ->
-    # terminal = createTerminal ->
-    # product = createProduct ->
 
     before (done) ->
         mongoose.connect mongoUrl, ->
@@ -31,108 +24,119 @@ describe "sale model mongo CRUD", ->
             (Store.remove {}).exec()
             (Supplier.remove {}).exec()
             (Customer.remove {}).exec()
+            (Company.remove {}).exec()
 
-        customer = new Customer
-            email: 'nadroj@gmail.com'
-            name:
-                first: 'Nadroj'
-                last: 'dnul'
-            phone: 16049291111
-            address:
-                street: '1234 sesame street'
-                postalCode: 'v7w4c9'
-                city: 'West Vancouver'
-                country: 'Canada'
-            dob: '1986-09-20'
+        company = new Company
+            name: "Nad's Hardware"
+            subscriptionType: "trial"
             dateCreated: new Date().toISOString()
-        customer.save (err) ->
+        company.save (err) ->
             if err
                 throw err
             else
-                supplier = new Supplier
-                    email: 'abc@gmail.com'
-                    name: 'abc suppliers'
+                customer = new Customer
+                    email: 'nadroj@gmail.com'
+                    name:
+                        first: 'Nadroj'
+                        last: 'dnul'
                     phone: 16049291111
                     address:
                         street: '1234 sesame street'
                         postalCode: 'v7w4c9'
                         city: 'West Vancouver'
                         country: 'Canada'
+                    dob: '1986-09-20'
                     dateCreated: new Date().toISOString()
-                supplier.save (err) ->
+                customer.save (err) ->
                     if err
                         throw err
                     else
-                        order = new Order
-                            _supplier: supplier
-                            referenceNum: 'aaa111bbb222'
-                            shippingInfo:
-                                company: 'UPS'
-                                travelType: 'air'
-                                cost: 10000
-                            arrivaldate: '12/12/12'
+                        supplier = new Supplier
+                            email: 'abc@gmail.com'
+                            name: 'abc suppliers'
+                            phone: 16049291111
+                            address:
+                                street: '1234 sesame street'
+                                postalCode: 'v7w4c9'
+                                city: 'West Vancouver'
+                                country: 'Canada'
                             dateCreated: new Date().toISOString()
-                        order.save (err) ->
+                        supplier.save (err) ->
                             if err
                                 throw err
                             else
-                                store = new Store
-                                    name: 'Second Grove'
-                                    phone: 16049291111
-                                    address:
-                                        street: '1234 sesame street'
-                                        postalCode: 'v7w4c9'
-                                        city: 'West Vancouver'
-                                        country: 'Canada'
+                                order = new Order
+                                    _supplier: supplier
+                                    referenceNum: 'aaa111bbb222'
+                                    shippingInfo:
+                                        company: 'UPS'
+                                        travelType: 'air'
+                                        cost: 10000
+                                    arrivaldate: '12/12/12'
                                     dateCreated: new Date().toISOString()
-                                store.save (err) ->
+                                order.save (err) ->
                                     if err
                                         throw err
                                     else
-                                        employee = new Employee
-                                            email: 'nadroj@gmail.com'
-                                            password: 'secretpassword'
-                                            name:
-                                                first: 'Nadroj'
-                                                last: 'dnul'
-                                            phone: '16049291111'
+                                        store = new Store
+                                            name: 'Second Grove'
+                                            _company: company.id
+                                            phone: 16049291111
                                             address:
                                                 street: '1234 sesame street'
                                                 postalCode: 'v7w4c9'
                                                 city: 'West Vancouver'
                                                 country: 'Canada'
-                                            dob: '1986-09-20'
-                                            title: 'employee'
-                                            startDate: new Date().toISOString()
-                                            _store: store
-
-                                        employee.save (err) ->
+                                            dateCreated: new Date().toISOString()
+                                        store.save (err) ->
                                             if err
                                                 throw err
                                             else
-                                                terminal = new Terminal
+                                                employee = new Employee
+                                                    email: 'nadroj@gmail.com'
+                                                    password: 'secretpassword'
+                                                    _company: company.id
+                                                    name:
+                                                        first: 'Nadroj'
+                                                        last: 'dnul'
+                                                    phone: '16049291111'
+                                                    address:
+                                                        street: '1234 sesame street'
+                                                        postalCode: 'v7w4c9'
+                                                        city: 'West Vancouver'
+                                                        country: 'Canada'
+                                                    dob: '1986-09-20'
+                                                    title: 'employee'
+                                                    startDate: new Date().toISOString()
                                                     _store: store
-                                                    _employee: employee
-                                                    referenceNum: 1
-                                                terminal.save (err) ->
+
+                                                employee.save (err) ->
                                                     if err
                                                         throw err
                                                     else
-                                                        product = new Product
+                                                        terminal = new Terminal
                                                             _store: store
-                                                            _order: order
-                                                            serialID: '666666666'
-                                                            description:
-                                                                brand: 'CCM'
-                                                                name: 'skate pro'
-                                                            category: 'hockey'
-                                                            cost: 7500
-                                                            price: 15000
-                                                            dateCreated: new Date().toISOString()
-                                                        product.save (err) ->
+                                                            _employee: employee
+                                                            referenceNum: 1
+                                                        terminal.save (err) ->
                                                             if err
                                                                 throw err
-                                                            done()
+                                                            else
+                                                                product = new Product
+                                                                    _store: store
+                                                                    _order: order
+                                                                    serialID: '666666666'
+                                                                    description:
+                                                                        brand: 'CCM'
+                                                                        name: 'skate pro'
+                                                                    category: 'hockey'
+                                                                    cost: 7500
+                                                                    price: 15000
+                                                                    dateCreated: new Date().toISOString()
+                                                                product.save (err) ->
+                                                                    if err
+                                                                        throw err
+                                                                    done()
 
     describe "should create a valid Sale", ->
         it "and save newly created sale", (done) ->
@@ -147,15 +151,17 @@ describe "sale model mongo CRUD", ->
                     done()
 
         it "then retrieve the terminal id from the sale", (done) ->
-            Sale.findOne _id: sale.id, (err, resSale) ->
-                Terminal.findOne _id: resSale._terminal, (err, resTerminal) ->
-                    resTerminal.referenceNum.should.equal 1
+            (Sale.findOne _id: sale.id)
+                .populate('_terminal').exec (err, terminal) ->
+                    # console.log terminal
+                    terminal._terminal.referenceNum.should.equal 1
                     done()
 
         it "then retrieve the sale's product's price", (done) ->
-            Sale.findOne _id: sale.id, (err, resSale) ->
-                Product.findOne _id: resSale._product, (err, resProduct) ->
-                    resProduct.cost.should.equal 7500
+            (Sale.findOne _id: sale.id)
+                .populate('_product').exec (err, product) ->
+                    # console.log product
+                    product._product.cost.should.equal 7500
                     done()
 
     after (done) ->
@@ -167,5 +173,6 @@ describe "sale model mongo CRUD", ->
         (Store.remove {}).exec()
         (Supplier.remove {}).exec()
         (Customer.remove {}).exec()
+        (Company.remove {}).exec()
         mongoose.connection.close()
         done()

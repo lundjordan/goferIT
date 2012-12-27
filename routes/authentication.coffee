@@ -25,26 +25,41 @@ routes = (app, passport) ->
             message: req.flash('error'),
 
     app.post '/register', (req, res) ->
-        newUser = new Employee
-            email: req.body.email
-            name:
-                first: req.body.firstName
-                last: req.body.lastName
-            password: req.body.password
-        newUser.save (err) ->
+        company = new Company
+            name: req.body.companyName
+            subscriptionType: "trial"
+            dateCreated: new Date().toISOString()
+        company.save (err) ->
             if err
                 throw err
-                res.redirect '/register'
-            res.redirect '/'
+                res.redirect '/'
+            else
+                employee = new Employee
+                    email: req.body.email
+                    _company: company.id
+                    password: req.body.password
+                    name:
+                        first: req.body.fullName.match(/[^\s-]+-?/g)[0]
+                        last: req.body.fullName.match(/[^\s-]+-?/g)[1]
+                    startDate: new Date().toISOString()
+                employee.save (err) ->
+                    if err
+                        throw err
+                        res.redirect '/'
+                    res.redirect '/'
 
     #TODO do an account details and ensure authenticated
     # app.get('/account', ensureAuthenticated, function(req, res){
     #   res.render('account', { user: req.user });
     # });
 
+
+    # helpers
+
     ensureAuthenticated = (req, res, next) ->
         if req.isAuthenticated()
             return next()
         res.redirect '/login'
+
 
 module.exports = routes

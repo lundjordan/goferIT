@@ -8,24 +8,24 @@ describe "employee model CRUD", ->
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
-        (mongoose.connect mongoUrl)
-        (Employee.remove {}).exec()
-        (Company.remove {}).exec()
-        company = new Company
-            name: "Nad's Hardware"
-            subscriptionType: "trial"
-            dateCreated: new Date().toISOString()
-        company.save (err) ->
-            if err
-                throw err
-            else
-                done()
-
+        mongoose.connect mongoUrl, ->
+            (Employee.remove {}).exec()
+            (Company.remove {}).exec()
+            company = new Company
+                name: "Nad's Hardware"
+                subscriptionType: "trial"
+                dateCreated: new Date().toISOString()
+            company.save (err) ->
+                if err
+                    throw err
+                else
+                    done()
 
     describe "should create a valid Employee", ->
         it "and save newly created employee", (done) ->
             employee = new Employee
                 email: 'nadroj@gmail.com'
+                _company: company.id
                 password: 'secretpassword'
                 name:
                     first: 'Nadroj'
@@ -39,7 +39,6 @@ describe "employee model CRUD", ->
                 dob: '1986-09-20'
                 title: 'employee'
                 startDate: new Date().toISOString()
-                _company: company.id
             employee.save (err) ->
                 if err
                     throw err
@@ -50,7 +49,7 @@ describe "employee model CRUD", ->
                 resEmployee.email.should.equal 'nadroj@gmail.com'
                 resEmployee.name.first.should.equal 'Nadroj'
             done()
-        it "then retrieve comp name from new employee", (done) ->
+        it "then retrieve company name from new employee", (done) ->
             (Employee.findOne _id: employee.id)
                 .populate('_company').exec (err, comp) ->
                     comp.name.should.equal "Nad's Hardware"

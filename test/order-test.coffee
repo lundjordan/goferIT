@@ -36,16 +36,19 @@ describe "order model mongo CRUD", ->
                 arrivaldate: '12/12/12'
                 dateCreated: new Date().toISOString()
             order.save done
+
         it "then retrieve reference number and shipping company from new order", (done) ->
             Order.findOne _id: order.id, (err, resOrder) ->
                 resOrder.referenceNum.should.equal 'aaa111bbb222'
                 resOrder.shippingInfo.company.should.equal 'UPS'
-            done()
+                done()
+
         it "then retrieve the order supplier's email", (done) ->
-            Order.findOne _id: order.id, (err, resOrder) ->
-                Supplier.findOne _id: resOrder.id, (err, resSupplier) ->
-                    resSupplier.email.should.equal 'abc@gmail.com'
-            done()
+            (Order.findOne _id: order.id)
+                .populate('_supplier').exec (err, supplier) ->
+                    console.log supplier
+                    # supplier.email.should.equal 'abc@gmail.com'
+                    done()
 
     after (done) ->
         (Order.remove {}).exec()

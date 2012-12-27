@@ -54,9 +54,9 @@ block content
       div.span9
         div.hero-unit
           h1 Welcome.
-          p Managing your store just got easier.
+          p An easier way to manage your business
 
-    div.modal.hide.fade.in(id='register-modal', style='display:none;')
+    div.modal.hide.fade.in(id='register', style='display:none;')
       div.modal-header
         a.close(data-dismiss="modal") ×
         h3 Sign Up
@@ -66,26 +66,28 @@ block content
           div.control-group
             label.control-label(for="inputEmail") Email
             div.controls
-              input#inputEmail(type='text', name='email', placeholder='Email')
+              input#inputEmail(type='text', name='email', placeholder='barbara@gmail.com')
           div.control-group
             label.control-label(for="inputPassword") Password
             div.controls
-              input#inputPassword(type='text', name='password', placeholder='Password')
+              input#inputPassword(type='password', name='password', placeholder='topsecretpassword')
           div.control-group
-            label.control-label(for="inputPassword2") Password2
+            label.control-label(for="inputPassword2") Confirm Password
             div.controls
-              input#inputPassword2(type='text', name='password2', placeholder='Password2')
+              input#inputPassword2(type='password', name='password2', placeholder='topsecretpassword')
           div.control-group
-            label.control-label(for="inputFirstName") First Name
+            label.control-label(for="inputFullName") Your Full Name
             div.controls
-              input#inputFirstName(type='text', name='firstName', placeholder='FirstName')
+              input#inputFullName(type='text', name='fullName', placeholder='Barbara Foosie')
           div.control-group
-            label.control-label(for="inputLastName") Last Name
+            label.control-label(for="inputCompanyName") Your Company Name
             div.controls
-              input#inputLastName(type='text', name='lastName', placeholder='Last Name')
+              input#inputCompanyName(type='text', name='companyName', placeholder="Barb's Hardware")
       div.modal-footer
-        a#signupCancel.btn.btn-danger(href='#', data-dismiss="modal") Cancel
-        a#signupConfirm.btn.btn-primary(href='#', data-dismiss="modal") Sign Up
+        a#signupCancel.btn(href='#', data-dismiss="modal") Cancel
+        a#signupConfirm.btn.btn-primary(href='#') Sign Up
 
 
-  script(type='text/coffeescript', src='javascripts/signup.coffee')
+  script(type='text/javascript', src='javascripts/vender/jquery.validate.js')
+  // script(type='text/coffeescript', src='javascripts/signup.coffee')
+  script(type='text/javascript', src='javascripts/signup.js')

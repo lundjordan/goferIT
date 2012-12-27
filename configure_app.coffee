@@ -1,3 +1,5 @@
+connectCoffeescript = require 'connect-coffee-script'
+
 expressConfig = (app, passport) ->
 
     express = require 'express'
@@ -28,6 +30,9 @@ expressConfig = (app, passport) ->
         app.use passport.initialize()
         app.use passport.session()
         app.use express.static path.join __dirname, 'public'
+        app.use connectCoffeescript
+            src: path.join __dirname, 'public'
+            enable: ['coffeescript']
 
     app.configure 'development', ->
         app.use express.errorHandler()

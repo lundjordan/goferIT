@@ -4,7 +4,7 @@ StoreSchema = new mongoose.Schema
     _company:
         type: mongoose.Schema.Types.ObjectId
         ref: 'Company'
-        required: false
+        required: true
     products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}]
     terminals: [{type: mongoose.Schema.Types.ObjectId, ref: 'Terminal'}]
     name:

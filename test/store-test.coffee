@@ -1,19 +1,31 @@
 mongoose = require 'mongoose'
 Store = require '../models/store'
+Company = require '../models/company'
 
 describe "store model mongo CRUD", ->
     store = null
+    company = null
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
         mongoose.connect mongoUrl, ->
+            (Company.remove {}).exec()
             (Store.remove {}).exec ->
-                done()
+            company = new Company
+                name: "Nad's Hardware"
+                subscriptionType: "trial"
+                dateCreated: new Date().toISOString()
+            company.save (err) ->
+                if err
+                    throw err
+                else
+                    done()
 
     describe "should create a valid Store", ->
         it "and save newly created store", (done) ->
             store = new Store
                 name: 'Second Grove'
+                _company: company.id
                 phone: 16049291111
                 address:
                     street: '1234 sesame street'
@@ -32,7 +44,14 @@ describe "store model mongo CRUD", ->
                 resStore.name.should.equal 'Second Grove'
             done()
 
+        it "then retrieve company name from new store", (done) ->
+            (Store.findOne _id: store.id)
+                .populate('_company').exec (err, comp) ->
+                    comp.name.should.equal "Nad's Hardware"
+            done()
+
     after (done) ->
         (Store.remove {}).exec ->
+            (Company.remove {}).exec()
             mongoose.connection.close ->
                 done()

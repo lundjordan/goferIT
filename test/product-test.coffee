@@ -1,11 +1,12 @@
 mongoose = require 'mongoose'
+Company = require '../models/company'
 Store = require '../models/store'
 Supplier = require '../models/supplier'
 Order = require '../models/order'
 Product = require '../models/product'
 
 describe "product model mongo CRUD", ->
-    [product, store, supplier, order] = [null, null, null, null]
+    [product, store, company, supplier, order] = [null, null, null, null, null]
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
@@ -14,6 +15,7 @@ describe "product model mongo CRUD", ->
             (Order.remove {}).exec()
             (Supplier.remove {}).exec()
             (Store.remove {}).exec()
+            (Company.remove {}).exec()
 
         supplier = new Supplier
             email: 'abc@gmail.com'
@@ -30,7 +32,7 @@ describe "product model mongo CRUD", ->
                 throw err
             else
                 order = new Order
-                    _supplier: supplier
+                    _supplier: supplier.id
                     referenceNum: 'aaa111bbb222'
                     shippingInfo:
                         company: 'UPS'
@@ -43,26 +45,35 @@ describe "product model mongo CRUD", ->
                     if err
                         throw err
                     else
-                        store = new Store
-                            name: 'Second Grove'
-                            phone: 16049291111
-                            address:
-                                street: '1234 sesame street'
-                                postalCode: 'v7w4c9'
-                                city: 'West Vancouver'
-                                country: 'Canada'
+                        company = new Company
+                            name: "Nad's Hardware"
+                            subscriptionType: "trial"
                             dateCreated: new Date().toISOString()
-                        store.save (err) ->
+                        company.save (err) ->
                             if err
                                 throw err
                             else
-                                done()
+                                store = new Store
+                                    name: 'Second Grove'
+                                    _company: company.id
+                                    phone: 16049291111
+                                    address:
+                                        street: '1234 sesame street'
+                                        postalCode: 'v7w4c9'
+                                        city: 'West Vancouver'
+                                        country: 'Canada'
+                                    dateCreated: new Date().toISOString()
+                                store.save (err) ->
+                                    if err
+                                        throw err
+                                    else
+                                        done()
 
     describe "should create a valid Product", ->
         it "and save newly created product", (done) ->
             product = new Product
-                _store: store
-                _order: order
+                _store: store.id
+                _order: order.id
                 serialID: '666666666'
                 description:
                     brand: 'CCM'
@@ -81,22 +92,25 @@ describe "product model mongo CRUD", ->
             Product.findOne _id: product.id, (err, resProduct) ->
                 resProduct.serialID.should.equal '666666666'
                 resProduct.description.name.should.equal 'skate pro'
-            done()
+                done()
+
         it "then retrieve the product store's name", (done) ->
-            Product.findOne _id: product.id, (err, resProduct) ->
-                Store.findOne _id: resProduct._store, (err, resStore) ->
-                    resStore.name.should.equal 'Second Grove'
-            done()
+            (Product.findOne _id: product.id)
+                .populate('_store').exec (err, store) ->
+                    store._store.name.should.equal 'Second Grove'
+                    done()
+
         it "then retrieve the product order's referenceNum", (done) ->
-            Product.findOne _id: product.id, (err, resProduct) ->
-                Order.findOne _id: resProduct._order, (err, resOrder) ->
-                    resOrder.referenceNum.should.equal 'aaa111bbb222'
-            done()
+            (Product.findOne _id: product.id)
+                .populate('_order').exec (err, order) ->
+                    order._order.referenceNum.should.equal 'aaa111bbb222'
+                    done()
 
     after (done) ->
         (Product.remove {}).exec()
         (Order.remove {}).exec()
         (Supplier.remove {}).exec()
         (Store.remove {}).exec()
+        (Company.remove {}).exec()
         mongoose.connection.close()
         done()
