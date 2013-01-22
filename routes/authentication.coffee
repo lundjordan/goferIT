@@ -1,4 +1,5 @@
 Employee = require '../models/employee'
+Company = require '../models/company'
 
 routes = (app, passport) ->
     failureRedirection = {failureRedirect: '/login', failureFlash: true}
@@ -17,12 +18,13 @@ routes = (app, passport) ->
         req.logout()
         res.redirect '/'
 
-    app.get '/register', (req, res) ->
-        res.render "#{__dirname}/../views/register",
-            title: 'Register',
-            stylesheet: 'register',
-            user: req.user,
-            message: req.flash('error'),
+    # TODO make sure I can remove this
+    # app.get '/register', (req, res) ->
+    #     res.render "#{__dirname}/../views/register",
+    #         title: 'Register',
+    #         stylesheet: 'register',
+    #         user: req.user,
+    #         message: req.flash('error'),
 
     app.post '/register', (req, res) ->
         company = new Company
@@ -32,7 +34,7 @@ routes = (app, passport) ->
         company.save (err) ->
             if err
                 throw err
-                res.redirect '/'
+                res.redirect '/SignupFailed'
             else
                 employee = new Employee
                     email: req.body.email
@@ -45,7 +47,10 @@ routes = (app, passport) ->
                 employee.save (err) ->
                     if err
                         throw err
-                        res.redirect '/'
+                        company.remove (err, comp) ->
+                            if err
+                                throw err
+                        res.redirect '/SignupFailed'
                     res.redirect '/'
 
     #TODO do an account details and ensure authenticated
@@ -55,6 +60,14 @@ routes = (app, passport) ->
 
 
     # helpers
+
+    app.post '/uniqueEmail', (req, res) ->
+        console.log req.body.email
+        Employee.findOne email: req.body.email, (err, resEmployee) ->
+            if resEmployee is null
+                res.send true
+            else
+                res.send false
 
     ensureAuthenticated = (req, res, next) ->
         if req.isAuthenticated()

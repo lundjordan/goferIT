@@ -1,26 +1,27 @@
 ($ document).ready (response) ->
 
-    jQuery.validator.addMethod "uniqueMobile", ((value, element) ->
+    $.validator.addMethod "uniqueEmail", ((value, element) ->
         response = undefined
         $.ajax
-            type: "POST",
+            type: "POST"
             url: '/uniqueEmail'
             data:"email=#{value}"
-            async: false,
+            async: false
             success: (data) ->
                 response = data
-        if response is 0
+        if response is true
             true
-        else if response is 1
+        else if response is false
             false
         else false if response is 'logout'
-    ), "Email is Already Taken"
+    ), "Email is already taken"
 
     ($ '#register-form').validate(
         rules:
             email:
                 required: true
                 email: true
+                uniqueEmail: true
             password:
                 minlength: 6
                 required: true
