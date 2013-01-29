@@ -1,5 +1,12 @@
 ($ document).ready (response) ->
 
+    # success alert
+    # bootstrap_alert_warning = (message) ->
+    #     ($ '#signup-alert').html '<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>'
+
+    # ($ '#signupConfirm').on 'click', ->
+    #     bootstrap_alert_warning('Success! You have now registered. Please Sign in with your given username and password')
+
     $.validator.addMethod "uniqueEmail", ((value, element) ->
         response = undefined
         $.ajax

@@ -2,14 +2,14 @@ Employee = require '../models/employee'
 Company = require '../models/company'
 
 routes = (app, passport) ->
-    failureRedirection = {failureRedirect: '/login', failureFlash: true}
+    failureRedirection = {failureRedirect: '/', failureFlash: true}
 
-    app.get '/login', (req, res) ->
-        res.render "#{__dirname}/../views/authentication",
-            title: 'Login',
-            stylesheet: 'login',
-            user: req.user,
-            message: req.flash('error'),
+    # app.get '/login', (req, res) ->
+    #     res.render "#{__dirname}/../views/authentication",
+    #         title: 'Login',
+    #         stylesheet: 'login',
+    #         user: req.user,
+    #         message: req.flash('error'),
 
     app.post '/login', (passport.authenticate 'local', failureRedirection), (req, res) ->
         res.redirect '/'
@@ -34,7 +34,7 @@ routes = (app, passport) ->
         company.save (err) ->
             if err
                 throw err
-                res.redirect '/SignupFailed'
+                res.redirect '/signupFail'
             else
                 employee = new Employee
                     email: req.body.email
@@ -47,12 +47,11 @@ routes = (app, passport) ->
                 employee.save (err) ->
                     if err
                         throw err
+                        res.redirect '/signupFail'
                         company.remove (err, comp) ->
                             if err
                                 throw err
-                        res.redirect '/SignupFailed'
-                    res.redirect '/'
-
+                    res.redirect '/signupSuccess'
     #TODO do an account details and ensure authenticated
     # app.get('/account', ensureAuthenticated, function(req, res){
     #   res.render('account', { user: req.user });

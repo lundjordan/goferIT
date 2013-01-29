@@ -43,12 +43,12 @@ EmployeeSchema.statics.authenticate = (email, password, callback) ->
         if err
             return callback err
         if !employee
-            return callback null, false, { message: "Unknown employee #{email}" }
+            return callback null, false, { message: "Email or Password is incorrect" }
         employee.verifyPassword password, (err, passwordCorrect) ->
             if err
                 return callback err
             if !passwordCorrect
-                return callback null, false, { message: 'Invalid password' }
+                return callback null, false, { message: 'Email or Password is incorrect' }
             return callback null, employee # email and password are correct!
 
 module.exports = mongoose.model 'Employee', EmployeeSchema

@@ -12,7 +12,8 @@ block content
         a.brand(href="#") Gofer
         div.nav-collapse.collapse
         if user
-          p.navbar-text.pull-right Logged in as #{user}
+          p.navbar-text.pull-right Logged in as #{user.name.first}
+          p.navbar-text.pull-right <a href="/logout", data-toggle='modal'> Sign out &nbsp;&nbsp;</a>
         else
           form.navbar-form.pull-right(action='/login', method='post')
             input.span2(id="username", type="text", name="username", placeholder="Email")
@@ -36,7 +37,16 @@ block content
               a(href="#about") About
             li
               a(href="#contact") Contact
-  div.signup-alert
+     // div#signup-alert
+  if alert != ''
+    if alert_type == 'success'
+      div.alert.alert-success
+        a.close(href="#", data-dismiss="alert") &times;
+        <strong>Wahoo!</strong> #{alert}
+    else
+      div.alert.alert-error
+        button.close(type="button", data-dismiss="alert") &times;
+        <strong>Uh Oh!</strong> #{alert}
 
   div.container-fluid
     div.row-fluid
@@ -89,6 +99,5 @@ block content
         a#signupConfirm.btn.btn-primary(href='#') Sign Up
 
 
-  script(type='text/javascript', src='javascripts/vender/jquery.validate.js')
-  // script(type='text/coffeescript', src='javascripts/signup.coffee')
+  script(type='text/javascript', src='javascripts/vendor/jquery.validate.js')
   script(type='text/javascript', src='javascripts/signup.js')
