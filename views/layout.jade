@@ -2,11 +2,29 @@ doctype 5
 html
   head
     title= "Gofer - " + title
+
+    // vendor styling
     link(rel='stylesheet', href='stylesheets/bootstrap.css')
+
+    // Gofer styling
     link(rel='stylesheet', href='stylesheets/#{stylesheet}.css')
-    script(src='javascripts/vendor/jquery-1.8.3.min.js')
-    script(src='javascripts/vendor/bootstrap.min.js')
+
   body
-    // #header
-    //   h1 Gofer
+
+    // vendor scripts
+    script(src='javascripts/vendor/jquery-1.8.3.min.js')
+    script(src='javascripts/vendor/jquery.validate.js')
+    script(src='javascripts/vendor/underscore-1.4.4.js')
+    script(src='javascripts/vendor/backbone-0.9.10.js')
+    script(src='javascripts/vendor/bootstrap-2.2.2.js')
+
+    // Gofer templates
+
+    // Gofer scripts
+    script(src='javascripts/product.js')
+    script(src='javascripts/products.js')
+    // script(src='javascripts/routes.js')
+    // script(src='javascripts/boot.js')
+
     block content
+    block signup

@@ -1,5 +1,7 @@
-Employee = require '../models/employee'
-Company = require '../models/company'
+Terminal = require '../models/terminal-mongo'
+Store = require '../models/store-mongo'
+Employee = require '../models/employee-mongo'
+Company = require '../models/company-mongo'
 
 routes = (app, passport) ->
     failureRedirection = {failureRedirect: '/', failureFlash: true}
@@ -27,6 +29,8 @@ routes = (app, passport) ->
     #         message: req.flash('error'),
 
     app.post '/register', (req, res) ->
+        registeredErrorFree = true
+        [company, employee, store, terminal] = [null, null, null, null]
         company = new Company
             name: req.body.companyName
             subscriptionType: "trial"
@@ -34,7 +38,7 @@ routes = (app, passport) ->
         company.save (err) ->
             if err
                 throw err
-                res.redirect '/signupFail'
+                registeredErrorFree = false
             else
                 employee = new Employee
                     email: req.body.email
@@ -47,11 +51,45 @@ routes = (app, passport) ->
                 employee.save (err) ->
                     if err
                         throw err
-                        res.redirect '/signupFail'
-                        company.remove (err, comp) ->
+                        registeredErrorFree = false
+                    else
+                        store = new Store
+                            _company: company.id
+                            dateCreated: new Date().toISOString()
+                        store.save (err) ->
                             if err
                                 throw err
-                    res.redirect '/signupSuccess'
+                                registeredErrorFree = false
+                            else
+                                terminal = new Terminal
+                                    _store: store.id
+                                    referenceNum: 1
+                                terminal.save (err) ->
+                                    if err
+                                        throw err
+                                        registeredErrorFree = false
+                                    else
+                                        if not registeredErrorFree
+                                            if Terminal.findById(terminal.id)
+                                                terminal.remove (err, obj) ->
+                                                    if err
+                                                        console.log err
+                                            if Employee.findById(employee.id)
+                                                employee.remove (err, obj) ->
+                                                    if err
+                                                        console.log err
+                                            if Store.findById(store.id)
+                                                store.remove (err, obj) ->
+                                                    if err
+                                                        console.log err
+                                            if Company.findById(company.id)
+                                                company.remove (err, obj) ->
+                                                    if err
+                                                        console.log err
+                                            res.redirect '/signupFail'
+                                        else
+                                            res.redirect '/signupSuccess'
+
     #TODO do an account details and ensure authenticated
     # app.get('/account', ensureAuthenticated, function(req, res){
     #   res.render('account', { user: req.user });

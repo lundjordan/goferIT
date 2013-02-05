@@ -1,5 +1,5 @@
 mongoose = require 'mongoose'
-Customer = require '../models/customer'
+Customer = require '../models/customer-mongo'
 
 describe "customer model mongo CRUD", ->
     customer = null

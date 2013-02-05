@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
 Terminal = require '../models/terminal'
-Store = require '../models/store'
-Company = require '../models/company'
+Store = require '../models/store-mongo'
+Company = require '../models/company-mongo'
 
 describe "terminal model mongo CRUD", ->
     terminal = null

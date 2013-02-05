@@ -5,14 +5,15 @@ passport = require 'passport'
 LocalStrategy = (require 'passport-local').Strategy
 
 ## models
-Employee = require './models/employee'
-Supplier = require './models/supplier'
-Customer = require './models/customer'
-Order = require './models/order'
-Store = require './models/store'
-Terminal = require './models/terminal'
-Product = require './models/product'
-Sale = require './models/sale'
+Employee = require './models/employee-mongo'
+Supplier = require './models/supplier-mongo'
+Customer = require './models/customer-mongo'
+Order = require './models/order-mongo'
+Store = require './models/store-mongo'
+Terminal = require './models/terminal-mongo'
+Product = require './models/product-mongo'
+Sale = require './models/sale-mongo'
+
 ##
 
 # authentication setup
@@ -31,6 +32,7 @@ app = module.exports = express()
 (require './routes/index') app
 (require './routes/authentication') app, passport
 (require './routes/suppliers') app, restify, Supplier
+(require './routes/products') app, restify, Product
 ##
 
 server = app.listen app.settings.port

@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
-Company = require '../models/company'
-Store = require '../models/store'
+Company = require '../models/company-mongo'
+Store = require '../models/store-mongo'
 
 describe "company model mongo CRUD", ->
     company = null

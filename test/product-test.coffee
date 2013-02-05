@@ -1,9 +1,9 @@
 mongoose = require 'mongoose'
-Company = require '../models/company'
-Store = require '../models/store'
-Supplier = require '../models/supplier'
-Order = require '../models/order'
-Product = require '../models/product'
+Company = require '../models/company-mongo'
+Store = require '../models/store-mongo'
+Supplier = require '../models/supplier-mongo'
+Order = require '../models/order-mongo'
+Product = require '../models/product-mongo'
 
 describe "product model mongo CRUD", ->
     [product, store, company, supplier, order] = [null, null, null, null, null]
