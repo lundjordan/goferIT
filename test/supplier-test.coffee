@@ -1,5 +1,5 @@
 mongoose = require 'mongoose'
-Supplier = require '../models/supplier'
+Supplier = require '../models/supplier-mongo'
 
 describe "supplier model mongo CRUD", ->
     supplier = null
