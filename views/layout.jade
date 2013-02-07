@@ -4,7 +4,7 @@ html
     title= "Gofer - " + title
 
     // vendor styling
-    link(rel='stylesheet', href='css/bootstrap.css')
+    link(rel='stylesheet', href='css/bootstrap.min1.css')
 
     // Gofer styling
     link(rel='stylesheet', href='css/#{stylesheet}.css')
@@ -18,13 +18,17 @@ html
     script(src='js/vendor/backbone-0.9.10.js')
     script(src='js/vendor/bootstrap-2.2.2.js')
 
-    // Gofer templates
+    block content
 
-    // Gofer scripts
+    // Gofer templates
+    // script(type='text/html', src='tml/inventory_templates.html')
+    include ../public/tml/inventory_templates.html
+
+    // gofer scripts
     script(src='js/product.js')
     script(src='js/products.js')
-    // script(src='js/routes.js')
-    // script(src='js/boot.js')
+    script(src='js/inventory_views.js')
+    script(src='js/main_app_view.js')
+    script(src='js/boot.js')
 
-    block content
-    block signup
+

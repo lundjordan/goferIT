@@ -1,0 +1,30 @@
+div.modal.hide.fade.in(id='register', style='display:none;')
+  div.modal-header
+    a.close(data-dismiss="modal") ×
+    h3 Sign Up
+  div.modal-body
+    h4 Fill In The Blanks
+    form#register-form.form-horizontal.form-control(action='/register', method='post')
+      div.control-group
+        label.control-label(for="inputEmail") Email
+        div.controls
+          input#inputEmail(type='text', name='email', placeholder='barbara@gmail.com')
+      div.control-group
+        label.control-label(for="inputPassword") Password
+        div.controls
+          input#inputPassword(type='password', name='password', placeholder='topsecretpassword')
+      div.control-group
+        label.control-label(for="inputPassword2") Confirm Password
+        div.controls
+          input#inputPassword2(type='password', name='password2', placeholder='topsecretpassword')
+      div.control-group
+        label.control-label(for="inputFullName") Your Full Name
+        div.controls
+          input#inputFullName(type='text', name='fullName', placeholder='Barbara Foosie')
+      div.control-group
+        label.control-label(for="inputCompanyName") Your Company Name
+        div.controls
+          input#inputCompanyName(type='text', name='companyName', placeholder="Barb's Hardware")
+  div.modal-footer
+    a#signupCancel.btn(href='#', data-dismiss="modal") Cancel
+    a#signupConfirm.btn.btn-primary(href='#') Sign Up

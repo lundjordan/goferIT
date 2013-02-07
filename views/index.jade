@@ -1,8 +1,8 @@
 extends layout
 
 block content
-
-  div.navbar.navbar-inverse.navbar-fixed-top
+  // Top Navbar
+  div.navbar.navbar-fixed-top
     div.navbar-inner
       div.container-fluid
         a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
@@ -13,13 +13,13 @@ block content
         div.nav-collapse.collapse
         if user
           p.navbar-text.pull-right Logged in as #{user.name.first}
-          p.navbar-text.pull-right <a href="/logout", data-toggle='modal'> Sign out &nbsp;&nbsp;</a>
+          p.navbar-text.pull-right <a href="/logout", data-toggle='modal'> Sign out </a>
         else
           form.navbar-form.pull-right(action='/login', method='post')
             input.span2(id="username", type="text", name="username", placeholder="Email")
             input.span2(id="password", type="password", name="password", placeholder="Password")
             button.btn(type="submit") Sign In
-          p.navbar-text.pull-right Login or <a href="#register", data-toggle='modal'> Sign up &nbsp;&nbsp;</a>
+          p.navbar-text.pull-right Login or <a href="#register", data-toggle='modal'> Sign up </a>
         ul.nav
           if user
             li.active
@@ -35,7 +35,6 @@ block content
               a(href="#learn-more") FAQ
             li
               a(href="#contact") Contact
-     // div#signup-alert
   if alert != ''
     if alert_type == 'success'
       div.alert.alert-success
@@ -45,57 +44,34 @@ block content
       div.alert.alert-error
         button.close(type="button", data-dismiss="alert") &times;
         <strong>Uh Oh!</strong> #{alert}
+  //
 
-  div.container-fluid
+
+  //Sidebar and Main Content
+  div#main.container-fluid
     div.row-fluid
       div.span2
-        div.well.sidebar-nav
+        div#main-nav.well.sidebar-nav
           ul.nav.nav-list
             li.active
               a(href='#') <i class='icon-th'></i> Dashboard
             li
               a(href='#') <i class='icon-shopping-cart'></i> Point Of Sale
             li
-              a(href='#') <i class='icon-tags'></i> Inventory
+              a#inventory-link(href='#') <i class='icon-tags'></i> Inventory
             li
               a(href='#') <i class='icon-user'></i> Staff
             li
               a(href='#') <i class='icon-book'></i> Accounting
       div.span10
-        div.hero-unit
-          h1 Welcome.
-          p An easier way to manage your business
-
-    div.modal.hide.fade.in(id='register', style='display:none;')
-      div.modal-header
-        a.close(data-dismiss="modal") ×
-        h3 Sign Up
-      div.modal-body
-        h4 Fill In The Blanks
-        form#register-form.form-horizontal.form-control(action='/register', method='post')
-          div.control-group
-            label.control-label(for="inputEmail") Email
-            div.controls
-              input#inputEmail(type='text', name='email', placeholder='barbara@gmail.com')
-          div.control-group
-            label.control-label(for="inputPassword") Password
-            div.controls
-              input#inputPassword(type='password', name='password', placeholder='topsecretpassword')
-          div.control-group
-            label.control-label(for="inputPassword2") Confirm Password
-            div.controls
-              input#inputPassword2(type='password', name='password2', placeholder='topsecretpassword')
-          div.control-group
-            label.control-label(for="inputFullName") Your Full Name
-            div.controls
-              input#inputFullName(type='text', name='fullName', placeholder='Barbara Foosie')
-          div.control-group
-            label.control-label(for="inputCompanyName") Your Company Name
-            div.controls
-              input#inputCompanyName(type='text', name='companyName', placeholder="Barb's Hardware")
-      div.modal-footer
-        a#signupCancel.btn(href='#', data-dismiss="modal") Cancel
-        a#signupConfirm.btn.btn-primary(href='#') Sign Up
+        div#main-window.hero-unit
+          if user == null
+            h1 Welcome to Gofer.
+            p An easier way to manage your business
 
 
+  // signup modal markup/logic from project_root/views/signup_modal.jade
+  // and js file in the public/js dir
+  include signup_modal
   script(type='text/javascript', src='js/signup.js')
+  //
