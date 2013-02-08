@@ -16,23 +16,37 @@
       AppView.prototype.el = '#main';
 
       AppView.prototype.events = {
-        'click #inventory-link': 'inventoryRender'
+        'click #inventory-link': 'inventoryRender',
+        'click #dashboard-link': 'dashboardRender'
       };
 
       AppView.prototype.initialize = function() {
-        return this.inventoryView = this.options.inventoryView;
+        this.inventoryView = this.options.inventoryView;
+        return this.selectedNavMenuItem = $('#dashboard-link');
       };
 
       AppView.prototype.inventoryRender = function() {
-        console.log('MIH');
-        return this.inventoryView.render();
+        this.inventoryView.render();
+        this.selectedNavMenuItem.removeClass('active');
+        this.selectedNavMenuItem = this.$('#inventory-link');
+        return this.selectedNavMenuItem.addClass('active');
+      };
+
+      AppView.prototype.dashboardRender = function() {
+        this.selectedNavMenuItem.removeClass('active');
+        this.selectedNavMenuItem = this.$('#dashboard-link');
+        return this.selectedNavMenuItem.addClass('active');
       };
 
       return AppView;
 
     })(Backbone.View);
     this.app = (_ref = window.app) != null ? _ref : {};
-    return this.app.AppView = AppView;
+    this.app.AppView = AppView;
+    this.app.Products.fetch();
+    return this.app.appView = new this.app.AppView({
+      inventoryView: new this.app.InventoryView
+    });
   });
 
 }).call(this);

@@ -47,27 +47,26 @@ block content
   //
 
 
-  //Sidebar and Main Content
+  //Backbone Section: Sidebar and Main Content
   div#main.container-fluid
     div.row-fluid
       div.span2
         div#main-nav.well.sidebar-nav
           ul.nav.nav-list
-            li.active
+            li#dashboard-link.active
               a(href='#') <i class='icon-th'></i> Dashboard
-            li
+            li#pos-link
               a(href='#') <i class='icon-shopping-cart'></i> Point Of Sale
-            li
-              a#inventory-link(href='#') <i class='icon-tags'></i> Inventory
-            li
+            li#inventory-link
+              a(href='#') <i class='icon-tags'></i> Inventory
+            li#staff-link
               a(href='#') <i class='icon-user'></i> Staff
-            li
-              a(href='#') <i class='icon-book'></i> Accounting
       div.span10
-        div#main-window.hero-unit
+        div#main-window
           if user == null
-            h1 Welcome to Gofer.
-            p An easier way to manage your business
+            div.hero-unit
+              h1 Welcome to Gofer.
+              p An easier way to manage your business
 
 
   // signup modal markup/logic from project_root/views/signup_modal.jade
