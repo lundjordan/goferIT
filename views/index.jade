@@ -5,7 +5,7 @@ block content
   // Top Navbar
   div.navbar-wrapper
     div.container
-      div#someID.navbar.navbar-inverse
+      div#someID.navbar
         div.navbar-inner
           div.container-fluid
             a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
@@ -24,12 +24,15 @@ block content
                   li.divider-vertical
                   li.dropdown
                     a#loginDropdown.dropdown-toggle(href='#', data-toggle="dropdown", role="button) Sign In <b class="caret"></b>
-                    ul.dropdown-menu(style="padding: 15px; padding-bottom: 16px;", aria-labelledby="drop3", role="menu")
+                    ul.dropdown-menu(style="padding: 15px; padding-bottom: 0px;", aria-labelledby="drop3", role="menu")
                       li(role="presentation")
-                        form.navbar-form.pull-right(action='/login', method='post')
-                          input.span2(id="username", type="text", name="username", placeholder="Email")
-                          input.span2(id="password", type="password", name="password", placeholder="Password")
-                          button.btn(type="submit") Login
+                        form(action='/login', method='post')
+                          fieldset
+                            label Username
+                            input.span2(id="username", type="text", name="username", placeholder="Email")
+                            label Password
+                            input.span2(id="password", type="password", name="password", placeholder="Password")
+                            button.btn(type="submit") Login
               ul.nav
                 if user != null
                   li
@@ -54,16 +57,16 @@ block content
     div#homepage.carousel.slide
       div.carousel-inner
         div.item.active
-          img(src='img/Pennies-Blur.jpg', alt="")
+          img(src='img/Pennies-Blur2.jpg', alt="")
           div.container
             div.carousel-caption
               h1 Welcome To Gofer
               p.lead an easier way to manage your business
         div.item
-          img(src='img/Cashier-Blur.jpg', alt="")
+          img(src='img/Register-Blur.jpg', alt="")
           div.container
             div.carousel-caption
-              h1 Cares For What Matters
+              h1 Looking After Your
               p.lead sales, inventory, staff, and customers
         div.item
           img(src='img/Cup-Coffee-Blur.jpg', alt="")
@@ -73,6 +76,21 @@ block content
               p.lead no installs. no backups. no updates.
       a.left.carousel-control(href="#homepage", data-slide="prev") &lsaquo;
       a.right.carousel-control(href="#homepage", data-slide="next") &rsaquo;
+      // some details of Gofer components
+    div.container.marketing
+      div.row
+        div.span3
+          h2 Sales
+          p From point of sale to sale history, discover a clean way to ring in items from the till and track how much and when you're really making money.
+        div.span3
+          h2 Inventory
+          p From the supplier to your shelf, lookup products easily, get notified when something is running low, and sort everything from a number of categories
+        div.span3
+          h2 Staff And Customers
+          p Manage the people who work for you and record the ones who buy from you.
+        div.span3
+          h2 The Power Of The Browser
+          p Use any computer or tablet you like, no installations or updates necessary, back up everything in the cloud, and <strong> even work offline </strong>
   else
     div#main.container-fluid
       div.row-fluid
