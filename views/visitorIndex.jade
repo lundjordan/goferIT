@@ -1,0 +1,118 @@
+extends layout
+
+block content
+
+  // Top Navbar
+  div.navbar-wrapper
+    div.container
+      div#someID.navbar
+        div.navbar-inner
+          div.container-fluid
+            a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.brand(href="#") Gofer
+            div.nav-collapse
+              ul.nav.pull-right
+                li
+                  a(href="#register", data-toggle='modal') Sign Up
+                li.divider-vertical
+                li.dropdown
+                  a#loginDropdown.dropdown-toggle(href='#', data-toggle="dropdown", role="button") Sign In <b class="caret"></b>
+                  ul.dropdown-menu(style="padding: 15px; padding-bottom: 0px;", aria-labelledby="drop3", role="menu")
+                    li(role="presentation")
+                      form(action='/login', method='post')
+                        fieldset
+                          label Username
+                          input.span2(id="username", type="text", name="username", placeholder="Email")
+                          label Password
+                          input.span2(id="password", type="password", name="password", placeholder="Password")
+                          button.btn(type="submit") Login
+              ul.nav
+                li
+                  a(href="#") Demo
+  if alert != ''
+    if alert_type == 'success'
+      div.alert.alert-success
+        a.close(href="#", data-dismiss="alert") &times;
+        <strong>Wahoo!</strong> #{alert}
+    else
+      div.alert.alert-error
+        button.close(type="button", data-dismiss="alert") &times;
+        <strong>Uh Oh!</strong> #{alert}
+
+  //Backbone Section: Sidebar and Main Content
+  div#homepage.carousel.slide
+    div.carousel-inner
+      div.item.active
+        img(src='img/Pennies-Blur2.jpg', alt="")
+        div.container
+          div.carousel-caption
+            h1 Welcome To Gofer
+            p.lead an easier way to manage your business
+      div.item
+        img(src='img/Register-Blur.jpg', alt="")
+        div.container
+          div.carousel-caption
+            h1 Looking After Your
+            p.lead sales, inventory, staff, and customers
+      div.item
+        img(src='img/Cup-Coffee-Blur.jpg', alt="")
+        div.container
+          div.carousel-caption
+            h1 Keeping It Easy
+            p.lead no installs. no backups. no updates.
+    a.left.carousel-control(href="#homepage", data-slide="prev") &lsaquo;
+    a.right.carousel-control(href="#homepage", data-slide="next") &rsaquo;
+
+  // some details of Gofer components
+  div.container.marketing
+    div.row
+      div.span3
+        h2 Sales
+        p From point of sale to sale history, discover a clean way to ring in items from the till and track how much and when you're really making money.
+      div.span3
+        h2 Inventory
+        p From the supplier to your shelf, lookup products easily, get notified when something is running low, and sort everything from a number of categories
+      div.span3
+        h2 Staff And Customers
+        p Manage the people who work for you and record the ones who buy from you.
+      div.span3
+        h2 The Power Of The Browser
+        p Use any computer or tablet you like, no installations or updates necessary, back up everything in the cloud, and <strong> even work offline </strong>
+
+  div.modal.hide.fade.in(id='register', style='display:none;')
+    div.modal-header
+      a.close(data-dismiss="modal") ×
+      h3 Sign Up
+    div.modal-body
+      h4 Create An Account In One Step
+      form#register-form.form-horizontal.form-control(action='/register', method='post')
+        div.control-group
+          label.control-label(for="inputEmail") Email
+          div.controls
+            input#inputEmail(type='text', name='email', placeholder='barbara@gmail.com')
+        div.control-group
+          label.control-label(for="inputPassword") Password
+          div.controls
+            input#inputPassword(type='password', name='password', placeholder='topsecretpassword')
+        div.control-group
+          label.control-label(for="inputPassword2") Confirm Password
+          div.controls
+            input#inputPassword2(type='password', name='password2', placeholder='topsecretpassword')
+        div.control-group
+          label.control-label(for="inputFullName") Your Full Name
+          div.controls
+            input#inputFullName(type='text', name='fullName', placeholder='Barbara Foosie')
+        div.control-group
+          label.control-label(for="inputCompanyName") Your Company Name
+          div.controls
+            input#inputCompanyName(type='text', name='companyName', placeholder="Barb's Hardware")
+    div.modal-footer
+      a#signupCancel.btn(href='#', data-dismiss="modal") Cancel
+      a#signupConfirm.btn.btn-primary(href='#') Sign Up
+  // signup modal markup/logic from project_root/views/signup_modal.jade
+  // and js file in the public/js dir
+  script(type='text/javascript', src='js/signup.js')
+
