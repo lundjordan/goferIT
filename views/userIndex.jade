@@ -1,0 +1,50 @@
+extends layout
+
+block content
+
+  // Top Navbar
+  div#someID.navbar
+    div.navbar-inner
+      div.container-fluid
+        a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.brand(href="#") Gofer
+        div.nav-collapse
+          ul.nav.pull-right
+            li
+              p.navbar-text.pull-right <a href="/logout", data-toggle='modal'> Sign out </a>
+            li.divider-vertical
+            li
+              p.navbar-text.pull-right #{user.name.first} #{user.name.last}
+          ul.nav
+            li
+              a(href="#") Help
+
+  if alert != ''
+    if alert_type == 'success'
+      div.alert.alert-success
+        a.close(href="#", data-dismiss="alert") &times;
+        <strong>Wahoo!</strong> #{alert}
+    else
+      div.alert.alert-error
+        button.close(type="button", data-dismiss="alert") &times;
+        <strong>Uh Oh!</strong> #{alert}
+
+
+  div#main.container-fluid
+    div.row-fluid
+      div.span2
+        div#main-nav.well.sidebar-nav
+          ul.nav.nav-list
+            li#dashboard-link.active
+              a(href='#') <i class='icon-th'></i> Dashboard
+            li#pos-link
+              a(href='#') <i class='icon-shopping-cart'></i> Point Of Sale
+            li#inventory-link
+              a(href='#') <i class='icon-tags'></i> Inventory
+            li#staff-link
+              a(href='#') <i class='icon-user'></i> Staff
+      div.span10
+        div#main-window

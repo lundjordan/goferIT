@@ -1,40 +1,45 @@
 extends layout
 
 block content
+
   // Top Navbar
-  div.navbar.navbar-fixed-top
-    div.navbar-inner
-      div.container-fluid
-        a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a.brand(href="#") Gofer
-        div.nav-collapse.collapse
-        if user
-          p.navbar-text.pull-right Logged in as #{user.name.first}
-          p.navbar-text.pull-right <a href="/logout", data-toggle='modal'> Sign out </a>
-        else
-          form.navbar-form.pull-right(action='/login', method='post')
-            input.span2(id="username", type="text", name="username", placeholder="Email")
-            input.span2(id="password", type="password", name="password", placeholder="Password")
-            button.btn(type="submit") Sign In
-          p.navbar-text.pull-right Login or <a href="#register", data-toggle='modal'> Sign up </a>
-        ul.nav
-          if user
-            li.active
-              a(href="#") Store Home
-            li
-              a(href="#about") How To
-            li
-              a(href="#contact") Contact
-          else
-            li.active
-              a(href="#demo") Demo
-            li
-              a(href="#learn-more") FAQ
-            li
-              a(href="#contact") Contact
+  div.navbar-wrapper
+    div.container
+      div#someID.navbar
+        div.navbar-inner
+          div.container-fluid
+            a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.brand(href="#") Gofer
+            div.nav-collapse
+              if user
+                p.navbar-text.pull-right Logged in as #{user.name.first}
+                p.navbar-text.pull-right <a href="/logout", data-toggle='modal'> Sign out </a>
+              else
+                ul.nav.pull-right
+                  li
+                    a(href="#register", data-toggle='modal') Sign Up
+                  li.divider-vertical
+                  li.dropdown
+                    a#loginDropdown.dropdown-toggle(href='#', data-toggle="dropdown", role="button) Sign In <b class="caret"></b>
+                    ul.dropdown-menu(style="padding: 15px; padding-bottom: 0px;", aria-labelledby="drop3", role="menu")
+                      li(role="presentation")
+                        form(action='/login', method='post')
+                          fieldset
+                            label Username
+                            input.span2(id="username", type="text", name="username", placeholder="Email")
+                            label Password
+                            input.span2(id="password", type="password", name="password", placeholder="Password")
+                            button.btn(type="submit") Login
+              ul.nav
+                if user != null
+                  li
+                    a(href="#") Store Home
+                else
+                  li
+                    a(href="#") Demo
   if alert != ''
     if alert_type == 'success'
       div.alert.alert-success
@@ -44,33 +49,66 @@ block content
       div.alert.alert-error
         button.close(type="button", data-dismiss="alert") &times;
         <strong>Uh Oh!</strong> #{alert}
-  //
 
 
   //Backbone Section: Sidebar and Main Content
-  div#main.container-fluid
-    div.row-fluid
-      div.span2
-        div#main-nav.well.sidebar-nav
-          ul.nav.nav-list
-            li#dashboard-link.active
-              a(href='#') <i class='icon-th'></i> Dashboard
-            li#pos-link
-              a(href='#') <i class='icon-shopping-cart'></i> Point Of Sale
-            li#inventory-link
-              a(href='#') <i class='icon-tags'></i> Inventory
-            li#staff-link
-              a(href='#') <i class='icon-user'></i> Staff
-      div.span10
-        div#main-window
-          if user == null
-            div.hero-unit
-              h1 Welcome to Gofer.
-              p An easier way to manage your business
+  if user == null
+    div#homepage.carousel.slide
+      div.carousel-inner
+        div.item.active
+          img(src='img/Pennies-Blur2.jpg', alt="")
+          div.container
+            div.carousel-caption
+              h1 Welcome To Gofer
+              p.lead an easier way to manage your business
+        div.item
+          img(src='img/Register-Blur.jpg', alt="")
+          div.container
+            div.carousel-caption
+              h1 Looking After Your
+              p.lead sales, inventory, staff, and customers
+        div.item
+          img(src='img/Cup-Coffee-Blur.jpg', alt="")
+          div.container
+            div.carousel-caption
+              h1 Keeping It Easy
+              p.lead no installs. no backups. no updates.
+      a.left.carousel-control(href="#homepage", data-slide="prev") &lsaquo;
+      a.right.carousel-control(href="#homepage", data-slide="next") &rsaquo;
+      // some details of Gofer components
+    div.container.marketing
+      div.row
+        div.span3
+          h2 Sales
+          p From point of sale to sale history, discover a clean way to ring in items from the till and track how much and when you're really making money.
+        div.span3
+          h2 Inventory
+          p From the supplier to your shelf, lookup products easily, get notified when something is running low, and sort everything from a number of categories
+        div.span3
+          h2 Staff And Customers
+          p Manage the people who work for you and record the ones who buy from you.
+        div.span3
+          h2 The Power Of The Browser
+          p Use any computer or tablet you like, no installations or updates necessary, back up everything in the cloud, and <strong> even work offline </strong>
+  else
+    div#main.container-fluid
+      div.row-fluid
+        div.span2
+          div#main-nav.well.sidebar-nav
+            ul.nav.nav-list
+              li#dashboard-link.active
+                a(href='#') <i class='icon-th'></i> Dashboard
+              li#pos-link
+                a(href='#') <i class='icon-shopping-cart'></i> Point Of Sale
+              li#inventory-link
+                a(href='#') <i class='icon-tags'></i> Inventory
+              li#staff-link
+                a(href='#') <i class='icon-user'></i> Staff
+        div.span10
+          div#main-window.well
 
 
   // signup modal markup/logic from project_root/views/signup_modal.jade
   // and js file in the public/js dir
   include signup_modal
   script(type='text/javascript', src='js/signup.js')
-  //

@@ -6,10 +6,14 @@ jQuery ->
     routes:
         '': 'dashboard'
         'inventory': 'inventory'
+    initialize: ->
+        @app.Products.fetch()
+
     dashboard: ->
         console.log 'WIP :('
     inventory: ->
-        console.log 'WIP :('
+        @app.appView = new @app.AppView
+            inventoryView: new @app.InventoryView
 
 
   @app = window.app ? {}

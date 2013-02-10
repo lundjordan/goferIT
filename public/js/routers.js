@@ -18,12 +18,18 @@
         'inventory': 'inventory'
       };
 
+      GoferRouter.prototype.initialize = function() {
+        return this.app.Products.fetch();
+      };
+
       GoferRouter.prototype.dashboard = function() {
         return console.log('WIP :(');
       };
 
       GoferRouter.prototype.inventory = function() {
-        return console.log('WIP :(');
+        return this.app.appView = new this.app.AppView({
+          inventoryView: new this.app.InventoryView
+        });
       };
 
       return GoferRouter;
