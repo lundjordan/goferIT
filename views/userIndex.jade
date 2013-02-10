@@ -22,15 +22,14 @@ block content
             li
               a(href="#") Help
 
-  if alert != ''
-    if alert_type == 'success'
-      div.alert.alert-success
-        a.close(href="#", data-dismiss="alert") &times;
-        <strong>Wahoo!</strong> #{alert}
-    else
-      div.alert.alert-error
-        button.close(type="button", data-dismiss="alert") &times;
-        <strong>Uh Oh!</strong> #{alert}
+  if info_alert != ''
+    div.alert.alert-success
+      a.close(href="#", data-dismiss="alert") &times;
+      <strong>Wahoo!</strong> #{info_alert}
+  if error_alert != ''
+    div.alert.alert-error
+      button.close(type="button", data-dismiss="alert") &times;
+      <strong>Uh Oh!</strong> #{error_alert}
 
 
   div#main.container-fluid

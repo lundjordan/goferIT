@@ -86,9 +86,11 @@ routes = (app, passport) ->
                                                 company.remove (err, obj) ->
                                                     if err
                                                         console.log err
-                                            res.redirect '/signupFail'
+                                            req.flash 'error', 'Something went wrong. Please try registering again!'
+                                            res.redirect '/'
                                         else
-                                            res.redirect '/signupSuccess'
+                                            req.flash 'info', 'You have now registered. Please Sign in at the top right!'
+                                            res.redirect '/'
 
     #TODO do an account details and ensure authenticated
     # app.get('/account', ensureAuthenticated, function(req, res){
