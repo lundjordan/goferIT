@@ -1,7 +1,6 @@
 mongoose = require 'mongoose'
 Company = require '../models/company-mongo'
 Customer = require '../models/customer-mongo'
-Terminal = require '../models/terminal-mongo'
 Store = require '../models/store-mongo'
 Product = require '../models/product-mongo'
 Sale = require '../models/sale-mongo'
@@ -10,7 +9,7 @@ Order = require '../models/order-mongo'
 Employee = require '../models/employee-mongo'
 
 describe "sale model mongo CRUD", ->
-    [product, customer, terminal, sale] = [null, null, null, null]
+    [product, customer, sale] = [null, null, null]
     [company, employee, store, order, supplier] = [null, null, null, null, null]
     mongoUrl = 'mongodb://localhost/gofer-test'
 
@@ -18,7 +17,6 @@ describe "sale model mongo CRUD", ->
         mongoose.connect mongoUrl, ->
             (Sale.remove {}).exec()
             (Product.remove {}).exec()
-            (Terminal.remove {}).exec()
             (Employee.remove {}).exec()
             (Order.remove {}).exec()
             (Store.remove {}).exec()
@@ -114,34 +112,26 @@ describe "sale model mongo CRUD", ->
                                                     if err
                                                         throw err
                                                     else
-                                                        terminal = new Terminal
+                                                        product = new Product
                                                             _store: store
-                                                            _employee: employee
-                                                            referenceNum: 1
-                                                        terminal.save (err) ->
+                                                            _order: order
+                                                            serialID: '666666666'
+                                                            description:
+                                                                brand: 'CCM'
+                                                                name: 'skate pro'
+                                                            category: 'hockey'
+                                                            cost: 7500
+                                                            price: 15000
+                                                            dateCreated: new Date().toISOString()
+                                                        product.save (err) ->
                                                             if err
                                                                 throw err
-                                                            else
-                                                                product = new Product
-                                                                    _store: store
-                                                                    _order: order
-                                                                    serialID: '666666666'
-                                                                    description:
-                                                                        brand: 'CCM'
-                                                                        name: 'skate pro'
-                                                                    category: 'hockey'
-                                                                    cost: 7500
-                                                                    price: 15000
-                                                                    dateCreated: new Date().toISOString()
-                                                                product.save (err) ->
-                                                                    if err
-                                                                        throw err
-                                                                    done()
+                                                            done()
 
     describe "should create a valid Sale", ->
         it "and save newly created sale", (done) ->
             sale = new Sale
-                _terminal: terminal
+                _employee: employee
                 _product: product
                 dateCreated: new Date().toISOString()
             sale.save (err) ->
@@ -150,11 +140,11 @@ describe "sale model mongo CRUD", ->
                 else
                     done()
 
-        it "then retrieve the terminal id from the sale", (done) ->
+        it "then retrieve the employee id from the sale", (done) ->
             (Sale.findOne _id: sale.id)
-                .populate('_terminal').exec (err, terminal) ->
-                    # console.log terminal
-                    terminal._terminal.referenceNum.should.equal 1
+                .populate('_employee').exec (err, employee) ->
+                    # console.log employee
+                    employee._employee.email.should.equal 'nadroj@gmail.com'
                     done()
 
         it "then retrieve the sale's product's price", (done) ->
@@ -167,7 +157,6 @@ describe "sale model mongo CRUD", ->
     after (done) ->
         (Sale.remove {}).exec()
         (Product.remove {}).exec()
-        (Terminal.remove {}).exec()
         (Employee.remove {}).exec()
         (Order.remove {}).exec()
         (Store.remove {}).exec()

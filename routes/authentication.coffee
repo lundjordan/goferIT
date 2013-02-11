@@ -1,4 +1,3 @@
-Terminal = require '../models/terminal-mongo'
 Store = require '../models/store-mongo'
 Employee = require '../models/employee-mongo'
 Company = require '../models/company-mongo'
@@ -30,7 +29,7 @@ routes = (app, passport) ->
 
     app.post '/register', (req, res) ->
         registeredErrorFree = true
-        [company, employee, store, terminal] = [null, null, null, null]
+        [company, employee, store] = [null, null, null]
         company = new Company
             name: req.body.companyName
             subscriptionType: "trial"
@@ -61,36 +60,24 @@ routes = (app, passport) ->
                                 throw err
                                 registeredErrorFree = false
                             else
-                                terminal = new Terminal
-                                    _store: store.id
-                                    referenceNum: 1
-                                terminal.save (err) ->
-                                    if err
-                                        throw err
-                                        registeredErrorFree = false
-                                    else
-                                        if not registeredErrorFree
-                                            if Terminal.findById(terminal.id)
-                                                terminal.remove (err, obj) ->
-                                                    if err
-                                                        console.log err
-                                            if Employee.findById(employee.id)
-                                                employee.remove (err, obj) ->
-                                                    if err
-                                                        console.log err
-                                            if Store.findById(store.id)
-                                                store.remove (err, obj) ->
-                                                    if err
-                                                        console.log err
-                                            if Company.findById(company.id)
-                                                company.remove (err, obj) ->
-                                                    if err
-                                                        console.log err
-                                            req.flash 'error', 'Something went wrong. Please try registering again!'
-                                            res.redirect '/'
-                                        else
-                                            req.flash 'info', 'You have now registered. Please Sign in at the top right!'
-                                            res.redirect '/'
+                                if not registeredErrorFree
+                                    if Employee.findById(employee.id)
+                                        employee.remove (err, obj) ->
+                                            if err
+                                                console.log err
+                                    if Store.findById(store.id)
+                                        store.remove (err, obj) ->
+                                            if err
+                                                console.log err
+                                    if Company.findById(company.id)
+                                        company.remove (err, obj) ->
+                                            if err
+                                                console.log err
+                                    req.flash 'error', 'Something went wrong. Please try registering again!'
+                                    res.redirect '/'
+                                else
+                                    req.flash 'info', 'You have now registered. Please Sign in at the top right!'
+                                    res.redirect '/'
 
     #TODO do an account details and ensure authenticated
     # app.get('/account', ensureAuthenticated, function(req, res){

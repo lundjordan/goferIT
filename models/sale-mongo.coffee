@@ -1,9 +1,9 @@
 mongoose = require 'mongoose'
 
 SaleSchema = new mongoose.Schema
-    _terminal:
+    _employee:
         type: mongoose.Schema.Types.ObjectId
-        ref: 'Terminal'
+        ref: 'Employee'
         required: true
     _product:
         type: mongoose.Schema.Types.ObjectId
