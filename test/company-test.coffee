@@ -32,4 +32,3 @@ describe "company model mongo CRUD", ->
         (Company.remove {}).exec()
         mongoose.connection.close()
         done()
-

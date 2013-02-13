@@ -18,8 +18,7 @@ describe "employee model CRUD", ->
             company.save (err) ->
                 if err
                     throw err
-                else
-                    done()
+                done()
 
     describe "should create a valid Employee", ->
         it "and save newly created employee", (done) ->
@@ -42,8 +41,8 @@ describe "employee model CRUD", ->
             employee.save (err) ->
                 if err
                     throw err
-                else
-                    done()
+                done()
+
         it "then retrieve email and first name from new employee", (done) ->
             Employee.findOne _id: employee.id, (err, resEmployee) ->
                 resEmployee.email.should.equal 'nadroj@gmail.com'
@@ -51,8 +50,8 @@ describe "employee model CRUD", ->
             done()
         it "then retrieve company name from new employee", (done) ->
             (Employee.findOne _id: employee.id)
-                .populate('_company').exec (err, comp) ->
-                    comp.name.should.equal "Nad's Hardware"
+                .populate('_company').exec (err, resEmployee) ->
+                    resEmployee._company.name.should.equal "Nad's Hardware"
             done()
 
     after (done) ->

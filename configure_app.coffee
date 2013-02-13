@@ -40,6 +40,7 @@ expressConfig = (app, passport) ->
         mongoose.connect mongodbUrl
         mongoose.connection.on 'open', ->
             console.log 'We have connected to mongodb'
+        mongoose.set 'debug', true
 
     app.configure 'test', ->
         app.set 'port', 3001

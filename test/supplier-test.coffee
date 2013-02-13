@@ -26,7 +26,7 @@ describe "supplier model mongo CRUD", ->
         it "then retrieve email and first name from new supplier", (done) ->
             Supplier.findOne _id: supplier.id, (err, resSupplier) ->
                 resSupplier.email.should.equal 'abc@gmail.com'
-                resSupplier.companyName.should.equal 'abc suppliers'
+                resSupplier.name.should.equal 'abc suppliers'
             done()
 
     after (done) ->

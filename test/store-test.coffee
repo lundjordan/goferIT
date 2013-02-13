@@ -46,8 +46,8 @@ describe "store model mongo CRUD", ->
 
         it "then retrieve company name from new store", (done) ->
             (Store.findOne _id: store.id)
-                .populate('_company').exec (err, comp) ->
-                    comp.name.should.equal "Nad's Hardware"
+                .populate('_company').exec (err, resStore) ->
+                    resStore._company.name.should.equal "Nad's Hardware"
             done()
 
     after (done) ->

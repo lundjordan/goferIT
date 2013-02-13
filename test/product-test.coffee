@@ -96,14 +96,14 @@ describe "product model mongo CRUD", ->
 
         it "then retrieve the product store's name", (done) ->
             (Product.findOne _id: product.id)
-                .populate('_store').exec (err, store) ->
-                    store._store.name.should.equal 'Second Grove'
+                .populate('_store').exec (err, product) ->
+                    product._store.name.should.equal 'Second Grove'
                     done()
 
         it "then retrieve the product order's referenceNum", (done) ->
             (Product.findOne _id: product.id)
-                .populate('_order').exec (err, order) ->
-                    order._order.referenceNum.should.equal 'aaa111bbb222'
+                .populate('_order').exec (err, product) ->
+                    product._order.referenceNum.should.equal 'aaa111bbb222'
                     done()
 
     after (done) ->

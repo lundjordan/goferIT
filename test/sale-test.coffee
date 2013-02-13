@@ -31,27 +31,50 @@ describe "sale model mongo CRUD", ->
         company.save (err) ->
             if err
                 throw err
-            else
-                customer = new Customer
-                    email: 'nadroj@gmail.com'
-                    name:
-                        first: 'Nadroj'
-                        last: 'dnul'
+            customer = new Customer
+                email: 'nadroj@gmail.com'
+                name:
+                    first: 'Nadroj'
+                    last: 'dnul'
+                phone: 16049291111
+                address:
+                    street: '1234 sesame street'
+                    postalCode: 'v7w4c9'
+                    city: 'West Vancouver'
+                    country: 'Canada'
+                dob: '1986-09-20'
+                dateCreated: new Date().toISOString()
+            customer.save (err) ->
+                if err
+                    throw err
+                supplier = new Supplier
+                    email: 'abc@gmail.com'
+                    name: 'abc suppliers'
                     phone: 16049291111
                     address:
                         street: '1234 sesame street'
                         postalCode: 'v7w4c9'
                         city: 'West Vancouver'
                         country: 'Canada'
-                    dob: '1986-09-20'
                     dateCreated: new Date().toISOString()
-                customer.save (err) ->
+                supplier.save (err) ->
                     if err
                         throw err
-                    else
-                        supplier = new Supplier
-                            email: 'abc@gmail.com'
-                            name: 'abc suppliers'
+                    order = new Order
+                        _supplier: supplier
+                        referenceNum: 'aaa111bbb222'
+                        shippingInfo:
+                            company: 'UPS'
+                            travelType: 'air'
+                            cost: 10000
+                        arrivaldate: '12/12/12'
+                        dateCreated: new Date().toISOString()
+                    order.save (err) ->
+                        if err
+                            throw err
+                        store = new Store
+                            name: 'Second Grove'
+                            _company: company.id
                             phone: 16049291111
                             address:
                                 street: '1234 sesame street'
@@ -59,74 +82,45 @@ describe "sale model mongo CRUD", ->
                                 city: 'West Vancouver'
                                 country: 'Canada'
                             dateCreated: new Date().toISOString()
-                        supplier.save (err) ->
+                        store.save (err) ->
                             if err
                                 throw err
-                            else
-                                order = new Order
-                                    _supplier: supplier
-                                    referenceNum: 'aaa111bbb222'
-                                    shippingInfo:
-                                        company: 'UPS'
-                                        travelType: 'air'
-                                        cost: 10000
-                                    arrivaldate: '12/12/12'
+                            employee = new Employee
+                                email: 'nadroj@gmail.com'
+                                password: 'secretpassword'
+                                _company: company.id
+                                name:
+                                    first: 'Nadroj'
+                                    last: 'dnul'
+                                phone: '16049291111'
+                                address:
+                                    street: '1234 sesame street'
+                                    postalCode: 'v7w4c9'
+                                    city: 'West Vancouver'
+                                    country: 'Canada'
+                                dob: '1986-09-20'
+                                title: 'employee'
+                                startDate: new Date().toISOString()
+                                _store: store
+
+                            employee.save (err) ->
+                                if err
+                                    throw err
+                                product = new Product
+                                    _store: store
+                                    _order: order
+                                    serialID: '666666666'
+                                    description:
+                                        brand: 'CCM'
+                                        name: 'skate pro'
+                                    category: 'hockey'
+                                    cost: 7500
+                                    price: 15000
                                     dateCreated: new Date().toISOString()
-                                order.save (err) ->
+                                product.save (err) ->
                                     if err
                                         throw err
-                                    else
-                                        store = new Store
-                                            name: 'Second Grove'
-                                            _company: company.id
-                                            phone: 16049291111
-                                            address:
-                                                street: '1234 sesame street'
-                                                postalCode: 'v7w4c9'
-                                                city: 'West Vancouver'
-                                                country: 'Canada'
-                                            dateCreated: new Date().toISOString()
-                                        store.save (err) ->
-                                            if err
-                                                throw err
-                                            else
-                                                employee = new Employee
-                                                    email: 'nadroj@gmail.com'
-                                                    password: 'secretpassword'
-                                                    _company: company.id
-                                                    name:
-                                                        first: 'Nadroj'
-                                                        last: 'dnul'
-                                                    phone: '16049291111'
-                                                    address:
-                                                        street: '1234 sesame street'
-                                                        postalCode: 'v7w4c9'
-                                                        city: 'West Vancouver'
-                                                        country: 'Canada'
-                                                    dob: '1986-09-20'
-                                                    title: 'employee'
-                                                    startDate: new Date().toISOString()
-                                                    _store: store
-
-                                                employee.save (err) ->
-                                                    if err
-                                                        throw err
-                                                    else
-                                                        product = new Product
-                                                            _store: store
-                                                            _order: order
-                                                            serialID: '666666666'
-                                                            description:
-                                                                brand: 'CCM'
-                                                                name: 'skate pro'
-                                                            category: 'hockey'
-                                                            cost: 7500
-                                                            price: 15000
-                                                            dateCreated: new Date().toISOString()
-                                                        product.save (err) ->
-                                                            if err
-                                                                throw err
-                                                            done()
+                                    done()
 
     describe "should create a valid Sale", ->
         it "and save newly created sale", (done) ->
@@ -137,8 +131,7 @@ describe "sale model mongo CRUD", ->
             sale.save (err) ->
                 if err
                     throw err
-                else
-                    done()
+                done()
 
         it "then retrieve the employee id from the sale", (done) ->
             (Sale.findOne _id: sale.id)
@@ -155,6 +148,8 @@ describe "sale model mongo CRUD", ->
                     done()
 
     after (done) ->
+        # console.log sale
+        # console.log sale.id
         (Sale.remove {}).exec()
         (Product.remove {}).exec()
         (Employee.remove {}).exec()

@@ -25,7 +25,9 @@ EmployeeSchema = new mongoose.Schema
         country: String
     dob: String
     title: String
-    startDate: Date
+    startDate:
+        type: Date
+        default: new Date().toISOString()
 
 virtualPassword = (EmployeeSchema.virtual 'password').get ->
     return this._password
