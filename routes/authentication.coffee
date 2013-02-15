@@ -46,7 +46,6 @@ routes = (app, passport) ->
                     name:
                         first: req.body.fullName.match(/[^\s-]+-?/g)[0]
                         last: req.body.fullName.match(/[^\s-]+-?/g)[1]
-                    startDate: new Date().toISOString()
                     title: 'admin'
                 employee.save (err) ->
                     if err

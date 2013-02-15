@@ -21,7 +21,6 @@ describe "supplier model mongo CRUD", ->
                     postalCode: 'v7w4c9'
                     city: 'West Vancouver'
                     country: 'Canada'
-                dateCreated: new Date().toISOString()
             supplier.save done
         it "then retrieve email and first name from new supplier", (done) ->
             Supplier.findOne _id: supplier.id, (err, resSupplier) ->

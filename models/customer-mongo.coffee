@@ -16,6 +16,8 @@ CustomerSchema = new mongoose.Schema
         city: String
         country: String
     dob: String
-    startDate: Date
+    dateCreated:
+        type: Date
+        default: new Date().toISOString()
 
 module.exports = mongoose.model 'Customer', CustomerSchema

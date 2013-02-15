@@ -14,7 +14,6 @@ describe "store model mongo CRUD", ->
             company = new Company
                 name: "Nad's Hardware"
                 subscriptionType: "trial"
-                dateCreated: new Date().toISOString()
             company.save (err) ->
                 if err
                     throw err
@@ -32,7 +31,6 @@ describe "store model mongo CRUD", ->
                     postalCode: 'v7w4c9'
                     city: 'West Vancouver'
                     country: 'Canada'
-                dateCreated: new Date().toISOString()
             store.save (err) ->
                 if err
                     throw err

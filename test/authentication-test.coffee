@@ -47,7 +47,6 @@ describe "authentication", ->
                 country: 'Canada'
             dob: '1986-09-20'
             title: 'employee'
-            startDate: new Date().toISOString()
             _store: store.id
 
         employee.save (err) ->

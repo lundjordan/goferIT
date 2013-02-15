@@ -14,7 +14,6 @@ describe "employee model CRUD", ->
             company = new Company
                 name: "Nad's Hardware"
                 subscriptionType: "trial"
-                dateCreated: new Date().toISOString()
             company.save (err) ->
                 if err
                     throw err
@@ -37,7 +36,6 @@ describe "employee model CRUD", ->
                     country: 'Canada'
                 dob: '1986-09-20'
                 title: 'employee'
-                startDate: new Date().toISOString()
             employee.save (err) ->
                 if err
                     throw err

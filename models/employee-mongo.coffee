@@ -25,7 +25,7 @@ EmployeeSchema = new mongoose.Schema
         country: String
     dob: String
     title: String
-    startDate:
+    dateCreated:
         type: Date
         default: new Date().toISOString()
 

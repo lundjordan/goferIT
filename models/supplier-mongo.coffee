@@ -12,6 +12,8 @@ SupplierSchema = new mongoose.Schema
         postalCode: String
         city: String
         country: String
-    startDate: Date
+    dateCreated:
+        type: Date
+        default: new Date().toISOString()
 
 module.exports = mongoose.model 'Supplier', SupplierSchema
