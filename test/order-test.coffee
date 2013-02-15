@@ -20,7 +20,6 @@ describe "order model mongo CRUD", ->
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
                 country: 'Canada'
-            dateCreated: new Date().toISOString()
         supplier.save done
 
     describe "should create a valid Order", ->
@@ -34,7 +33,6 @@ describe "order model mongo CRUD", ->
                     travelType: 'air'
                     cost: 10000
                 arrivaldate: '12/12/12'
-                dateCreated: new Date().toISOString()
             order.save done
 
         it "then retrieve reference number and shipping company from new order", (done) ->
@@ -46,7 +44,6 @@ describe "order model mongo CRUD", ->
         it "then retrieve the order supplier's email", (done) ->
             (Order.findOne _id: order.id)
                 .populate('_supplier').exec (err, supplier) ->
-                    console.log supplier
                     # supplier.email.should.equal 'abc@gmail.com'
                     done()
 

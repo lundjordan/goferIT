@@ -56,19 +56,17 @@ describe "sale model mongo CRUD", ->
                         postalCode: 'v7w4c9'
                         city: 'West Vancouver'
                         country: 'Canada'
-                    dateCreated: new Date().toISOString()
                 supplier.save (err) ->
                     if err
                         throw err
                     order = new Order
-                        _supplier: supplier
+                        _supplier: supplier.id
                         referenceNum: 'aaa111bbb222'
                         shippingInfo:
                             company: 'UPS'
                             travelType: 'air'
                             cost: 10000
                         arrivaldate: '12/12/12'
-                        dateCreated: new Date().toISOString()
                     order.save (err) ->
                         if err
                             throw err
@@ -81,7 +79,6 @@ describe "sale model mongo CRUD", ->
                                 postalCode: 'v7w4c9'
                                 city: 'West Vancouver'
                                 country: 'Canada'
-                            dateCreated: new Date().toISOString()
                         store.save (err) ->
                             if err
                                 throw err
@@ -100,15 +97,14 @@ describe "sale model mongo CRUD", ->
                                     country: 'Canada'
                                 dob: '1986-09-20'
                                 title: 'employee'
-                                startDate: new Date().toISOString()
                                 _store: store
 
                             employee.save (err) ->
                                 if err
                                     throw err
                                 product = new Product
-                                    _store: store
-                                    _order: order
+                                    _store: store.id
+                                    _order: order.id
                                     serialID: '666666666'
                                     description:
                                         brand: 'CCM'
@@ -116,7 +112,6 @@ describe "sale model mongo CRUD", ->
                                     category: 'hockey'
                                     cost: 7500
                                     price: 15000
-                                    dateCreated: new Date().toISOString()
                                 product.save (err) ->
                                     if err
                                         throw err
@@ -125,9 +120,8 @@ describe "sale model mongo CRUD", ->
     describe "should create a valid Sale", ->
         it "and save newly created sale", (done) ->
             sale = new Sale
-                _employee: employee
-                _product: product
-                dateCreated: new Date().toISOString()
+                _employee: employee.id
+                _product: product.id
             sale.save (err) ->
                 if err
                     throw err
@@ -136,20 +130,16 @@ describe "sale model mongo CRUD", ->
         it "then retrieve the employee id from the sale", (done) ->
             (Sale.findOne _id: sale.id)
                 .populate('_employee').exec (err, employee) ->
-                    # console.log employee
                     employee._employee.email.should.equal 'nadroj@gmail.com'
                     done()
 
         it "then retrieve the sale's product's price", (done) ->
             (Sale.findOne _id: sale.id)
                 .populate('_product').exec (err, product) ->
-                    # console.log product
                     product._product.cost.should.equal 7500
                     done()
 
     after (done) ->
-        # console.log sale
-        # console.log sale.id
         (Sale.remove {}).exec()
         (Product.remove {}).exec()
         (Employee.remove {}).exec()

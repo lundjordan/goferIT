@@ -26,7 +26,6 @@ describe "product model mongo CRUD", ->
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
                 country: 'Canada'
-            dateCreated: new Date().toISOString()
         supplier.save (err) ->
             if err
                 throw err
@@ -39,7 +38,6 @@ describe "product model mongo CRUD", ->
                         travelType: 'air'
                         cost: 10000
                     arrivaldate: '12/12/12'
-                    dateCreated: new Date().toISOString()
 
                 order.save (err) ->
                     if err
@@ -48,7 +46,6 @@ describe "product model mongo CRUD", ->
                         company = new Company
                             name: "Nad's Hardware"
                             subscriptionType: "trial"
-                            dateCreated: new Date().toISOString()
                         company.save (err) ->
                             if err
                                 throw err
@@ -62,7 +59,6 @@ describe "product model mongo CRUD", ->
                                         postalCode: 'v7w4c9'
                                         city: 'West Vancouver'
                                         country: 'Canada'
-                                    dateCreated: new Date().toISOString()
                                 store.save (err) ->
                                     if err
                                         throw err
@@ -81,7 +77,6 @@ describe "product model mongo CRUD", ->
                 category: 'hockey'
                 cost: 7500
                 price: 15000
-                dateCreated: new Date().toISOString()
             product.save (err) ->
                 if err
                     throw err

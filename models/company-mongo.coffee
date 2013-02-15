@@ -10,6 +10,8 @@ CompanySchema = new mongoose.Schema
     employees: [{type: mongoose.Schema.Types.ObjectId, ref: 'Employee'}]
     stores: [{type: mongoose.Schema.Types.ObjectId, ref: 'Store'}]
     subscriptionType: String
-    dateCreated: Date
+    dateCreated:
+        type: Date
+        default: new Date().toISOString()
 
 module.exports = mongoose.model 'Company', CompanySchema

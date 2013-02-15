@@ -16,5 +16,11 @@ ProductSchema = new mongoose.Schema
     cost: Number
     price: Number
     dateCreated: Date
+    # TODO - figure out if we need a sold check here or just go through Sale
+    # collection's products
+    # isSold:
+    #     type: Boolean
+    #     required: true
+    #     default: true
 
 module.exports = mongoose.model 'Product', ProductSchema
