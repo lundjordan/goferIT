@@ -16,9 +16,10 @@
       });
     };
     setupErrorHandlers();
-    this.app.Products.fetch();
-    return this.app.appView = new this.app.AppView({
-      inventoryView: new this.app.InventoryView
+    TODO(implement(routers));
+    this.app.router = new app.GoferRouter;
+    return Backbone.history.start({
+      pushState: true
     });
   });
 

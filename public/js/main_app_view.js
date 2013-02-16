@@ -15,11 +15,6 @@
 
       AppView.prototype.el = '#main';
 
-      AppView.prototype.events = {
-        'click #inventory-link': 'inventoryRender',
-        'click #dashboard-link': 'dashboardRender'
-      };
-
       AppView.prototype.initialize = function() {
         this.inventoryView = this.options.inventoryView;
         return this.selectedNavMenuItem = $('#dashboard-link');
@@ -42,11 +37,7 @@
 
     })(Backbone.View);
     this.app = (_ref = window.app) != null ? _ref : {};
-    this.app.AppView = AppView;
-    this.app.Products.fetch();
-    return this.app.appView = new this.app.AppView({
-      inventoryView: new this.app.InventoryView
-    });
+    return this.app.AppView = AppView;
   });
 
 }).call(this);

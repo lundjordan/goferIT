@@ -29,7 +29,7 @@ findAllDocsInModelHelper = (modelArray, modelCollection, cb) ->
 
 async.series [
     (callback) -> # open mongo connection and remove any previous data
-        mongoUrl = 'mongodb://localhost/gofer-test'
+        mongoUrl = 'mongodb://localhost/gofer'
         mongoose.connect mongoUrl, ->
             (Sale.remove {}).exec()
             (Product.remove {}).exec()

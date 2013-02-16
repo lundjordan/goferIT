@@ -3,9 +3,6 @@
 jQuery ->
     class AppView extends Backbone.View
         el: '#main'
-        events:
-            'click #inventory-link': 'inventoryRender'
-            'click #dashboard-link': 'dashboardRender'
         initialize: ->
             @inventoryView = @options.inventoryView
             @selectedNavMenuItem = $('#dashboard-link')
@@ -21,7 +18,3 @@ jQuery ->
 
     @app = window.app ? {}
     @app.AppView = AppView
-
-    @app.Products.fetch()
-    @app.appView = new @app.AppView
-        inventoryView: new @app.InventoryView

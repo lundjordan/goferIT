@@ -16,10 +16,7 @@ jQuery ->
 
     setupErrorHandlers()
 
-    # TODO implement routers
-    # @app.router = new app.GoferRouter
-    # Backbone.history.start({pushState:true})
+    TODO implement routers
+    @app.router = new app.GoferRouter
+    Backbone.history.start({pushState:true})
 
-    @app.Products.fetch()
-    @app.appView = new @app.AppView
-        inventoryView: new @app.InventoryView
