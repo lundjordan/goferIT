@@ -38,12 +38,20 @@ block content
         div#main-nav.well.sidebar-nav
           ul.nav.nav-list
             li#dashboard-link.active
-              a(href='#') <i class='icon-th'></i> Dashboard
+              a(href='#dashboard-main-content', data-toggle='tab')
+                <i class='icon-th'></i> Dashboard
             li#pos-link
-              a(href='#') <i class='icon-shopping-cart'></i> Point Of Sale
+              a(href='#pos-main-content', data-toggle='tab')
+                <i class='icon-shopping-cart'></i> Point Of Sale
             li#inventory-link
-              a(href='#inventory') <i class='icon-tags'></i> Inventory
+              a(href='#inventory-main-content', data-toggle='tab')
+                <i class='icon-tags'></i> Inventory
             li#staff-link
-              a(href='#') <i class='icon-user'></i> Staff
+              a(href='#people', data-toggle='tab')
+                <i class='icon-user'></i> Staff
       div.span10
-        div#main-window
+        div#main-window-main-content.tab-content
+          div#dashboard-main-content.tab-pane
+          div#pos-main-content.tab-pane
+          div#inventory-main-content.tab-pane
+          div#people-main-content.tab-pane

@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryView, _ref;
+    var InventoryView, OrderListView, OrderMainView, ProductListView, ProductMainView, _ref;
     InventoryView = (function(_super) {
 
       __extends(InventoryView, _super);
@@ -13,15 +13,124 @@
         return InventoryView.__super__.constructor.apply(this, arguments);
       }
 
-      InventoryView.prototype.el = '#main-window';
+      InventoryView.prototype.el = '#inventory-main-content';
 
-      InventoryView.prototype.template = _.template(($('#products-list-template')).html());
+      InventoryView.prototype.events = {
+        'click #product-menu-pill': 'renderProductView',
+        'click #order-menu-pill': 'renderOrderView'
+      };
+
+      InventoryView.prototype.template = _.template(($('#inventory-main-template')).html());
+
+      InventoryView.prototype.initialize = function() {
+        return this.inventorySubViews = {
+          productMainView: new ProductMainView(),
+          orderMainView: new OrderMainView()
+        };
+      };
 
       InventoryView.prototype.render = function() {
-        return this.$el.html(this.template({}));
+        this.$el.html(this.template({}));
+        return this.renderProductView();
+      };
+
+      InventoryView.prototype.renderProductView = function() {
+        return this.$('#product-main-view').html(this.inventorySubViews.productMainView.render().el);
+      };
+
+      InventoryView.prototype.renderOrderView = function() {
+        this.$('#order-main-view').html(this.inventorySubViews.orderMainView.render().el);
+        return this.inventorySubViews.orderMainView.render();
       };
 
       return InventoryView;
+
+    })(Backbone.View);
+    ProductMainView = (function(_super) {
+
+      __extends(ProductMainView, _super);
+
+      function ProductMainView() {
+        return ProductMainView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductMainView.prototype.tagClass = 'tabbable';
+
+      ProductMainView.prototype.template = _.template(($('#product-content-template')).html());
+
+      ProductMainView.prototype.initialize = function() {
+        this.productSubViews = {
+          productListView: new ProductListView({
+            collection: app.products
+          })
+        };
+        return this.currentContentView = this.productSubViews.productListView;
+      };
+
+      ProductMainView.prototype.render = function() {
+        this.$el.html(this.template({}));
+        return this;
+      };
+
+      return ProductMainView;
+
+    })(Backbone.View);
+    OrderMainView = (function(_super) {
+
+      __extends(OrderMainView, _super);
+
+      function OrderMainView() {
+        return OrderMainView.__super__.constructor.apply(this, arguments);
+      }
+
+      OrderMainView.prototype.el = '#order-main-view';
+
+      OrderMainView.prototype.template = _.template(($('#order-content-template')).html());
+
+      OrderMainView.prototype.render = function() {
+        this.$el.html(this.template({}));
+        return this;
+      };
+
+      return OrderMainView;
+
+    })(Backbone.View);
+    ProductListView = (function(_super) {
+
+      __extends(ProductListView, _super);
+
+      function ProductListView() {
+        return ProductListView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductListView.prototype.el = '#product-list-view';
+
+      ProductListView.prototype.template = _.template(($('#product-list-template')).html());
+
+      ProductListView.prototype.render = function() {
+        return this.$el.html(this.template({}));
+      };
+
+      return ProductListView;
+
+    })(Backbone.View);
+    OrderListView = (function(_super) {
+
+      __extends(OrderListView, _super);
+
+      function OrderListView() {
+        return OrderListView.__super__.constructor.apply(this, arguments);
+      }
+
+      OrderListView.prototype.el = '#order-list-view';
+
+      OrderListView.prototype.template = _.template(($('#order-list-template')).html());
+
+      OrderListView.prototype.render = function() {
+        return this.$el.html(this.template({}));
+      };
+
+      return OrderListView;
 
     })(Backbone.View);
     this.app = (_ref = window.app) != null ? _ref : {};

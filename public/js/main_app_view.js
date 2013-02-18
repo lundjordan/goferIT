@@ -15,23 +15,20 @@
 
       AppView.prototype.el = '#main';
 
+      AppView.prototype.events = {
+        'click #dashboard-link': "dashboardRender",
+        'click #inventory-link': "inventoryRender"
+      };
+
       AppView.prototype.initialize = function() {
-        this.inventoryView = this.options.inventoryView;
-        return this.selectedNavMenuItem = $('#dashboard-link');
+        return this.inventoryView = this.options.inventoryView;
       };
 
       AppView.prototype.inventoryRender = function() {
-        this.inventoryView.render();
-        this.selectedNavMenuItem.removeClass('active');
-        this.selectedNavMenuItem = this.$('#inventory-link');
-        return this.selectedNavMenuItem.addClass('active');
+        return this.inventoryView.render();
       };
 
-      AppView.prototype.dashboardRender = function() {
-        this.selectedNavMenuItem.removeClass('active');
-        this.selectedNavMenuItem = this.$('#dashboard-link');
-        return this.selectedNavMenuItem.addClass('active');
-      };
+      AppView.prototype.dashboardRender = function() {};
 
       return AppView;
 
