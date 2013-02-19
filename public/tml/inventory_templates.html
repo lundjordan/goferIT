@@ -1,4 +1,4 @@
-<script type="text/template" id="inventory-main-template">
+<script type="text/template" id="inventory-menu-template">
   <div>
     <h1> Inventory Control </h1>
     <p class='lead'>everything on one shelf</p>
@@ -10,71 +10,76 @@
     <li id-'order-menu-pill'><a href="#order-main-view", data-toggle='tab'>Orders</a></li>
   </ul>
   <div class="tab-content">
-    <div id="product-main-view", class='tab-pane'> </div>
-    <div id="order-main-view", class='tab-pane'> </div>
+    <div id="product-main-view", class='tab-pane'>
+      <div class='tabbable'>
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#product-list" data-toggle="tab">List</a></li>
+          <li><a href="#product-view" data-toggle="tab">View/Edit</a></li>
+          <li><a href="#product-create" data-toggle="tab">Create</a></li>
+        </ul>
+        <div class='tab-content'>
+          <div class="tab-pane active" id='product-list-view'>
+          </div>
+
+          <div class="tab-pane" id='product-item-view'>
+          </div>
+
+          <div class="tab-pane" id='product-create-view'>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="order-main-view", class='tab-pane'>
+      <div class='tabbable'>
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#order-list" data-toggle="tab">List</a></li>
+          <li><a href="#order-view" data-toggle="tab">View/Edit</a></li>
+          <li><a href="#order-create" data-toggle="tab">Create</a></li>
+        </ul>
+        <div class='tab-content'>
+          <div class="tab-pane active" id='order-list'>
+          </div>
+
+          <div class="tab-pane" id='order-view'>
+          </div>
+
+          <div class="tab-pane" id='order-create'>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </script>
 
 <script type="text/template" id="product-content-template">
-  <div class='tabbable'>
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#product-list" data-toggle="tab">List</a></li>
-      <li><a href="#product-view" data-toggle="tab">View/Edit</a></li>
-      <li><a href="#product-create" data-toggle="tab">Create</a></li>
-    </ul>
-    <div class='tab-content'>
-      <div class="tab-pane active" id='product-list-view'>
-      </div>
-
-      <div class="tab-pane" id='product-item-view'>
-      </div>
-
-      <div class="tab-pane" id='product-create-view'>
-      </div>
-    </div>
-  </div>
 </script>
 
 <script type="text/template" id="order-content-template">
-  <div class='tabbable'>
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#order-list" data-toggle="tab">List</a></li>
-      <li><a href="#order-view" data-toggle="tab">View/Edit</a></li>
-      <li><a href="#order-create" data-toggle="tab">Create</a></li>
-    </ul>
-    <div class='tab-content'>
-      <div class="tab-pane active" id='order-list'>
-      </div>
-
-      <div class="tab-pane" id='order-view'>
-      </div>
-
-      <div class="tab-pane" id='order-create'>
-      </div>
-    </div>
-  </div>
 </script>
 
 <script type="text/template" id="product-list-template">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Language</th>
+        <th>Name</th>
+        <th>Brand</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Supplier</th>
       </tr>
     </thead>
-    <tbody id='inventory-table-list">
-      <tr>
-        <td>Some</td>
-        <td>One</td>
-        <td>English</td>
-      </tr>
+    <tbody id="inventory-table-list">
     </tbody>
   </table>
 </script>
 
-<script type="text/template" id="product-view-template">
+<script type="text/template" id="product-item-template">
+    <td><% description.name %> </td>
+    <td><% description.brand %> </td>
+    <td><% category %> </td>
+    <td><% price / 100 %> </td>
+    <td><% category %> </td>
 </script>
 
 <script type="text/template" id="product-add-template">

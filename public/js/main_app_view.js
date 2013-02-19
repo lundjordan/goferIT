@@ -4,37 +4,38 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var AppView, _ref;
-    AppView = (function(_super) {
+    var AppControllerView, _ref;
+    AppControllerView = (function(_super) {
 
-      __extends(AppView, _super);
+      __extends(AppControllerView, _super);
 
-      function AppView() {
-        return AppView.__super__.constructor.apply(this, arguments);
+      function AppControllerView() {
+        return AppControllerView.__super__.constructor.apply(this, arguments);
       }
 
-      AppView.prototype.el = '#main';
+      AppControllerView.prototype.el = '#main';
 
-      AppView.prototype.events = {
+      AppControllerView.prototype.events = {
         'click #dashboard-link': "dashboardRender",
         'click #inventory-link': "inventoryRender"
       };
 
-      AppView.prototype.initialize = function() {
-        return this.inventoryView = this.options.inventoryView;
+      AppControllerView.prototype.initialize = function() {
+        this.inventoryControllerView = this.options.inventoryControllerView;
+        return this.inventoryControllerView.render();
       };
 
-      AppView.prototype.inventoryRender = function() {
-        return this.inventoryView.render();
+      AppControllerView.prototype.inventoryRender = function() {
+        return this.inventoryControllerView.render();
       };
 
-      AppView.prototype.dashboardRender = function() {};
+      AppControllerView.prototype.dashboardRender = function() {};
 
-      return AppView;
+      return AppControllerView;
 
     })(Backbone.View);
     this.app = (_ref = window.app) != null ? _ref : {};
-    return this.app.AppView = AppView;
+    return this.app.AppControllerView = AppControllerView;
   });
 
 }).call(this);

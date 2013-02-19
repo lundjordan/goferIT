@@ -54,4 +54,40 @@ block content
           div#dashboard-main-content.tab-pane
           div#pos-main-content.tab-pane
           div#inventory-main-content.tab-pane
+            div
+              h1 Inventory Control
+                p.lead everything on one shelf
+              ul.nav.nav-pills
+                li#product-menu-pill.active
+                  a(href='#product-main-view', data-toggle='tab') Stock
+                li(id-='id-', order-menu-pill='order-menu-pill')
+                  a(href='#order-main-view', data-toggle='tab') Orders
+              .tab-content
+                #product-main-view.tab-pane.active
+                  .tabbable
+                    ul.nav.nav-tabs
+                      li.active
+                        a(href='#product-list', data-toggle='tab') List
+                      li
+                        a(href='#product-view', data-toggle='tab') View/Edit
+                      li
+                        a(href='#product-create', data-toggle='tab') Create
+                    .tab-content
+                      #product-list-view.tab-pane.active
+                      #product-item-view.tab-pane
+                      #product-create-view.tab-pane
+                #order-main-view.tab-pane
+                  .tabbable
+                    ul.nav.nav-tabs
+                      li.active
+                        a(href='#order-list', data-toggle='tab') List
+                      li
+                        a(href='#order-view', data-toggle='tab') View/Edit
+                      li
+                        a(href='#order-create', data-toggle='tab') Create
+                    .tab-content
+                      #order-list.tab-pane.active
+                      #order-view.tab-pane
+                      #order-create.tab-pane
+
           div#people-main-content.tab-pane

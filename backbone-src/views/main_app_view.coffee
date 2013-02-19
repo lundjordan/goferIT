@@ -1,16 +1,17 @@
 # The Main App View / Controller
 
 jQuery ->
-    class AppView extends Backbone.View
+    class AppControllerView extends Backbone.View
         el: '#main'
         events:
             'click #dashboard-link': "dashboardRender"
             'click #inventory-link': "inventoryRender"
         initialize: ->
-            @inventoryView = @options.inventoryView
+            @inventoryControllerView = @options.inventoryControllerView
+            @inventoryControllerView.render()
         inventoryRender: ->
-            @inventoryView.render()
+            @inventoryControllerView.render()
         dashboardRender: ->
 
     @app = window.app ? {}
-    @app.AppView = AppView
+    @app.AppControllerView = AppControllerView

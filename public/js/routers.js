@@ -23,8 +23,8 @@
 
       GoferRouter.prototype.initialize = function() {
         app.Products.fetch();
-        return app.appView = new app.AppView({
-          inventoryView: new app.InventoryView
+        return app.appControllerView = new app.AppControllerView({
+          inventoryControllerView: new app.InventoryControllerView
         });
       };
 

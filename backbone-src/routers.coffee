@@ -9,8 +9,8 @@ jQuery ->
             'inventory': 'inventory'
         initialize: ->
             app.Products.fetch()
-            app.appView = new app.AppView
-                inventoryView: new app.InventoryView
+            app.appControllerView = new app.AppControllerView
+                inventoryControllerView: new app.InventoryControllerView
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->
