@@ -2,14 +2,14 @@ require './_helper'
 assert  = require 'assert'
 request = require 'request'
 app     = require '../app'
-Employee = require '../models/employee'
-Store = require '../models/store'
+Employee = require '../models/employee-mongo'
+Company = require '../models/company-mongo'
 mongoose = require 'mongoose'
 
 describe "authentication", ->
     mongoUrl = 'mongodb://localhost/gofer-test'
     employee = null
-    store = null
+    company = null
 
     before (done) -> # create a real employee
         mongoose.connect mongoUrl

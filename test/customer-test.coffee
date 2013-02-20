@@ -18,7 +18,6 @@ describe "customer model mongo CRUD", ->
                 if err
                     throw err
                 done()
-            done()
 
     describe "should create a valid Customer", ->
         it "save newly created customer", (done) ->
@@ -39,8 +38,7 @@ describe "customer model mongo CRUD", ->
             customer.save (err) ->
                 if err
                     throw err
-                else
-                    done()
+                done()
         it "retrieve email and first name from new customer", (done) ->
             Customer.findOne _id: customer.id, (err, resCustomer) ->
                 resCustomer.email.should.equal 'nadroj@gmail.com'

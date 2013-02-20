@@ -1,7 +1,6 @@
 mongoose = require 'mongoose'
 Company = require '../models/company-mongo'
 Customer = require '../models/customer-mongo'
-Store = require '../models/store-mongo'
 Product = require '../models/product-mongo'
 Sale = require '../models/sale-mongo'
 Supplier = require '../models/supplier-mongo'
@@ -10,7 +9,7 @@ Employee = require '../models/employee-mongo'
 
 describe "sale model mongo CRUD", ->
     [product, customer, sale] = [null, null, null]
-    [company, employee, store, order, supplier] = [null, null, null, null, null]
+    [company, employee, order, supplier] = [null, null, null, null]
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
@@ -19,7 +18,6 @@ describe "sale model mongo CRUD", ->
             (Product.remove {}).exec()
             (Employee.remove {}).exec()
             (Order.remove {}).exec()
-            (Store.remove {}).exec()
             (Supplier.remove {}).exec()
             (Customer.remove {}).exec()
             (Company.remove {}).exec()
@@ -28,11 +26,21 @@ describe "sale model mongo CRUD", ->
             name: "Nad's Hardware"
             subscriptionType: "trial"
             dateCreated: new Date().toISOString()
+            stores: [
+                name: 'Second Grove'
+                phone: 16049291111
+                address:
+                    street: '1234 sesame street'
+                    postalCode: 'v7w4c9'
+                    city: 'West Vancouver'
+                    country: 'Canada'
+            ]
         company.save (err) ->
             if err
                 throw err
             customer = new Customer
                 email: 'nadroj@gmail.com'
+                _company: company._id
                 name:
                     first: 'Nadroj'
                     last: 'dnul'
@@ -49,6 +57,7 @@ describe "sale model mongo CRUD", ->
                     throw err
                 supplier = new Supplier
                     email: 'abc@gmail.com'
+                    _company: company._id
                     name: 'abc suppliers'
                     phone: 16049291111
                     address:
@@ -70,52 +79,39 @@ describe "sale model mongo CRUD", ->
                     order.save (err) ->
                         if err
                             throw err
-                        store = new Store
-                            name: 'Second Grove'
-                            _company: company.id
-                            phone: 16049291111
+                        employee = new Employee
+                            email: 'nadroj@gmail.com'
+                            password: 'secretpassword'
+                            _company: company._id
+                            name:
+                                first: 'Nadroj'
+                                last: 'dnul'
+                            phone: '16049291111'
                             address:
                                 street: '1234 sesame street'
                                 postalCode: 'v7w4c9'
                                 city: 'West Vancouver'
                                 country: 'Canada'
-                        store.save (err) ->
+                            dob: '1986-09-20'
+                            title: 'employee'
+
+                        employee.save (err) ->
                             if err
                                 throw err
-                            employee = new Employee
-                                email: 'nadroj@gmail.com'
-                                password: 'secretpassword'
-                                _company: company.id
-                                name:
-                                    first: 'Nadroj'
-                                    last: 'dnul'
-                                phone: '16049291111'
-                                address:
-                                    street: '1234 sesame street'
-                                    postalCode: 'v7w4c9'
-                                    city: 'West Vancouver'
-                                    country: 'Canada'
-                                dob: '1986-09-20'
-                                title: 'employee'
-                                _store: store
-
-                            employee.save (err) ->
+                            product = new Product
+                                _company: company._id
+                                _order: order.id
+                                serialID: '666666666'
+                                description:
+                                    brand: 'CCM'
+                                    name: 'skate pro'
+                                category: 'hockey'
+                                cost: 7500
+                                price: 15000
+                            product.save (err) ->
                                 if err
                                     throw err
-                                product = new Product
-                                    _store: store.id
-                                    _order: order.id
-                                    serialID: '666666666'
-                                    description:
-                                        brand: 'CCM'
-                                        name: 'skate pro'
-                                    category: 'hockey'
-                                    cost: 7500
-                                    price: 15000
-                                product.save (err) ->
-                                    if err
-                                        throw err
-                                    done()
+                                done()
 
     describe "should create a valid Sale", ->
         it "and save newly created sale", (done) ->
@@ -144,7 +140,6 @@ describe "sale model mongo CRUD", ->
         (Product.remove {}).exec()
         (Employee.remove {}).exec()
         (Order.remove {}).exec()
-        (Store.remove {}).exec()
         (Supplier.remove {}).exec()
         (Customer.remove {}).exec()
         (Company.remove {}).exec()

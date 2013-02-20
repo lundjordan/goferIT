@@ -1,4 +1,5 @@
 mongoose = require 'mongoose'
+Company = require '../models/company-mongo'
 Supplier = require '../models/supplier-mongo'
 Order = require '../models/order-mongo'
 
@@ -12,22 +13,31 @@ describe "order model mongo CRUD", ->
         mongoose.connect mongoUrl, ->
             (Order.remove {}).exec()
             (Supplier.remove {}).exec()
-        supplier = new Supplier
-            email: 'abc@gmail.com'
-            name: 'abc suppliers'
-            phone: 16049291111
-            address:
-                street: '1234 sesame street'
-                postalCode: 'v7w4c9'
-                city: 'West Vancouver'
-                country: 'Canada'
-        supplier.save done
+            (Company.remove {}).exec()
+
+            company = new Company
+                name: "Nad's Hardware"
+                subscriptionType: "trial"
+            company.save (err) ->
+                if err
+                    throw err
+                supplier = new Supplier
+                    email: 'abc@gmail.com'
+                    _company: company._id
+                    name: 'abc suppliers'
+                    phone: 16049291111
+                    address:
+                        street: '1234 sesame street'
+                        postalCode: 'v7w4c9'
+                        city: 'West Vancouver'
+                        country: 'Canada'
+                supplier.save done
 
     describe "should create a valid Order", ->
 
         it "and save newly created order", (done) ->
             order = new Order
-                _supplier: supplier
+                _supplier: supplier._id
                 referenceNum: 'aaa111bbb222'
                 shippingInfo:
                     company: 'UPS'

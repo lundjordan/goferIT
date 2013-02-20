@@ -13,4 +13,4 @@
 # ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script # test/_helper.coffee test/sale-test.coffee -R spec
 
 
-./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/company-test.coffee test/employee-test.coffee test/customer-test.coffee test/supplier-test.coffee test/store-test.coffee test/order-test.coffee test/product-test.coffee test/sale-test.coffee -R spec
+./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/_helper.coffee test/company-test.coffee test/employee-test.coffee test/customer-test.coffee test/supplier-test.coffee test/order-test.coffee test/product-test.coffee test/sale-test.coffee -R spec

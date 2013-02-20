@@ -1,9 +1,9 @@
 mongoose = require 'mongoose'
 
 ProductSchema = new mongoose.Schema
-    _store:
+    _company:
         type: mongoose.Schema.Types.ObjectId
-        ref: 'Store'
+        ref: 'Company'
     _order:
         type: mongoose.Schema.Types.ObjectId
         ref: 'Order'

@@ -1,4 +1,5 @@
 mongoose = require 'mongoose'
+Company = require '../models/company-mongo'
 Supplier = require '../models/supplier-mongo'
 
 describe "supplier model mongo CRUD", ->
@@ -17,7 +18,6 @@ describe "supplier model mongo CRUD", ->
                 if err
                     throw err
                 done()
-            done()
 
     describe "should create a valid Supplier", ->
         it "and save newly created supplier", (done) ->

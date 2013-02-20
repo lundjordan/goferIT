@@ -1,6 +1,5 @@
 mongoose = require 'mongoose'
 Company = require '../models/company-mongo'
-Store = require '../models/store-mongo'
 
 describe "company model mongo CRUD", ->
     company = null
@@ -17,6 +16,15 @@ describe "company model mongo CRUD", ->
                 name: "Nad's Hardware"
                 subscriptionType: "trial"
                 dateCreated: new Date().toISOString()
+                stores: [
+                    name: 'Second Grove'
+                    phone: 16049291111
+                    address:
+                        street: '1234 sesame street'
+                        postalCode: 'v7w4c9'
+                        city: 'West Vancouver'
+                        country: 'Canada'
+                ]
             company.save (err) ->
                 if err
                     throw err
