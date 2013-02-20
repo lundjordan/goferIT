@@ -23,7 +23,7 @@ describe "employee model CRUD", ->
         it "and save newly created employee", (done) ->
             employee = new Employee
                 email: 'nadroj@gmail.com'
-                _company: company.id
+                _company: company._id
                 password: 'secretpassword'
                 name:
                     first: 'Nadroj'

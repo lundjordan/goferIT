@@ -4,6 +4,7 @@ Order = require '../models/order-mongo'
 
 describe "order model mongo CRUD", ->
     order = null
+    company = null
     supplier = null
     mongoUrl = 'mongodb://localhost/gofer-test'
 
@@ -36,13 +37,13 @@ describe "order model mongo CRUD", ->
             order.save done
 
         it "then retrieve reference number and shipping company from new order", (done) ->
-            Order.findOne _id: order.id, (err, resOrder) ->
+            Order.findOne _id: order._id, (err, resOrder) ->
                 resOrder.referenceNum.should.equal 'aaa111bbb222'
                 resOrder.shippingInfo.company.should.equal 'UPS'
                 done()
 
         it "then retrieve the order supplier's email", (done) ->
-            (Order.findOne _id: order.id)
+            (Order.findOne _id: order._id)
                 .populate('_supplier').exec (err, supplier) ->
                     # supplier.email.should.equal 'abc@gmail.com'
                     done()

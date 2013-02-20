@@ -30,14 +30,12 @@ app = module.exports = express()
 ## Routes
 (require './routes/index') app
 (require './routes/authentication') app, passport
-(require './routes/customers') app, restify, Customers
-(require './routes/companies') app, restify, Companies
-(require './routes/stores') app, restify, Stores
-(require './routes/employees') app, restify, Employees
+# (require './routes/customers') app, restify, Customer
+# (require './routes/employees') app, restify, Employee
 (require './routes/suppliers') app, restify, Supplier
-(require './routes/orders') app, restify, Orders
-(require './routes/products') app, restify, Product
-(require './routes/sales') app, restify, Sales
+# (require './routes/orders') app, restify, Order
+# (require './routes/products') app, restify, Product
+# (require './routes/sales') app, restify, Sale
 ##
 
 server = app.listen app.settings.port

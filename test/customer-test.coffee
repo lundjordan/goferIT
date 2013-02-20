@@ -1,19 +1,30 @@
 mongoose = require 'mongoose'
+Company = require '../models/company-mongo'
 Customer = require '../models/customer-mongo'
 
 describe "customer model mongo CRUD", ->
     customer = null
+    company = null
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
         mongoose.connect mongoUrl, ->
             (Customer.remove {}).exec()
+            (Company.remove {}).exec()
+            company = new Company
+                name: "Nad's Hardware"
+                subscriptionType: "trial"
+            company.save (err) ->
+                if err
+                    throw err
+                done()
             done()
 
     describe "should create a valid Customer", ->
         it "save newly created customer", (done) ->
             customer = new Customer
                 email: 'nadroj@gmail.com'
+                _company: company._id
                 name:
                     first: 'Nadroj'
                     last: 'dnul'

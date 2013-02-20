@@ -2,18 +2,28 @@ mongoose = require 'mongoose'
 Supplier = require '../models/supplier-mongo'
 
 describe "supplier model mongo CRUD", ->
+    company = null
     supplier = null
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
         mongoose.connect mongoUrl, ->
             (Supplier.remove {}).exec()
+            (Company.remove {}).exec()
+            company = new Company
+                name: "Nad's Hardware"
+                subscriptionType: "trial"
+            company.save (err) ->
+                if err
+                    throw err
+                done()
             done()
 
     describe "should create a valid Supplier", ->
         it "and save newly created supplier", (done) ->
             supplier = new Supplier
                 email: 'abc@gmail.com'
+                _company: company._id
                 name: 'abc suppliers'
                 phone: '16049291111'
                 address:

@@ -15,9 +15,9 @@ exports.getListController = (model) ->
         # console.log 'list', req.body
         model.find {}, (err, result) ->
             if not err
-                res.send result
+                return result
             else
-                res.send (errMsg err)
+                return (errMsg err)
 
 #------------------------------
 # Create
@@ -28,9 +28,9 @@ exports.getCreateController = (model) ->
         m = new model req.body
         m.save (err) ->
             if not err
-                res.send m
+                return m
             else
-                res.send (errMsg err)
+                return (errMsg err)
 
 #------------------------------
 # Read
@@ -40,9 +40,9 @@ exports.getReadController = (model) ->
         #console.log('read', req.body);
         model.findById req.params.id, (err, result) ->
             if not err
-                res.send result
+                return result
             else
-                res.send (errMsg err)
+                return (errMsg err)
 
 #------------------------------
 # Update
@@ -56,9 +56,9 @@ exports.getUpdateController = (model) ->
 
             result.save (err) ->
                 if not err
-                    res.send result
+                    return result
                 else
-                    res.send (errMsg err)
+                    return (errMsg err)
 
 #------------------------------
 # Delete
@@ -68,11 +68,11 @@ exports.getDeleteController = (model) ->
         #console.log('delete', req.body);
         model.findById req.params.id, (err, result) ->
             if err
-                res.send (errMsg err)
+                return (errMsg err)
             else
                 result.remove()
                 result.save (err) ->
                     if not err
-                        res.send {}
+                        return {}
                     else
-                        res.send (errMsg err)
+                        return (errMsg err)
