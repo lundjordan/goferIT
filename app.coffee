@@ -9,7 +9,6 @@ Employee = require './models/employee-mongo'
 Supplier = require './models/supplier-mongo'
 Customer = require './models/customer-mongo'
 Order = require './models/order-mongo'
-Store = require './models/store-mongo'
 Product = require './models/product-mongo'
 Sale = require './models/sale-mongo'
 

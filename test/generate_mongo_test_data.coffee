@@ -5,12 +5,11 @@ mongoose = require 'mongoose'
 Company = require '../models/company-mongo'
 Employee = require '../models/employee-mongo'
 Customer = require '../models/customer-mongo'
-Store = require '../models/store-mongo'
 Supplier = require '../models/supplier-mongo'
 Order = require '../models/order-mongo'
 Product = require '../models/product-mongo'
 Sale = require '../models/sale-mongo'
-[companyArray, employeeArray, customerArray, storeArray] = [null, null, null, null]
+[companyArray, employeeArray, customerArray] = [null, null, null]
 [supplierArray, orderArray, productArray, saleArray] = [null, null, null, null]
 
 # helpers
@@ -35,7 +34,6 @@ async.series [
             (Product.remove {}).exec()
             (Employee.remove {}).exec()
             (Order.remove {}).exec()
-            (Store.remove {}).exec()
             (Supplier.remove {}).exec()
             (Customer.remove {}).exec()
             (Company.remove {}).exec()
@@ -43,15 +41,16 @@ async.series [
             callback(null, 'connected to mongo - gofer-test')
 
     ,(callback) -> # create and persist test data - companies
-        companyObjs = [
+        company = new Company
             name: "Nad's Sports"
             subscriptionType: "trial"
-            dateCreated: new Date().toISOString()
-        ]
-        async.each companyObjs, (obj) ->
-            createDocInModelHelper obj, Company
-
-        callback null, 'created company docs'
+            stores: [
+                name: 'Main Store'
+            ]
+        company.save (err) ->
+            if err
+                throw err
+            callback null, 'created company docs'
 
     ,(callback) -> # populate listArray - companyArray
         # findAllDocsInModelHelper companyArray, Company, callback
@@ -59,7 +58,7 @@ async.series [
             if err
                 throw err
             companyArray = docsResult
-            callback err, 'company docs stored in companyArray'
+            callback null, 'company docs stored in companyArray'
 
     ,(callback) -> # employee - generate test data
         employeeObjs = [
@@ -124,6 +123,7 @@ async.series [
     ,(callback) -> # customer - generate test data
         customerObjs = [
             email: 'customer1@gmail.com'
+            _company: companyArray[0].id
             name:
                 first: 'Martin'
                 last: 'Brennan'
@@ -136,6 +136,7 @@ async.series [
             dob: '1989-02-22'
         ,
             email: 'customer2@gmail.com'
+            _company: companyArray[0].id
             name:
                 first: 'Joe'
                 last: 'Skully'
@@ -148,6 +149,7 @@ async.series [
             dob: '1986-09-20'
         ,
             email: 'customer3@gmail.com'
+            _company: companyArray[0].id
             name:
                 first: 'Sanzhar'
                 last: 'Kushekbayev'
@@ -175,6 +177,7 @@ async.series [
     ,(callback) -> # supplier - generate test data
         supplierObjs = [
             email: 'abc@gmail.com'
+            _company: companyArray[0].id
             name: 'abc suppliers'
             phone: '16049290000'
             address:
@@ -184,6 +187,7 @@ async.series [
                 country: 'Canada'
         ,
             email: 'def@gmail.com'
+            _company: companyArray[0].id
             name: 'def big co'
             phone: '16049299999'
             address:
@@ -193,6 +197,7 @@ async.series [
                 country: 'Canada'
         ,
             email: 'ghi@gmail.com'
+            _company: companyArray[0].id
             name: 'ghi gear4U'
             phone: '16049298888'
             address:
@@ -213,30 +218,6 @@ async.series [
                 throw err
             supplierArray = docsResult
             callback err, 'supplier docs stored in supplierArray'
-
-    ,(callback) -> # store - generate test data
-        storeObjs = [
-            name: 'Main Store'
-            _company: companyArray[0].id
-            phone: 16049291111
-            address:
-                street: '4444 main location'
-                postalCode: 'v7w2b8'
-                city: 'Vancouver'
-                country: 'Canada'
-        ]
-        async.each storeObjs, (obj) ->
-            createDocInModelHelper obj, Store
-
-        callback null, 'stores generated'
-
-    ,(callback) -> # store newly created store docs
-        # findAllDocsInModelHelper storeArray, Store, callback
-        Store.find (err, docsResult) ->
-            if err
-                throw err
-            storeArray = docsResult
-            callback err, 'store docs stored in storeArray'
 
     ,(callback) -> # order - generate test data
         orderObjs = [
@@ -280,7 +261,7 @@ async.series [
 
     ,(callback) -> # product - generate test data
         productObjs = [
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -290,7 +271,7 @@ async.series [
             price: 40000
             size: 9
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -300,7 +281,7 @@ async.series [
             price: 40000
             size: 9
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -310,7 +291,7 @@ async.series [
             price: 40000
             size: 9
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -320,7 +301,7 @@ async.series [
             price: 40000
             size: 8
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -330,7 +311,7 @@ async.series [
             price: 40000
             size: 8
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -340,7 +321,7 @@ async.series [
             price: 40000
             size: 7
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -350,7 +331,7 @@ async.series [
             price: 40000
             size: 7
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -360,7 +341,7 @@ async.series [
             price: 40000
             size: 7
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -370,7 +351,7 @@ async.series [
             price: 40000
             size: 7
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             _order: orderArray[0].id
             description:
                 brand: 'Bauer'
@@ -380,7 +361,7 @@ async.series [
             price: 40000
             size: 7
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -389,7 +370,7 @@ async.series [
             price: 65000
             size: 10
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -398,7 +379,7 @@ async.series [
             price: 65000
             size: 10
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -407,7 +388,7 @@ async.series [
             price: 65000
             size: 10
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -416,7 +397,7 @@ async.series [
             price: 65000
             size: 9
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -425,7 +406,7 @@ async.series [
             price: 65000
             size: 9
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -434,7 +415,7 @@ async.series [
             price: 65000
             size: 8
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -443,7 +424,7 @@ async.series [
             price: 65000
             size: 8
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -452,7 +433,7 @@ async.series [
             price: 65000
             size: 8
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'
@@ -461,7 +442,7 @@ async.series [
             price: 65000
             size: 12
         ,
-            _store: storeArray[0].id
+            _company: companyArray[0].id
             description:
                 brand: 'CCM'
                 name: 'Crazy Light'

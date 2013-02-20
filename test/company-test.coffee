@@ -28,11 +28,11 @@ describe "company model mongo CRUD", ->
             company.save (err) ->
                 if err
                     throw err
-                else
-                    done()
+                done()
 
         it "then retrieve comp name from new company", (done) ->
             Company.findOne _id: company.id, (err, resCompany) ->
+                console.log resCompany
                 resCompany.name.should.equal "Nad's Hardware"
                 done()
 

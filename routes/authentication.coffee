@@ -1,4 +1,3 @@
-Store = require '../models/store-mongo'
 Employee = require '../models/employee-mongo'
 Company = require '../models/company-mongo'
 
@@ -29,55 +28,43 @@ routes = (app, passport) ->
 
     app.post '/register', (req, res) ->
         registeredErrorFree = true
-        [company, employee, store] = [null, null, null]
+        [company, employee] = [null, null]
         company = new Company
             name: req.body.companyName
             subscriptionType: "trial"
-            dateCreated: new Date().toISOString()
+            stores: [
+                name: 'Main Store'
+            ]
         company.save (err) ->
             if err
                 throw err
                 registeredErrorFree = false
-            else
-                employee = new Employee
-                    email: req.body.email
-                    _company: company.id
-                    password: req.body.password
-                    name:
-                        first: req.body.fullName.match(/[^\s-]+-?/g)[0]
-                        last: req.body.fullName.match(/[^\s-]+-?/g)[1]
-                    title: 'admin'
-                employee.save (err) ->
-                    if err
-                        throw err
-                        registeredErrorFree = false
-                    else
-                        store = new Store
-                            _company: company.id
-                            dateCreated: new Date().toISOString()
-                        store.save (err) ->
+            employee = new Employee
+                email: req.body.email
+                _company: company.id
+                password: req.body.password
+                name:
+                    first: req.body.fullName.match(/[^\s-]+-?/g)[0]
+                    last: req.body.fullName.match(/[^\s-]+-?/g)[1]
+                title: 'admin'
+            employee.save (err) ->
+                if err
+                    throw err
+                    registeredErrorFree = false
+                if not registeredErrorFree
+                    if Employee.findById(employee.id)
+                        employee.remove (err, obj) ->
                             if err
-                                throw err
-                                registeredErrorFree = false
-                            else
-                                if not registeredErrorFree
-                                    if Employee.findById(employee.id)
-                                        employee.remove (err, obj) ->
-                                            if err
-                                                console.log err
-                                    if Store.findById(store.id)
-                                        store.remove (err, obj) ->
-                                            if err
-                                                console.log err
-                                    if Company.findById(company.id)
-                                        company.remove (err, obj) ->
-                                            if err
-                                                console.log err
-                                    req.flash 'error', 'Something went wrong. Please try registering again!'
-                                    res.redirect '/'
-                                else
-                                    req.flash 'info', 'You have now registered. Please Sign in at the top right!'
-                                    res.redirect '/'
+                                console.log err
+                    if Company.findById(company.id)
+                        company.remove (err, obj) ->
+                            if err
+                                console.log err
+                    req.flash 'error', 'Something went wrong. Please try registering again!'
+                    res.redirect '/'
+                else
+                    req.flash 'info', 'You have now registered. Please Sign in at the top right!'
+                    res.redirect '/'
 
     #TODO do an account details and ensure authenticated
     # app.get('/account', ensureAuthenticated, function(req, res){
