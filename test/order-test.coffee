@@ -37,19 +37,52 @@ describe "order model mongo CRUD", ->
 
         it "and save newly created order", (done) ->
             order = new Order
-                _supplier: supplier._id
                 referenceNum: 'aaa111bbb222'
+                _supplier: supplier._id
+                _company: company._id
+                products: [
+                    description:
+                        brand: 'Bauer'
+                        name: 'Vapor X4.0'
+                    category: 'Hockey Skates'
+                    cost: 30000
+                    price: 40000
+                    size: 8
+                ,
+                    description:
+                        brand: 'Bauer'
+                        name: 'Vapor X4.0'
+                    category: 'Hockey Skates'
+                    cost: 30000
+                    price: 40000
+                    size: 9
+                ,
+                    description:
+                        brand: 'CCM'
+                        name: 'Crazy Light'
+                    category: 'Hockey Skates'
+                    cost: 45000
+                    price: 65000
+                    size: 9
+                ]
                 shippingInfo:
                     company: 'UPS'
                     travelType: 'air'
                     cost: 10000
-                arrivaldate: '12/12/12'
-            order.save done
+                estimatedArrivalDate: '04/28/13'
+            order.save (err) ->
+                if err
+                    throw err
+                done()
 
         it "then retrieve reference number and shipping company from new order", (done) ->
             Order.findOne _id: order._id, (err, resOrder) ->
                 resOrder.referenceNum.should.equal 'aaa111bbb222'
                 resOrder.shippingInfo.company.should.equal 'UPS'
+
+            Order.findOne _id: order._id, (err, resOrder) ->
+                resOrder.products[0].description.brand.should.equal 'Bauer'
+                console.log resOrder.products[0]
                 done()
 
         it "then retrieve the order supplier's email", (done) ->
