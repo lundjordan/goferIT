@@ -18,6 +18,9 @@ describe "order model mongo CRUD", ->
             company = new Company
                 name: "Nad's Hardware"
                 subscriptionType: "trial"
+                stores: [{
+                    name: "Main Store"
+                }]
             company.save (err) ->
                 if err
                     throw err
@@ -40,6 +43,7 @@ describe "order model mongo CRUD", ->
                 referenceNum: 'aaa111bbb222'
                 _supplier: supplier._id
                 _company: company._id
+                storeName: company.stores[0].name
                 products: [
                     description:
                         brand: 'Bauer'
@@ -82,7 +86,6 @@ describe "order model mongo CRUD", ->
 
             Order.findOne _id: order._id, (err, resOrder) ->
                 resOrder.products[0].description.brand.should.equal 'Bauer'
-                console.log resOrder.products[0]
                 done()
 
         it "then retrieve the order supplier's email", (done) ->

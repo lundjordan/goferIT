@@ -9,7 +9,7 @@ Employee = require './models/employee-mongo'
 Supplier = require './models/supplier-mongo'
 Customer = require './models/customer-mongo'
 Order = require './models/order-mongo'
-Product = require './models/product-mongo'
+Stock = require './models/stock-mongo'
 Sale = require './models/sale-mongo'
 
 ##
@@ -33,7 +33,7 @@ app = module.exports = express()
 # (require './routes/employees') app, restify, Employee
 (require './routes/suppliers') app, restify, Supplier
 # (require './routes/orders') app, restify, Order
-# (require './routes/products') app, restify, Product
+# (require './routes/products') app, restify, Stock
 # (require './routes/sales') app, restify, Sale
 ##
 
