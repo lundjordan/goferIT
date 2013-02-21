@@ -1,21 +1,21 @@
 mongoose = require 'mongoose'
 Company = require '../models/company-mongo'
 Customer = require '../models/customer-mongo'
-Product = require '../models/product-mongo'
+Stock = require '../models/stock-mongo'
 Sale = require '../models/sale-mongo'
 Supplier = require '../models/supplier-mongo'
 Order = require '../models/order-mongo'
 Employee = require '../models/employee-mongo'
 
 describe "sale model mongo CRUD", ->
-    [product, customer, sale] = [null, null, null]
+    [stock, customer, sale] = [null, null, null]
     [company, employee, order, supplier] = [null, null, null, null]
     mongoUrl = 'mongodb://localhost/gofer-test'
 
     before (done) ->
         mongoose.connect mongoUrl, ->
             (Sale.remove {}).exec()
-            (Product.remove {}).exec()
+            (Stock.remove {}).exec()
             (Employee.remove {}).exec()
             (Order.remove {}).exec()
             (Supplier.remove {}).exec()
@@ -69,13 +69,25 @@ describe "sale model mongo CRUD", ->
                     if err
                         throw err
                     order = new Order
-                        _supplier: supplier.id
+                        referenceNum: 'aaa111bbb222'
+                        _supplier: supplier._id
+                        _company: company._id
+                        storeName: company.stores[0].name
+                        products: [
+                            description:
+                                brand: 'Bauer'
+                                name: 'Vapor X4.0'
+                            category: 'Hockey Skates'
+                            cost: 30000
+                            price: 40000
+                            size: 8
+                        ]
                         referenceNum: 'aaa111bbb222'
                         shippingInfo:
                             company: 'UPS'
                             travelType: 'air'
                             cost: 10000
-                        arrivaldate: '12/12/12'
+                        estimatedArrivalDate: '04/28/13'
                     order.save (err) ->
                         if err
                             throw err
@@ -98,17 +110,20 @@ describe "sale model mongo CRUD", ->
                         employee.save (err) ->
                             if err
                                 throw err
-                            product = new Product
+                            stock = new Stock
                                 _company: company._id
-                                _order: order.id
-                                serialID: '666666666'
-                                description:
-                                    brand: 'CCM'
-                                    name: 'skate pro'
-                                category: 'hockey'
-                                cost: 7500
-                                price: 15000
-                            product.save (err) ->
+                                storeName: company.stores[0].name
+                                products: [
+                                    description:
+                                        brand: 'Bauer'
+                                        name: 'Vapor X4.0'
+                                    category: 'Hockey Skates'
+                                    cost: 30000
+                                    price: 40000
+                                    size: 8
+                                    _order: order.id
+                                ]
+                            stock.save (err) ->
                                 if err
                                     throw err
                                 done()
@@ -116,8 +131,13 @@ describe "sale model mongo CRUD", ->
     describe "should create a valid Sale", ->
         it "and save newly created sale", (done) ->
             sale = new Sale
+                _company: company._id
                 _employee: employee.id
-                _product: product.id
+                storeName: company.stores[0].name
+                products: [
+                    stock.products[0],
+                    stock.products[1],
+                ]
             sale.save (err) ->
                 if err
                     throw err
@@ -129,15 +149,10 @@ describe "sale model mongo CRUD", ->
                     employee._employee.email.should.equal 'nadroj@gmail.com'
                     done()
 
-        it "then retrieve the sale's product's price", (done) ->
-            (Sale.findOne _id: sale.id)
-                .populate('_product').exec (err, product) ->
-                    product._product.cost.should.equal 7500
-                    done()
 
     after (done) ->
         (Sale.remove {}).exec()
-        (Product.remove {}).exec()
+        (Stock.remove {}).exec()
         (Employee.remove {}).exec()
         (Order.remove {}).exec()
         (Supplier.remove {}).exec()
