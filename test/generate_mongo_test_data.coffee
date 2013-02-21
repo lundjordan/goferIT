@@ -7,10 +7,10 @@ Employee = require '../models/employee-mongo'
 Customer = require '../models/customer-mongo'
 Supplier = require '../models/supplier-mongo'
 Order = require '../models/order-mongo'
-Product = require '../models/product-mongo'
+Stock = require '../models/stock-mongo'
 Sale = require '../models/sale-mongo'
 [companyArray, employeeArray, customerArray] = [null, null, null]
-[supplierArray, orderArray, productArray, saleArray] = [null, null, null, null]
+[supplierArray, orderArray, stock, saleArray] = [null, null, null, null]
 
 # helpers
 createDocInModelHelper = (obj, model) ->
@@ -31,7 +31,7 @@ async.series [
         mongoUrl = 'mongodb://localhost/gofer'
         mongoose.connect mongoUrl, ->
             (Sale.remove {}).exec()
-            (Product.remove {}).exec()
+            (Stock.remove {}).exec()
             (Employee.remove {}).exec()
             (Order.remove {}).exec()
             (Supplier.remove {}).exec()
@@ -220,36 +220,102 @@ async.series [
             callback err, 'supplier docs stored in supplierArray'
 
     ,(callback) -> # order - generate test data
-        orderObjs = [
-            _supplier: supplierArray[0]
+        order1 = new Order
+            _company: companyArray[0].id
+            storeName: companyArray[0].stores[0].name
+            _supplier: supplierArray[0].id
             referenceNum: 'aaa111bbb222'
+            products: [
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 9
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 9
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 9
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 8
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 8
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ]
             shippingInfo:
                 company: 'UPS'
                 travelType: 'air'
                 cost: 10000
-            arrivaldate: '02/08/2013'
-        ,
-            _supplier: supplierArray[1]
-            referenceNum: 'zzzzzzzz'
-            shippingInfo:
-                company: 'UPS'
-                travelType: 'air'
-                cost: 20000
-            arrivaldate: '02/10/2013'
-        ,
-            _supplier: supplierArray[0]
-            referenceNum: 'bbbbbbbbb'
-            shippingInfo:
-                company: 'Fedex'
-                travelType: 'road'
-                cost: 5000
-            arrivaldate: '02/11/2013'
+            estimatedArrivalDate: '04/28/13'
 
-        ]
-        async.each orderObjs, (obj) ->
-            createDocInModelHelper obj, Order
-
-        callback null, 'order generated'
+        order1.save (err) ->
+            if err
+                throw err
+            callback null, 'order generated'
 
     ,(callback) -> # order newly created order docs
         # findAllDocsInModelHelper orderArray, Order, callback
@@ -259,234 +325,291 @@ async.series [
             orderArray = docsResult
             callback err, 'order docs stored in orderArray'
 
-    ,(callback) -> # product - generate test data
-        productObjs = [
+    ,(callback) -> # stock - generate test data
+        stock1 = new Stock
             _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 9
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 9
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 9
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 8
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 8
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 7
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 7
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 7
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 7
-        ,
-            _company: companyArray[0].id
-            _order: orderArray[0].id
-            description:
-                brand: 'Bauer'
-                name: 'Vapor X4.0'
-            category: 'Hockey Skates'
-            cost: 30000
-            price: 40000
-            size: 7
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 10
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 10
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 10
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 9
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 9
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 8
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 8
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 8
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 12
-        ,
-            _company: companyArray[0].id
-            description:
-                brand: 'CCM'
-                name: 'Crazy Light'
-            category: 'Hockey Skates'
-            cost: 45000
-            price: 65000
-            size: 12
-        ]
-        async.each productObjs, (obj) ->
-            createDocInModelHelper obj, Product
-
-        callback null, 'product generated'
-
-    ,(callback) -> # product newly created product docs
-        # findAllDocsInModelHelper productArray, Product, callback
-        Product.find (err, docsResult) ->
+            storeName: companyArray[0].stores[0].name
+            products: [
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 9
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 9
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 9
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 8
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 8
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                _order: orderArray[0].id
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40000
+                size: 7
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 10
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 10
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 10
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 9
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 9
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 8
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 8
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 8
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 12
+            ,
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 12
+            ,
+                description:
+                    brand: 'Adidas'
+                    name: 'F30 TRX'
+                category: 'Men\'s Soccer Cleats'
+                cost: 45000
+                price: 65000
+                size: 11
+            ,
+                description:
+                    brand: 'Adidas'
+                    name: 'F30 TRX'
+                category: 'Men\'s Soccer Cleats'
+                cost: 5000
+                price: 9500
+                size: 10
+            ,
+                description:
+                    brand: 'Adidas'
+                    name: 'Nike Vapor Talon Elite'
+                category: 'Men\'s Football Cleats'
+                cost: 45000
+                price: 65000
+                size: 9
+            ,
+                description:
+                    brand: 'Adidas'
+                    name: 'F30 TRX'
+                category: 'Men\'s Football Cleats'
+                cost: 6000
+                price: 19000
+                size: 10
+            ]
+        stock1.save (err) ->
             if err
                 throw err
-            productArray = docsResult
-            callback err, 'product docs stored in productArray'
+            callback null, 'stock generated'
+
+    ,(callback) -> # stock newly created stock docs
+        # findAllDocsInModelHelper stockArray, Stock, callback
+        Stock.find (err, docsResult) ->
+            if err
+                throw err
+            stockArray = docsResult
+            callback err, 'stock docs stored in stockArray'
 
     ,(callback) -> # sale - generate test data
-        saleObjs = [
+        sale1 = new Sale
+            _company: companyArray[0].id
+            storeName: companyArray[0].stores[0].name
             _employee: employeeArray[0].id
-            _product: productArray[0].id
-        ,
+            products: [
+                description:
+                    brand: 'Adidas'
+                    name: 'F30 TRX'
+                category: 'Men\'s Soccer Cleats'
+                cost: 45000
+                price: 65000
+                size: 11
+            ]
+        sale2 = new Sale
+            _company: companyArray[0].id
+            storeName: companyArray[0].stores[0].name
             _employee: employeeArray[0].id
-            _product: productArray[3].id
-        ,
+            products: [
+                description:
+                    brand: 'Adidas'
+                    name: 'Nike Vapor Talon Elite'
+                category: 'Men\'s Football Cleats'
+                cost: 45000
+                price: 65000
+                size: 9
+            ,
+                description:
+                    brand: 'Adidas'
+                    name: 'F30 TRX'
+                category: 'Men\'s Football Cleats'
+                cost: 6000
+                price: 19000
+                size: 8
+            ]
+        sale3 = new Sale
+            _company: companyArray[0].id
+            storeName: companyArray[0].stores[0].name
             _employee: employeeArray[0].id
-            _product: productArray[5].id
-        ,
+            products: [
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 9
+            ]
+        sale4 = new Sale
+            _company: companyArray[0].id
+            storeName: companyArray[0].stores[0].name
             _employee: employeeArray[1].id
-            _product: productArray[7].id
-        ,
-            _employee: employeeArray[1].id
-            _product: productArray[8].id
-        ,
-            _employee: employeeArray[2].id
-            _product: productArray[10].id
-
-        ]
-        async.each saleObjs, (obj) ->
-            createDocInModelHelper obj, Sale
+            products: [
+                description:
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
+                cost: 45000
+                price: 65000
+                size: 10
+            ]
+        async.each [sale1, sale2, sale3, sale4], (obj) ->
+            obj.save (err) ->
+                if err
+                    throw err
 
         callback null, 'sale generated'
 
