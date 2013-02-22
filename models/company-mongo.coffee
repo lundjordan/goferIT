@@ -9,7 +9,7 @@ CompanySchema = new mongoose.Schema
         required: false
     stores: [
         name:
-            type: String, unique: true
+            type: String
         phone: Number
         address:
             street: String

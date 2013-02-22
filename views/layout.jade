@@ -24,13 +24,14 @@ html
 
     block content
 
-    // Gofer templates
-    // script(type='text/html', src='tml/inventory_templates.html')
-    include ../public/tml/inventory_templates.html
+    if user != null
+      // Gofer templates
+      // script(type='text/html', src='tml/inventory_templates.html')
+      include ../public/tml/inventory_templates.html
 
-    // gofer scripts
-    script(src='js/product.js')
-    script(src='js/products.js')
-    script(src='js/inventory_views.js')
-    script(src='js/main_app_view.js')
-    script(src='js/routers.js')
+      // gofer scripts
+      script(src='js/product.js')
+      script(src='js/products.js')
+      script(src='js/inventory_views.js')
+      script(src='js/main_app_view.js')
+      script(src='js/routers.js')

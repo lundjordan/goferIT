@@ -11,13 +11,14 @@ errMsg = (msg) ->
 #  List
 #
 exports.getListController = (model) ->
-    return (req, res) ->
-        # console.log 'list', req.body
+    (req, res) ->
+        # _company: res.user._company
+        console.log req.user._company
         model.find {}, (err, result) ->
             if not err
-                return result
+                res.send result
             else
-                return (errMsg err)
+                res.send (errMsg err)
 
 #------------------------------
 # Create

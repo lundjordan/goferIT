@@ -41,16 +41,25 @@ async.series [
             callback(null, 'connected to mongo - gofer-test')
 
     ,(callback) -> # create and persist test data - companies
-        company = new Company
-            name: "Nad's Sports"
+        company1 = new Company
+            name: "Time Out Sports"
             subscriptionType: "trial"
             stores: [
                 name: 'Main Store'
             ]
-        company.save (err) ->
+        company2 = new Company
+            name: "The Boardroom"
+            subscriptionType: "trial"
+            stores: [
+                name: 'Main Store'
+            ]
+        company1.save (err) ->
             if err
                 throw err
-            callback null, 'created company docs'
+            company2.save (err) ->
+                if err
+                    throw err
+                callback null, 'created company docs'
 
     ,(callback) -> # populate listArray - companyArray
         # findAllDocsInModelHelper companyArray, Company, callback
@@ -532,10 +541,40 @@ async.series [
                 price: 19000
                 size: 10
             ]
+        stock2 = new Stock
+            _company: companyArray[1].id
+            storeName: companyArray[1].stores[0].name
+            products: [
+                description:
+                    brand: 'Ride'
+                    name: 'Arcade Snowboard'
+                category: 'Snowboard'
+                cost: 35000
+                price: 50999
+                size: 154
+            ,
+                description:
+                    brand: 'Hyperlite'
+                    name: 'Marek Nova'
+                category: 'Wakeboard'
+                cost: 50000
+                price: 76999
+                size: 140
+            ]
         stock1.save (err) ->
             if err
                 throw err
-            callback null, 'stock generated'
+            stock2.save (err) ->
+                if err
+                    throw err
+                callback null, 'created stock docs'
+
+        # async.each [stock1], (obj) ->
+        #     obj.save (err) ->
+        #         if err
+        #             throw err
+
+        # callback null, 'stock generated'
 
     ,(callback) -> # stock newly created stock docs
         # findAllDocsInModelHelper stockArray, Stock, callback

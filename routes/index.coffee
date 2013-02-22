@@ -1,7 +1,5 @@
 routes = (app) ->
 
-    #TODO not XXX hack newSignupStatus
-
     app.get '/', (req, res) ->
         if req.user
             res.render "#{__dirname}/../views/userIndex", # render the logged in welcome page
@@ -11,6 +9,7 @@ routes = (app) ->
                 error_alert: req.flash('error')
         else
             res.render "#{__dirname}/../views/visitorIndex", # render the marketing welcome page
+                user: null
                 stylesheet: 'visitorStyle'
                 info_alert: req.flash('info')
                 error_alert: req.flash('error')
