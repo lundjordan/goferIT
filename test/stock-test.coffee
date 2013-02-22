@@ -73,11 +73,11 @@ describe "stock model mongo CRUD", ->
         it "and save newly created stock", (done) ->
             stock = new Stock
                 _company: company.id
-                storeName: company.stores[0].name
                 products: [
                     description:
                         brand: 'Bauer'
                         name: 'Vapor X4.0'
+                    storeName: company.stores[0].name
                     category: 'Hockey Skates'
                     cost: 30000
                     price: 40000
@@ -87,6 +87,7 @@ describe "stock model mongo CRUD", ->
                     description:
                         brand: 'Bauer'
                         name: 'Vapor X4.0'
+                    storeName: company.stores[0].name
                     category: 'Hockey Skates'
                     cost: 30000
                     price: 40000
@@ -96,6 +97,7 @@ describe "stock model mongo CRUD", ->
                     description:
                         brand: 'CCM'
                         name: 'Crazy Light'
+                    storeName: company.stores[0].name
                     category: 'Hockey Skates'
                     cost: 45000
                     price: 65000

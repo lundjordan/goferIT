@@ -337,7 +337,6 @@ async.series [
     ,(callback) -> # stock - generate test data
         stock1 = new Stock
             _company: companyArray[0].id
-            storeName: companyArray[0].stores[0].name
             products: [
                 _order: orderArray[0].id
                 description:
@@ -543,7 +542,6 @@ async.series [
             ]
         stock2 = new Stock
             _company: companyArray[1].id
-            storeName: companyArray[1].stores[0].name
             products: [
                 description:
                     brand: 'Ride'
@@ -561,6 +559,11 @@ async.series [
                 price: 76999
                 size: 140
             ]
+
+        storeName = companyArray[0].stores[0].name
+        product.storeName =  storeName for product in stock1.products
+        product.storeName =  storeName for product in stock2.products
+
         stock1.save (err) ->
             if err
                 throw err

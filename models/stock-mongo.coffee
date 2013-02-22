@@ -4,15 +4,15 @@ StockSchema = new mongoose.Schema
     _company:
         type: mongoose.Schema.Types.ObjectId
         ref: 'Company'
-    storeName:
-        type: String
-        required: true
     products: [{
         serialID:
             type: String
         description:
             brand: String
             name: String
+        storeName:
+            type: String
+            required: true
         category: String
         cost: Number
         price: Number
