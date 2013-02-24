@@ -26,12 +26,33 @@ jQuery ->
         template: _.template ($ '#product-list-template').html()
         render: ->
             @$el.html this.template({})
+            this.addAll()
+            @
+        addOne: (product) ->
+            view = new ProductItemView model: product
+            (@$ "#inventory-table-list").append view.render().el
+        addAll: ->
+            app.Products.each @addOne, @
 
     class ProductItemView extends Backbone.View
         tagName: 'tr'
+        events:
+            'mouseover': 'showProductOptions'
+            'mouseout': 'hideProductOptions'
         template: _.template ($ '#product-item-template').html()
         render: ->
-            @$el.html this.template({})
+            @$el.html this.template(@model.toJSON())
+            $(@el).find('i').hide()
+            @
+        showProductOptions: (event) ->
+            # $('#item-options').prepend("<i class='icon-search'></i>")
+            console.log "mouse over #{@model.get('cost')}"
+            $(@el).find('i').show()
+        hideProductOptions: (event) ->
+            # $('#item-options').html()
+            console.log "mouse out #{@model.get('cost')}"
+            $(@el).find('i').hide()
+
 
     class OrderListView extends Backbone.View
         el: '#order-list-view'

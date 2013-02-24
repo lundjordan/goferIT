@@ -344,201 +344,76 @@ async.series [
                     name: 'Vapor X4.0'
                 category: 'Hockey Skates'
                 cost: 30000
-                price: 40000
-                size: 9
+                price: 40099
+                totalQuantity: 9
+                subTotalQuantity: [
+                    size: 8
+                    quantity: 3
+                ,
+                    size: 9
+                    quantity: 3
+                ,
+                    size: 10
+                    quantity: 2
+                ,
+                    size: 11
+                    quantity: 1
+                ]
             ,
                 _order: orderArray[0].id
                 description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 9
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 9
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 8
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 8
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                _order: orderArray[0].id
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                description:
                     brand: 'CCM'
                     name: 'Crazy Light'
                 category: 'Hockey Skates'
                 cost: 45000
-                price: 65000
-                size: 10
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 10
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 10
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 9
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 9
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 8
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 8
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 8
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 12
-            ,
-                description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
-                category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 12
+                price: 65099
+                totalQuantity: 8
+                subTotalQuantity: [
+                    size: 9
+                    quantity: 1
+                ,
+                    size: 10
+                    quantity: 3
+                ,
+                    size: 11
+                    quantity: 4
+                ,
+                    size: 12
+                    quantity: 0
+                ]
             ,
                 description:
                     brand: 'Adidas'
                     name: 'F30 TRX'
                 category: 'Men\'s Soccer Cleats'
-                cost: 45000
-                price: 65000
-                size: 11
-            ,
-                description:
-                    brand: 'Adidas'
-                    name: 'F30 TRX'
-                category: 'Men\'s Soccer Cleats'
-                cost: 5000
-                price: 9500
-                size: 10
+                cost: 9000
+                price: 14099
+                totalQuantity: 2
+                subTotalQuantity: [
+                    size: 9
+                    quantity: 2
+                ]
             ,
                 description:
                     brand: 'Adidas'
                     name: 'Nike Vapor Talon Elite'
                 category: 'Men\'s Football Cleats'
-                cost: 45000
-                price: 65000
-                size: 9
-            ,
-                description:
-                    brand: 'Adidas'
-                    name: 'F30 TRX'
-                category: 'Men\'s Football Cleats'
-                cost: 6000
-                price: 19000
-                size: 10
+                cost: 11000
+                price: 19099
+                totalQuantity: 7
+                subTotalQuantity: [
+                    size: 9
+                    quantity: 3
+                ,
+                    size: 10
+                    quantity: 2
+                ,
+                    size: 11
+                    quantity: 1
+                ,
+                    size: 12
+                    quantity: 1
+                ]
             ]
         stock2 = new Stock
             _company: companyArray[1].id
@@ -549,7 +424,11 @@ async.series [
                 category: 'Snowboard'
                 cost: 35000
                 price: 50999
-                size: 154
+                totalQuantity: 3
+                subTotalQuantity: [
+                    size: 154
+                    quantity: 3
+                ]
             ,
                 description:
                     brand: 'Hyperlite'
@@ -557,7 +436,14 @@ async.series [
                 category: 'Wakeboard'
                 cost: 50000
                 price: 76999
-                size: 140
+                totalQuantity: 4
+                subTotalQuantity: [
+                    size: 145
+                    quantity: 3
+                ,
+                    size: 130
+                    quantity: 1
+                ]
             ]
 
         storeName = companyArray[0].stores[0].name

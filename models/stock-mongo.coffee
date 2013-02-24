@@ -5,6 +5,9 @@ StockSchema = new mongoose.Schema
         type: mongoose.Schema.Types.ObjectId
         ref: 'Company'
     products: [{
+        _order:
+            type: mongoose.Schema.Types.ObjectId
+            ref: 'Order'
         serialID:
             type: String
         description:
@@ -16,6 +19,7 @@ StockSchema = new mongoose.Schema
         category: String
         cost: Number
         price: Number
+        totalQuantity: Number
         dateCreated:
             type: Date
             default: new Date().toISOString()

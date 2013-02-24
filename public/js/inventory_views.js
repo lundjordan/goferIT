@@ -62,7 +62,21 @@
       ProductListView.prototype.template = _.template(($('#product-list-template')).html());
 
       ProductListView.prototype.render = function() {
-        return this.$el.html(this.template({}));
+        this.$el.html(this.template({}));
+        this.addAll();
+        return this;
+      };
+
+      ProductListView.prototype.addOne = function(product) {
+        var view;
+        view = new ProductItemView({
+          model: product
+        });
+        return (this.$("#inventory-table-list")).append(view.render().el);
+      };
+
+      ProductListView.prototype.addAll = function() {
+        return app.Products.each(this.addOne, this);
       };
 
       return ProductListView;
@@ -78,10 +92,27 @@
 
       ProductItemView.prototype.tagName = 'tr';
 
+      ProductItemView.prototype.events = {
+        'mouseover': 'showProductOptions',
+        'mouseout': 'hideProductOptions'
+      };
+
       ProductItemView.prototype.template = _.template(($('#product-item-template')).html());
 
       ProductItemView.prototype.render = function() {
-        return this.$el.html(this.template({}));
+        this.$el.html(this.template(this.model.toJSON()));
+        $(this.el).find('i').hide();
+        return this;
+      };
+
+      ProductItemView.prototype.showProductOptions = function(event) {
+        console.log("mouse over " + (this.model.get('cost')));
+        return $(this.el).find('i').show();
+      };
+
+      ProductItemView.prototype.hideProductOptions = function(event) {
+        console.log("mouse out " + (this.model.get('cost')));
+        return $(this.el).find('i').hide();
       };
 
       return ProductItemView;

@@ -1,56 +1,3 @@
-<script type="text/template" id="inventory-menu-template">
-  <div>
-    <h1> Inventory Control </h1>
-    <p class='lead'>everything on one shelf</p>
-  </div>
-  <ul class="nav nav-pills">
-    <li id='product-menu-pill', class="active">
-      <a href="#product-main-view", data-toggle='tab'>Stock</a>
-    </li>
-    <li id-'order-menu-pill'><a href="#order-main-view", data-toggle='tab'>Orders</a></li>
-  </ul>
-  <div class="tab-content">
-    <div id="product-main-view", class='tab-pane'>
-      <div class='tabbable'>
-        <ul class="nav nav-tabs">
-          <li class="active"><a href="#product-list" data-toggle="tab">List</a></li>
-          <li><a href="#product-view" data-toggle="tab">View/Edit</a></li>
-          <li><a href="#product-create" data-toggle="tab">Create</a></li>
-        </ul>
-        <div class='tab-content'>
-          <div class="tab-pane active" id='product-list-view'>
-          </div>
-
-          <div class="tab-pane" id='product-item-view'>
-          </div>
-
-          <div class="tab-pane" id='product-create-view'>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="order-main-view", class='tab-pane'>
-      <div class='tabbable'>
-        <ul class="nav nav-tabs">
-          <li class="active"><a href="#order-list" data-toggle="tab">List</a></li>
-          <li><a href="#order-view" data-toggle="tab">View/Edit</a></li>
-          <li><a href="#order-create" data-toggle="tab">Create</a></li>
-        </ul>
-        <div class='tab-content'>
-          <div class="tab-pane active" id='order-list'>
-          </div>
-
-          <div class="tab-pane" id='order-view'>
-          </div>
-
-          <div class="tab-pane" id='order-create'>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</script>
-
 <script type="text/template" id="product-content-template">
 </script>
 
@@ -66,7 +13,7 @@
         <th>Category</th>
         <th>Price</th>
         <th>Quantity</th>
-        <th>Supplier</th>
+        <th>Order Refnum</th>
       </tr>
     </thead>
     <tbody id="inventory-table-list">
@@ -75,11 +22,19 @@
 </script>
 
 <script type="text/template" id="product-item-template">
-    <td><% description.name %> </td>
-    <td><% description.brand %> </td>
-    <td><% category %> </td>
-    <td><% price / 100 %> </td>
-    <td><% category %> </td>
+  <td>
+    <i class='icon-eye-open'></i>
+    <i class='icon-pencil'></i>
+    <i class='icon-trash'></i>
+    <%= description.name %>
+  </td>
+  <td><%= description.brand %> </td>
+  <td><%= category %> </td>
+  <td><%= price * 0.01 %> </td>
+  <td><%= totalQuantity %> </td>
+  <% if (obj._order) { %>
+    <td><%= _order.referenceNum %> </td>
+  <% } %>
 </script>
 
 <script type="text/template" id="product-add-template">
