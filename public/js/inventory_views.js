@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryControllerView, OrderListView, ProductItemView, ProductListView, _ref;
+    var InventoryControllerView, OrderListView, ProductItemView, ProductListView, StoreSelectView, _ref;
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -22,9 +22,7 @@
 
       InventoryControllerView.prototype.initialize = function() {
         this.productSubViews = {
-          productListView: new ProductListView({
-            collection: app.products
-          })
+          productListView: new ProductListView()
         };
         this.orderSubViews = {
           orderListView: new OrderListView()
@@ -49,6 +47,34 @@
       return InventoryControllerView;
 
     })(Backbone.View);
+    StoreSelectView = (function(_super) {
+
+      __extends(StoreSelectView, _super);
+
+      function StoreSelectView() {
+        return StoreSelectView.__super__.constructor.apply(this, arguments);
+      }
+
+      StoreSelectView.prototype.el = '#store-name-select';
+
+      StoreSelectView.prototype.initialize = function() {
+        var store, stores, _i, _len, _results;
+        stores = app.Companies.models[0].get('stores');
+        _results = [];
+        for (_i = 0, _len = stores.length; _i < _len; _i++) {
+          store = stores[_i];
+          _results.push(this.addToSelect(store.name));
+        }
+        return _results;
+      };
+
+      StoreSelectView.prototype.addToSelect = function(storeName) {
+        return $(this.el).append("<option>" + storeName + "</option>");
+      };
+
+      return StoreSelectView;
+
+    })(Backbone.View);
     ProductListView = (function(_super) {
 
       __extends(ProductListView, _super);
@@ -63,6 +89,7 @@
 
       ProductListView.prototype.render = function() {
         this.$el.html(this.template({}));
+        new StoreSelectView();
         this.addAll();
         return this;
       };
@@ -106,12 +133,10 @@
       };
 
       ProductItemView.prototype.showProductOptions = function(event) {
-        console.log("mouse over " + (this.model.get('cost')));
         return $(this.el).find('i').show();
       };
 
       ProductItemView.prototype.hideProductOptions = function(event) {
-        console.log("mouse out " + (this.model.get('cost')));
         return $(this.el).find('i').hide();
       };
 

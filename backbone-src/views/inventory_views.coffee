@@ -8,7 +8,7 @@ jQuery ->
             'click #order-menu-pill': 'renderOrderListView'
         initialize: ->
             @productSubViews =
-                productListView: new ProductListView(collection: app.products)
+                productListView: new ProductListView()
             @orderSubViews =
                 orderListView: new OrderListView()
             @currentContentView = @productSubViews.productListView
@@ -21,11 +21,20 @@ jQuery ->
             @currentContentView = @orderSubViews.orderListView
             @render()
 
+    class StoreSelectView extends Backbone.View
+        el: '#store-name-select'
+        initialize: ->
+            stores = app.Companies.models[0].get 'stores'
+            @addToSelect(store.name) for store in stores
+        addToSelect: (storeName) ->
+            $(@el).append "<option>#{storeName}</option>"
+
     class ProductListView extends Backbone.View
         el: '#product-list-view'
         template: _.template ($ '#product-list-template').html()
         render: ->
             @$el.html this.template({})
+            new StoreSelectView()
             this.addAll()
             @
         addOne: (product) ->
@@ -46,11 +55,9 @@ jQuery ->
             @
         showProductOptions: (event) ->
             # $('#item-options').prepend("<i class='icon-search'></i>")
-            console.log "mouse over #{@model.get('cost')}"
             $(@el).find('i').show()
         hideProductOptions: (event) ->
             # $('#item-options').html()
-            console.log "mouse out #{@model.get('cost')}"
             $(@el).find('i').hide()
 
 

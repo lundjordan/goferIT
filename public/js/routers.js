@@ -22,6 +22,7 @@
       };
 
       GoferRouter.prototype.initialize = function() {
+        app.Companies.fetch();
         app.Products.fetch();
         return app.appControllerView = new app.AppControllerView({
           inventoryControllerView: new app.InventoryControllerView
@@ -31,7 +32,7 @@
       GoferRouter.prototype.dashboard = function() {};
 
       GoferRouter.prototype.inventory = function() {
-        return app.appView.inventoryRender();
+        return app.appControllerView.inventoryRender();
       };
 
       return GoferRouter;

@@ -12,9 +12,7 @@ errMsg = (msg) ->
 #
 exports.getListController = (model) ->
     (req, res) ->
-        # _company: res.user._company
-        console.log req.user._company
-        model.find {}, (err, result) ->
+        model.findOne {_company: req.user._company}, (err, result) ->
             if not err
                 res.send result
             else

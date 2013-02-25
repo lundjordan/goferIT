@@ -5,6 +5,7 @@ passport = require 'passport'
 LocalStrategy = (require 'passport-local').Strategy
 
 ## models
+Company = require './models/company-mongo'
 Employee = require './models/employee-mongo'
 Supplier = require './models/supplier-mongo'
 Customer = require './models/customer-mongo'
@@ -32,6 +33,7 @@ app = module.exports = express()
 # (require './routes/employees') app, restify, Employee
 # (require './routes/suppliers') app, restify, Supplier
 # (require './routes/orders') app, restify, Order
+(require './routes/companies') app, restify, Company
 (require './routes/products') app, restify, Stock
 # (require './routes/sales') app, restify, Sale
 ##

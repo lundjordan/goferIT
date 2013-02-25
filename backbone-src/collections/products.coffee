@@ -1,4 +1,4 @@
-# COLLECTIONS
+# Products Collection
 
 class Products extends Backbone.Collection
   model: app.Product

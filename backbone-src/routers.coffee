@@ -8,13 +8,14 @@ jQuery ->
             '': 'dashboard'
             'inventory': 'inventory'
         initialize: ->
+            app.Companies.fetch()
             app.Products.fetch()
             app.appControllerView = new app.AppControllerView
                 inventoryControllerView: new app.InventoryControllerView
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->
-            app.appView.inventoryRender()
+            app.appControllerView.inventoryRender()
 
     @app.GoferRouter = GoferRouter
 

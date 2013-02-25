@@ -21,8 +21,7 @@
       };
 
       AppControllerView.prototype.initialize = function() {
-        this.inventoryControllerView = this.options.inventoryControllerView;
-        return this.inventoryControllerView.render();
+        return this.inventoryControllerView = this.options.inventoryControllerView;
       };
 
       AppControllerView.prototype.inventoryRender = function() {

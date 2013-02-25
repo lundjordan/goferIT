@@ -3,7 +3,7 @@ restifyProducts = (app, restify, model) ->
     pathWithId = "products/:id"
 
     app.get path, (req, res) ->
-        model.findOne({_company: req.user._company})
+        (model.findOne {_company: req.user._company})
             .populate('products._order')
             .exec (err, result) ->
                 if not err

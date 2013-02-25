@@ -8,7 +8,6 @@ jQuery ->
             'click #inventory-link': "inventoryRender"
         initialize: ->
             @inventoryControllerView = @options.inventoryControllerView
-            @inventoryControllerView.render()
         inventoryRender: ->
             @inventoryControllerView.render()
         dashboardRender: ->
