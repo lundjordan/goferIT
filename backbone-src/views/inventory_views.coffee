@@ -22,26 +22,43 @@ jQuery ->
             @render()
 
     class StoreSelectView extends Backbone.View
-        el: '#store-name-select'
-        initialize: ->
-            stores = app.Companies.models[0].get 'stores'
-            @addToSelect(store.name) for store in stores
+        el: '#product-list-head'
+        template: _.template ($ '#store-names-template').html()
+        render: ->
+            @$el.html this.template({})
+            storeNames = app.Companies.models[0].get 'stores'
+            @addToSelect(store.name) for store in storeNames
+            @
         addToSelect: (storeName) ->
-            $(@el).append "<option>#{storeName}</option>"
+            console.log storeName
+            @$('#store-name-select').append "<option>#{storeName}</option>"
+
+    class ProductsTable extends Backbone.View
+        el: '#product-list-body'
+        template: _.template ($ '#products-table-template').html()
+        render: ->
+            @$el.html this.template({})
+            @addAll()
+            @
+        addOne: (product) ->
+            if $('#store-name-select').val() is product.get('storeName')
+                view = new ProductItemView model: product
+                (@$ "#inventory-table-list").append view.render().el
+        addAll: ->
+            app.Products.each @addOne, @
 
     class ProductListView extends Backbone.View
         el: '#product-list-view'
-        template: _.template ($ '#product-list-template').html()
+        events:
+            'change #store-name-select': 'renderProductsTable'
+        initialize: (options) ->
+            @storeSelectView = new StoreSelectView()
+            @productsTable = new ProductsTable()
         render: ->
-            @$el.html this.template({})
-            new StoreSelectView()
-            this.addAll()
-            @
-        addOne: (product) ->
-            view = new ProductItemView model: product
-            (@$ "#inventory-table-list").append view.render().el
-        addAll: ->
-            app.Products.each @addOne, @
+            @storeSelectView.render()
+            @productsTable.render()
+        renderProductsTable: ->
+            @productsTable.render()
 
     class ProductItemView extends Backbone.View
         tagName: 'tr'

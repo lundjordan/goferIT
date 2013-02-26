@@ -46,6 +46,8 @@ async.series [
             subscriptionType: "trial"
             stores: [
                 name: 'Main Store'
+            ,
+                name: 'Second Store'
             ]
         company2 = new Company
             name: "The Boardroom"

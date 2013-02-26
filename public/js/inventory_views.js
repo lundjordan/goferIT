@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryControllerView, OrderListView, ProductItemView, ProductListView, StoreSelectView, _ref;
+    var InventoryControllerView, OrderListView, ProductItemView, ProductListView, ProductsTable, StoreSelectView, _ref;
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -55,24 +55,62 @@
         return StoreSelectView.__super__.constructor.apply(this, arguments);
       }
 
-      StoreSelectView.prototype.el = '#store-name-select';
+      StoreSelectView.prototype.el = '#product-list-head';
 
-      StoreSelectView.prototype.initialize = function() {
-        var store, stores, _i, _len, _results;
-        stores = app.Companies.models[0].get('stores');
-        _results = [];
-        for (_i = 0, _len = stores.length; _i < _len; _i++) {
-          store = stores[_i];
-          _results.push(this.addToSelect(store.name));
+      StoreSelectView.prototype.template = _.template(($('#store-names-template')).html());
+
+      StoreSelectView.prototype.render = function() {
+        var store, storeNames, _i, _len;
+        this.$el.html(this.template({}));
+        storeNames = app.Companies.models[0].get('stores');
+        for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
+          store = storeNames[_i];
+          this.addToSelect(store.name);
         }
-        return _results;
+        return this;
       };
 
       StoreSelectView.prototype.addToSelect = function(storeName) {
-        return $(this.el).append("<option>" + storeName + "</option>");
+        console.log(storeName);
+        return this.$('#store-name-select').append("<option>" + storeName + "</option>");
       };
 
       return StoreSelectView;
+
+    })(Backbone.View);
+    ProductsTable = (function(_super) {
+
+      __extends(ProductsTable, _super);
+
+      function ProductsTable() {
+        return ProductsTable.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductsTable.prototype.el = '#product-list-body';
+
+      ProductsTable.prototype.template = _.template(($('#products-table-template')).html());
+
+      ProductsTable.prototype.render = function() {
+        this.$el.html(this.template({}));
+        this.addAll();
+        return this;
+      };
+
+      ProductsTable.prototype.addOne = function(product) {
+        var view;
+        if ($('#store-name-select').val() === product.get('storeName')) {
+          view = new ProductItemView({
+            model: product
+          });
+          return (this.$("#inventory-table-list")).append(view.render().el);
+        }
+      };
+
+      ProductsTable.prototype.addAll = function() {
+        return app.Products.each(this.addOne, this);
+      };
+
+      return ProductsTable;
 
     })(Backbone.View);
     ProductListView = (function(_super) {
@@ -85,25 +123,22 @@
 
       ProductListView.prototype.el = '#product-list-view';
 
-      ProductListView.prototype.template = _.template(($('#product-list-template')).html());
+      ProductListView.prototype.events = {
+        'change #store-name-select': 'renderProductsTable'
+      };
+
+      ProductListView.prototype.initialize = function(options) {
+        this.storeSelectView = new StoreSelectView();
+        return this.productsTable = new ProductsTable();
+      };
 
       ProductListView.prototype.render = function() {
-        this.$el.html(this.template({}));
-        new StoreSelectView();
-        this.addAll();
-        return this;
+        this.storeSelectView.render();
+        return this.productsTable.render();
       };
 
-      ProductListView.prototype.addOne = function(product) {
-        var view;
-        view = new ProductItemView({
-          model: product
-        });
-        return (this.$("#inventory-table-list")).append(view.render().el);
-      };
-
-      ProductListView.prototype.addAll = function() {
-        return app.Products.each(this.addOne, this);
+      ProductListView.prototype.renderProductsTable = function() {
+        return this.productsTable.render();
       };
 
       return ProductListView;
