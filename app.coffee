@@ -29,11 +29,11 @@ app = module.exports = express()
 ## Routes
 (require './routes/index') app
 (require './routes/authentication') app, passport
+(require './routes/companies') app, restify, Company
 # (require './routes/customers') app, restify, Customer
 # (require './routes/employees') app, restify, Employee
-# (require './routes/suppliers') app, restify, Supplier
+(require './routes/suppliers') app, restify, Supplier
 # (require './routes/orders') app, restify, Order
-(require './routes/companies') app, restify, Company
 (require './routes/products') app, restify, Stock
 # (require './routes/sales') app, restify, Sale
 ##

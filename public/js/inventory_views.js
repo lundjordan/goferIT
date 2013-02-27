@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryControllerView, OrderListView, ProductItemBodyView, ProductItemContentView, ProductItemView, ProductListItemView, ProductsListView, ProductsTable, StoreSelectView, _ref;
+    var InventoryControllerView, OrderListView, ProductItemBodyView, ProductItemContentView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListView, ProductsTable, StoreSelectView, _ref;
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -230,7 +230,9 @@
 
       ProductItemBodyView.prototype.renderProductContent = function(productModel) {
         this.currentProduct = new ProductItemContentView();
-        return this.$('#product-view-content').html(this.currentProduct.render(productModel).el);
+        this.currentProductSupplier = new ProductItemSupplierNameView();
+        this.$('#product-view-content').html(this.currentProduct.render(productModel).el);
+        return this.$('#product-view-supplier-name').html(this.currentProductSupplier.render(productModel).el);
       };
 
       return ProductItemBodyView;
@@ -244,14 +246,38 @@
         return ProductItemContentView.__super__.constructor.apply(this, arguments);
       }
 
-      ProductItemContentView.prototype.template = _.template(($('#product-content-template')).html());
+      ProductItemContentView.prototype.className = 'container-fluid';
+
+      ProductItemContentView.prototype.template = _.template(($('#product-view-content-template')).html());
 
       ProductItemContentView.prototype.render = function(productModel) {
-        this.$el.html(this.template({}));
+        console.log(productModel.attributes);
+        this.$el.html(this.template(productModel.attributes));
         return this;
       };
 
       return ProductItemContentView;
+
+    })(Backbone.View);
+    ProductItemSupplierNameView = (function(_super) {
+
+      __extends(ProductItemSupplierNameView, _super);
+
+      function ProductItemSupplierNameView() {
+        return ProductItemSupplierNameView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductItemSupplierNameView.prototype.template = _.template(($('#product-view-supplier-name-template')).html());
+
+      ProductItemSupplierNameView.prototype.render = function(productModel) {
+        var supplierID, supplierName;
+        supplierID = productModel.attributes._order._supplier;
+        supplierName = app.Suppliers.get(supplierID);
+        this.$el.html(this.template(supplierName.attributes));
+        return this;
+      };
+
+      return ProductItemSupplierNameView;
 
     })(Backbone.View);
     OrderListView = (function(_super) {

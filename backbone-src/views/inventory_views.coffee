@@ -107,11 +107,24 @@ jQuery ->
             @
         renderProductContent: (productModel) ->
             @currentProduct = new ProductItemContentView()
-            @$('#product-view-content').html @currentProduct.render(productModel).el
+            @currentProductSupplier = new ProductItemSupplierNameView()
+            @$('#product-view-content')
+                .html @currentProduct.render(productModel).el
+            @$('#product-view-supplier-name')
+                .html @currentProductSupplier.render(productModel).el
     class ProductItemContentView extends Backbone.View
-        template: _.template ($ '#product-content-template').html()
+        className: 'container-fluid'
+        template: _.template ($ '#product-view-content-template').html()
         render: (productModel) ->
-            @$el.html this.template({})
+            console.log productModel.attributes
+            @$el.html this.template(productModel.attributes)
+            @
+    class ProductItemSupplierNameView extends Backbone.View
+        template: _.template ($ '#product-view-supplier-name-template').html()
+        render: (productModel) ->
+            supplierID = productModel.attributes._order._supplier
+            supplierName = app.Suppliers.get(supplierID)
+            @$el.html this.template(supplierName.attributes)
             @
     # ###############
 
