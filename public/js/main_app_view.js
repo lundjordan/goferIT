@@ -25,7 +25,7 @@
       };
 
       AppControllerView.prototype.inventoryRender = function() {
-        return this.inventoryControllerView.render();
+        return this.inventoryControllerView.renderProductsListView();
       };
 
       AppControllerView.prototype.dashboardRender = function() {};

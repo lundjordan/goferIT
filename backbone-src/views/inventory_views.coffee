@@ -4,28 +4,22 @@ jQuery ->
     class InventoryControllerView extends Backbone.View
         el: '#inventory-main-content'
         events:
-            'click #product-menu-pill': 'renderProductListView'
-            'click #inventory-list-tab': 'renderProductListView'
-            'click #inventory-item-tab': 'renderProductItemView'
+            'click #product-menu-pill': 'renderProductsListView'
+            'click #inventory-list-tab': 'renderProductsListView'
+            'click #inventory-item-tab': 'renderProductDefaultItemView'
             'click #order-menu-pill': 'renderOrderListView'
-        initialize: ->
-            @productSubViews =
-                productListView: new ProductListView()
-                productItemView: new ProductItemView()
-            @orderSubViews =
-                orderListView: new OrderListView()
-            @currentContentView = @productSubViews.productListView
-        render: ->
-            @currentContentView.render()
-        renderProductListView: ->
-            @currentContentView = @productSubViews.productListView
-            @render()
-        renderProductItemView: ->
-            @currentContentView = @productSubViews.productItemView
-            @render()
+        renderProductsListView: ->
+            productsListView = new ProductsListView()
+            productsListView.render()
+        renderProductDefaultItemView: ->
+            productItemView = new ProductItemView()
+            productItemView.render app.Products.models[0]
+        renderProductSpecificItemView: (event) ->
+            productItemView = new ProductItemView()
+            productItemView.render app.Products.models[0]
         renderOrderListView: ->
-            @currentContentView = @orderSubViews.orderListView
-            @render()
+            orderListView = new OrderListView()
+            orderListView.render()
 
     # ###############
     # HELPER CLASS -> SHARED
@@ -38,13 +32,12 @@ jQuery ->
             @addToSelect(store.name) for store in storeNames
             @
         addToSelect: (storeName) ->
-            console.log storeName
             @$('#store-name-select').append "<option>#{storeName}</option>"
     # ###############
 
     # ###############
-    # ProductListView
-    class ProductListView extends Backbone.View
+    # Products List View Section
+    class ProductsListView extends Backbone.View
         el: '#inventory-view-content'
         events:
             'change #store-name-select': 'renderProductsTable'
@@ -56,7 +49,7 @@ jQuery ->
             @productsTable.render()
         renderProductsTable: ->
             @productsTable.render()
-    # ProductListView
+    # Products List View Section
     class ProductsTable extends Backbone.View
         el: '#inventory-view-body'
         template: _.template ($ '#products-table-template').html()
@@ -70,7 +63,7 @@ jQuery ->
                 (@$ "#inventory-table-list").append view.render().el
         addAll: ->
             app.Products.each @addOne, @
-    # ProductListView
+    # Products List View Section
     class ProductListItemView extends Backbone.View
         tagName: 'tr'
         events:
@@ -78,7 +71,7 @@ jQuery ->
             'mouseout': 'hideProductOptions'
         template: _.template ($ '#product-tr-template').html()
         render: ->
-            @$el.html this.template(@model.toJSON())
+            @$el.html this.template @model.attributes
             $(@el).find('i').hide()
             @
         showProductOptions: (event) ->
@@ -91,24 +84,36 @@ jQuery ->
 
 
     # ###############
-    # ProductItemView
+    # Product Item View Section
     class ProductItemView extends Backbone.View
         el: '#inventory-view-content'
         initialize: (options) ->
-            @storeSelectView = new StoreSelectView()
-            @productView = new ProductView()
-        render: ->
+            @storeSelectView =  new StoreSelectView()
+            @productView =  new ProductItemBodyView()
+        render: (productModel) ->
             @storeSelectView.render()
-            @productView.render()
-        renderProductView: ->
-            @productView.render()
-    # ProductItemView
-    class ProductView extends Backbone.View
+            @productView.render(productModel)
+        renderProductItemMenuView: ->
+            @productView.render(productModel)
+    # Product Item View Section
+    class ProductItemBodyView extends Backbone.View
         el: '#inventory-view-body'
         template: _.template ($ '#product-view-template').html()
-        render: ->
+        initialize: ->
+            @currentProduct = null
+        render: (productModel) ->
+            @$el.html this.template({})
+            @renderProductContent(productModel)
+            @
+        renderProductContent: (productModel) ->
+            @currentProduct = new ProductItemContentView()
+            @$('#product-view-content').html @currentProduct.render(productModel).el
+    class ProductItemContentView extends Backbone.View
+        template: _.template ($ '#product-content-template').html()
+        render: (productModel) ->
             @$el.html this.template({})
             @
+    # ###############
 
 
     class OrderListView extends Backbone.View

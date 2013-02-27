@@ -9,7 +9,7 @@ jQuery ->
         initialize: ->
             @inventoryControllerView = @options.inventoryControllerView
         inventoryRender: ->
-            @inventoryControllerView.render()
+            @inventoryControllerView.renderProductsListView()
         dashboardRender: ->
 
     @app = window.app ? {}
