@@ -9,31 +9,31 @@
 </script>
 
 <script type="text/template" id="product-view-supplier-name-template">
-  <p> <strong> Supplier </strong> <%= name %>
+  <address>
+    <strong>Supplier</strong><br>
+    <%= name %>
+  </address>
 </script>
 
 <script type="text/template" id="product-view-content-template">
   <div class="row-fluid">
+    <h3><%= description.name %></h3>
+  </div>
+  <div class="row-fluid">
     <div class="span5">
-      <h3><%= description.name %></h3>
       <p class="lead"><%= description.brand %></p>
-      <p> <strong> Order </strong> <%= _order.referenceNum %>
+      <address>
+        <strong>Order</strong><br>
+        <%= _order.referenceNum %>
+      </address>
       <div id="product-view-supplier-name">
       </div>
     </div>
     <div class="span7">
-      <address>
-        <strong>Twitter, Inc.</strong><br>
-        795 Folsom Ave, Suite 600<br>
-        San Francisco, CA 94107<br>
-        <abbr title="Phone">P:</abbr> (123) 456-7890
-      </address>
-
-      <address>
-        <strong>Full Name</strong><br>
-        <a href="mailto:#">first.last@example.com</a>
-      </address>
-      <!--Body content-->
+      <p> <strong> Category: </strong> <%= category %>
+      <p> <strong> Price: </strong> <%= price * 0.01 %>
+      <p> <strong> Date Added: </strong> <%= new Date(dateCreated).toDateString() %>
+      <p> <strong> Quantity: </strong> <%= totalQuantity %>
     </div>
   </div>
 </script>
