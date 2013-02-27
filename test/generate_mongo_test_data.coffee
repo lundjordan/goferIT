@@ -349,16 +349,20 @@ async.series [
                 price: 40099
                 totalQuantity: 9
                 subTotalQuantity: [
-                    size: 8
+                    measurementName: 'size'
+                    measurementValue: 8
                     quantity: 3
                 ,
-                    size: 9
+                    measurementName: 'size'
+                    measurementValue: 9
                     quantity: 3
                 ,
-                    size: 10
+                    measurementName: 'size'
+                    measurementValue: 10
                     quantity: 2
                 ,
-                    size: 11
+                    measurementName: 'size'
+                    measurementValue: 11
                     quantity: 1
                 ]
             ,
@@ -371,16 +375,20 @@ async.series [
                 price: 65099
                 totalQuantity: 8
                 subTotalQuantity: [
-                    size: 9
+                    measurementName: 'size'
+                    measurementValue: 9
                     quantity: 1
                 ,
-                    size: 10
+                    measurementName: 'size'
+                    measurementValue: 10
                     quantity: 3
                 ,
-                    size: 11
+                    measurementName: 'size'
+                    measurementValue: 11
                     quantity: 4
                 ,
-                    size: 12
+                    measurementName: 'size'
+                    measurementValue: 12
                     quantity: 0
                 ]
             ,
@@ -392,7 +400,8 @@ async.series [
                 price: 14099
                 totalQuantity: 2
                 subTotalQuantity: [
-                    size: 9
+                    measurementName: 'size'
+                    measurementValue: 9
                     quantity: 2
                 ]
             ,
@@ -404,16 +413,20 @@ async.series [
                 price: 19099
                 totalQuantity: 7
                 subTotalQuantity: [
-                    size: 9
+                    measurementName: 'size'
+                    measurementValue: 10
                     quantity: 3
                 ,
-                    size: 10
+                    measurementName: 'size'
+                    measurementValue: 9
                     quantity: 2
                 ,
-                    size: 11
+                    measurementName: 'size'
+                    measurementValue: 8
                     quantity: 1
                 ,
-                    size: 12
+                    measurementName: 'size'
+                    measurementValue: 12
                     quantity: 1
                 ]
             ]
@@ -428,7 +441,8 @@ async.series [
                 price: 50999
                 totalQuantity: 3
                 subTotalQuantity: [
-                    size: 154
+                    measurementName: 'length'
+                    measurementValue: 145
                     quantity: 3
                 ]
             ,
@@ -440,10 +454,12 @@ async.series [
                 price: 76999
                 totalQuantity: 4
                 subTotalQuantity: [
-                    size: 145
+                    measurementName: 'length'
+                    measurementValue: 145
                     quantity: 3
                 ,
-                    size: 130
+                    measurementName: 'length'
+                    measurementValue: 130
                     quantity: 1
                 ]
             ]

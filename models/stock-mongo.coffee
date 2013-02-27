@@ -20,6 +20,7 @@ StockSchema = new mongoose.Schema
         cost: Number
         price: Number
         totalQuantity: Number
+        subTotalQuantity: []
         dateCreated:
             type: Date
             default: new Date().toISOString()

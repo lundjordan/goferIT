@@ -108,10 +108,15 @@ jQuery ->
         renderProductContent: (productModel) ->
             @currentProduct = new ProductItemContentView()
             @currentProductSupplier = new ProductItemSupplierNameView()
+            @currentProductItemSubQuantity = new ProductItemSubQuantityView()
             @$('#product-view-content')
                 .html @currentProduct.render(productModel).el
             @$('#product-view-supplier-name')
                 .html @currentProductSupplier.render(productModel).el
+            if productModel.attributes.subTotalQuantity
+                @$('#sub-quantity-totals')
+                    .html @currentProductItemSubQuantity.render(productModel).el
+
     class ProductItemContentView extends Backbone.View
         className: 'container-fluid'
         template: _.template ($ '#product-view-content-template').html()
@@ -126,7 +131,32 @@ jQuery ->
             supplierName = app.Suppliers.get(supplierID)
             @$el.html this.template(supplierName.attributes)
             @
+    class ProductItemSubQuantityView extends Backbone.View
+        className: 'container-fluid'
+        template: _.template ($ '#product-view-sub-quantity-template').html()
+        render: (productModel) ->
+            # first let's sort the subquantities for readibility in table
+            productSubQuants = productModel.attributes.subTotalQuantity
+            _.sortBy productSubQuants, (el) ->
+                return el.measurementValue
+            @$el.html this.template({})
+
+            # now let's add column 1 name and row 1 titles
+            tableHeaderValues = "<th>Measurement</th>"
+            tableRow1Values = "<td>#{productSubQuants[0].measurementName}</td>"
+
+            # fill in the remaining rows/columns with the subquants
+            _.each productSubQuants, (el) ->
+                tableHeaderValues += "<th>#{el.measurementValue}</th>"
+                tableRow1Values += "<td>#{el.quantity}</td>"
+
+            # finally append this to their respective th and td tags
+            @$('#product-sub-quantity-thead-tr').append tableHeaderValues
+            @$('#product-sub-quantity-tbody-td').append tableRow1Values
+
+            @
     # ###############
+    # dateCreated, price, category, quantity
 
 
     class OrderListView extends Backbone.View

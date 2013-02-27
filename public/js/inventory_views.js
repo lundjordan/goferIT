@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryControllerView, OrderListView, ProductItemBodyView, ProductItemContentView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListView, ProductsTable, StoreSelectView, _ref;
+    var InventoryControllerView, OrderListView, ProductItemBodyView, ProductItemContentView, ProductItemSubQuantityView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListView, ProductsTable, StoreSelectView, _ref;
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -231,8 +231,12 @@
       ProductItemBodyView.prototype.renderProductContent = function(productModel) {
         this.currentProduct = new ProductItemContentView();
         this.currentProductSupplier = new ProductItemSupplierNameView();
+        this.currentProductItemSubQuantity = new ProductItemSubQuantityView();
         this.$('#product-view-content').html(this.currentProduct.render(productModel).el);
-        return this.$('#product-view-supplier-name').html(this.currentProductSupplier.render(productModel).el);
+        this.$('#product-view-supplier-name').html(this.currentProductSupplier.render(productModel).el);
+        if (productModel.attributes.subTotalQuantity) {
+          return this.$('#sub-quantity-totals').html(this.currentProductItemSubQuantity.render(productModel).el);
+        }
       };
 
       return ProductItemBodyView;
@@ -278,6 +282,39 @@
       };
 
       return ProductItemSupplierNameView;
+
+    })(Backbone.View);
+    ProductItemSubQuantityView = (function(_super) {
+
+      __extends(ProductItemSubQuantityView, _super);
+
+      function ProductItemSubQuantityView() {
+        return ProductItemSubQuantityView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductItemSubQuantityView.prototype.className = 'container-fluid';
+
+      ProductItemSubQuantityView.prototype.template = _.template(($('#product-view-sub-quantity-template')).html());
+
+      ProductItemSubQuantityView.prototype.render = function(productModel) {
+        var productSubQuants, tableHeaderValues, tableRow1Values;
+        productSubQuants = productModel.attributes.subTotalQuantity;
+        _.sortBy(productSubQuants, function(el) {
+          return el.measurementValue;
+        });
+        this.$el.html(this.template({}));
+        tableHeaderValues = "<th>Measurement</th>";
+        tableRow1Values = "<td>" + productSubQuants[0].measurementName + "</td>";
+        _.each(productSubQuants, function(el) {
+          tableHeaderValues += "<th>" + el.measurementValue + "</th>";
+          return tableRow1Values += "<td>" + el.quantity + "</td>";
+        });
+        this.$('#product-sub-quantity-thead-tr').append(tableHeaderValues);
+        this.$('#product-sub-quantity-tbody-td').append(tableRow1Values);
+        return this;
+      };
+
+      return ProductItemSubQuantityView;
 
     })(Backbone.View);
     OrderListView = (function(_super) {
