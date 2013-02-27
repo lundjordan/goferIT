@@ -189,18 +189,30 @@
 
       ProductItemView.prototype.el = '#inventory-view-content';
 
+      ProductItemView.prototype.events = {
+        'click #product-item-prev-link': 'renderProductItemPrevView',
+        'click #product-item-next-link': 'renderProductItemNextView'
+      };
+
       ProductItemView.prototype.initialize = function(options) {
         this.storeSelectView = new StoreSelectView();
         return this.productView = new ProductItemBodyView();
       };
 
       ProductItemView.prototype.render = function(productModel) {
+        this.model = productModel;
         this.storeSelectView.render();
-        return this.productView.render(productModel);
+        return this.productView.render(this.model);
       };
 
-      ProductItemView.prototype.renderProductItemMenuView = function() {
-        return this.productView.render(productModel);
+      ProductItemView.prototype.renderProductItemPrevView = function(event) {
+        this.model = app.Products.findPrev(this.model);
+        return this.productView.render(this.model);
+      };
+
+      ProductItemView.prototype.renderProductItemNextView = function(event) {
+        this.model = app.Products.findNext(this.model);
+        return this.productView.render(this.model);
       };
 
       return ProductItemView;
@@ -275,9 +287,15 @@
 
       ProductItemSupplierNameView.prototype.render = function(productModel) {
         var supplierID, supplierName;
-        supplierID = productModel.attributes._order._supplier;
-        supplierName = app.Suppliers.get(supplierID);
-        this.$el.html(this.template(supplierName.attributes));
+        if (productModel.attributes._order) {
+          supplierID = productModel.attributes._order._supplier;
+          supplierName = app.Suppliers.get(supplierID);
+          this.$el.html(this.template(supplierName.attributes));
+        } else {
+          this.$el.html(this.template({
+            name: 'N/A'
+          }));
+        }
         return this;
       };
 
@@ -303,8 +321,8 @@
           return el.measurementValue;
         });
         this.$el.html(this.template({}));
-        tableHeaderValues = "<th>Measurement</th>";
-        tableRow1Values = "<td>" + productSubQuants[0].measurementName + "</td>";
+        tableHeaderValues = "<th>" + productSubQuants[0].measurementName + "</th>";
+        tableRow1Values = "<td>Totals</td>";
         _.each(productSubQuants, function(el) {
           tableHeaderValues += "<th>" + el.measurementValue + "</th>";
           return tableRow1Values += "<td>" + el.quantity + "</td>";

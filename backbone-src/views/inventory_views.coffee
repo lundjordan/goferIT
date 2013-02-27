@@ -87,14 +87,22 @@ jQuery ->
     # Product Item View Section
     class ProductItemView extends Backbone.View
         el: '#inventory-view-content'
+        events:
+            'click #product-item-prev-link': 'renderProductItemPrevView'
+            'click #product-item-next-link': 'renderProductItemNextView'
         initialize: (options) ->
             @storeSelectView =  new StoreSelectView()
             @productView =  new ProductItemBodyView()
         render: (productModel) ->
+            @model = productModel
             @storeSelectView.render()
-            @productView.render(productModel)
-        renderProductItemMenuView: ->
-            @productView.render(productModel)
+            @productView.render @model
+        renderProductItemPrevView: (event) ->
+            @model = app.Products.findPrev @model
+            @productView.render @model
+        renderProductItemNextView: (event) ->
+            @model = app.Products.findNext @model
+            @productView.render @model
     # Product Item View Section
     class ProductItemBodyView extends Backbone.View
         el: '#inventory-view-body'
@@ -127,9 +135,12 @@ jQuery ->
     class ProductItemSupplierNameView extends Backbone.View
         template: _.template ($ '#product-view-supplier-name-template').html()
         render: (productModel) ->
-            supplierID = productModel.attributes._order._supplier
-            supplierName = app.Suppliers.get(supplierID)
-            @$el.html this.template(supplierName.attributes)
+            if productModel.attributes._order
+                supplierID = productModel.attributes._order._supplier
+                supplierName = app.Suppliers.get(supplierID)
+                @$el.html this.template(supplierName.attributes)
+            else
+                @$el.html this.template({name: 'N/A'})
             @
     class ProductItemSubQuantityView extends Backbone.View
         className: 'container-fluid'
@@ -142,8 +153,8 @@ jQuery ->
             @$el.html this.template({})
 
             # now let's add column 1 name and row 1 titles
-            tableHeaderValues = "<th>Measurement</th>"
-            tableRow1Values = "<td>#{productSubQuants[0].measurementName}</td>"
+            tableHeaderValues = "<th>#{productSubQuants[0].measurementName}</th>"
+            tableRow1Values = "<td>Totals</td>"
 
             # fill in the remaining rows/columns with the subquants
             _.each productSubQuants, (el) ->
