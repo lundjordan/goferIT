@@ -58,7 +58,7 @@ block content
               a(href='#finance-main-content', data-toggle='tab')
                 <i class='icon-book'></i> Finance
       div.span10
-        div#main-window-main-content.tab-content
+        div#main-window-main-content.tab-content.active
           div#dashboard-main-content.tab-pane
           div#pos-main-content.tab-pane
           div#inventory-main-content.tab-pane
@@ -75,17 +75,19 @@ block content
                   .tabbable
                     ul.nav.nav-tabs
                       li#inventory-list-tab.active
-                        a(href='#', data-toggle='tab') List
+                        a(href='#products-list-view-content', data-toggle='tab') List
                       li#inventory-item-tab
-                        a(href='#', data-toggle='tab') View
+                        a(href='#product-item-view-content', data-toggle='tab') View
                       li#inventory-create-tab
                         a(href='#', data-toggle='tab') Create/Edit
                     .tab-content
-                      #inventory-view-content.tab-pane.active
-                        #inventory-view-head
-                        #inventory-view-body
-                      // #product-item-view.tab-pane
-                      // #product-create-view.tab-pane
+                      #products-list-view-content.tab-pane.active
+                        #products-view-head
+                        #products-view-body
+                      #product-item-view-content.tab-pane
+                        #product-item-view-head
+                        #product-item-view-body
+                      #product-create-view-content.tab-pane
                 #order-main-view.tab-pane
                   .tabbable
                     ul.nav.nav-tabs

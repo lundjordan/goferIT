@@ -14,9 +14,12 @@ jQuery ->
         renderProductDefaultItemView: ->
             productItemView = new ProductItemView()
             productItemView.render app.Products.models[0]
-        renderProductSpecificItemView: (event) ->
+        renderProductSpecificItemView: (model) ->
+            # $('#inventory-list-tab').removeClass('active')
+            # $('#inventory-item-tab').addClass('active')
+            $('#inventory-item-tab a').tab('show');
             productItemView = new ProductItemView()
-            productItemView.render app.Products.models[0]
+            productItemView.render model
         renderOrderListView: ->
             orderListView = new OrderListView()
             orderListView.render()
@@ -24,7 +27,7 @@ jQuery ->
     # ###############
     # HELPER CLASS -> SHARED
     class StoreSelectView extends Backbone.View
-        el: '#inventory-view-head'
+        el: '#products-view-head'
         template: _.template ($ '#store-names-template').html()
         render: ->
             @$el.html this.template({})
@@ -38,7 +41,7 @@ jQuery ->
     # ###############
     # Products List View Section
     class ProductsListView extends Backbone.View
-        el: '#inventory-view-content'
+        el: '#products-list-view-content'
         events:
             'change #store-name-select': 'renderProductsTable'
         initialize: (options) ->
@@ -51,7 +54,7 @@ jQuery ->
             @productsTable.render()
     # Products List View Section
     class ProductsTable extends Backbone.View
-        el: '#inventory-view-body'
+        el: '#products-view-body'
         template: _.template ($ '#products-table-template').html()
         render: ->
             @$el.html this.template({})
@@ -60,7 +63,7 @@ jQuery ->
         addOne: (product) ->
             if $('#store-name-select').val() is product.get('storeName')
                 view = new ProductListItemView model: product
-                (@$ "#inventory-table-list").append view.render().el
+                (@$ "#products-table-list").append view.render().el
         addAll: ->
             app.Products.each @addOne, @
     # Products List View Section
@@ -69,6 +72,7 @@ jQuery ->
         events:
             'mouseover': 'showProductOptions'
             'mouseout': 'hideProductOptions'
+            'click #product-view-eye-link': 'renderProductItemView'
         template: _.template ($ '#product-tr-template').html()
         render: ->
             @$el.html this.template @model.attributes
@@ -80,22 +84,25 @@ jQuery ->
         hideProductOptions: (event) ->
             # $('#item-options').html()
             $(@el).find('i').hide()
+        renderProductItemView: ->
+            app.appControllerView.inventoryControllerView
+                .renderProductSpecificItemView @model
     # ###############
 
 
     # ###############
     # Product Item View Section
     class ProductItemView extends Backbone.View
-        el: '#inventory-view-content'
+        el: '#product-item-view-content'
         events:
             'click #product-item-prev-link': 'renderProductItemPrevView'
             'click #product-item-next-link': 'renderProductItemNextView'
         initialize: (options) ->
-            @storeSelectView =  new StoreSelectView()
+            # @storeSelectView = new StoreSelectView()
             @productView =  new ProductItemBodyView()
         render: (productModel) ->
             @model = productModel
-            @storeSelectView.render()
+            # @storeSelectView.render()
             @productView.render @model
         renderProductItemPrevView: (event) ->
             @model = app.Products.findPrev @model
@@ -105,7 +112,7 @@ jQuery ->
             @productView.render @model
     # Product Item View Section
     class ProductItemBodyView extends Backbone.View
-        el: '#inventory-view-body'
+        el: '#product-item-view-body'
         template: _.template ($ '#product-view-template').html()
         initialize: ->
             @currentProduct = null
@@ -124,7 +131,6 @@ jQuery ->
             if productModel.attributes.subTotalQuantity
                 @$('#sub-quantity-totals')
                     .html @currentProductItemSubQuantity.render(productModel).el
-
     class ProductItemContentView extends Backbone.View
         className: 'container-fluid'
         template: _.template ($ '#product-view-content-template').html()

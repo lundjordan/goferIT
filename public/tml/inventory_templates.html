@@ -92,14 +92,14 @@
         <th>Order Refnum</th>
       </tr>
     </thead>
-    <tbody id="inventory-table-list">
+    <tbody id="products-table-list">
     </tbody>
   </table>
 </script>
 
 <script type="text/template" id="product-tr-template">
   <td>
-    <i class='icon-eye-open'></i>
+    <a href='#' id='product-view-eye-link'><i class='icon-eye-open'></i><a>
     <i class='icon-pencil'></i>
     <i class='icon-trash'></i>
     <%= description.name %>
