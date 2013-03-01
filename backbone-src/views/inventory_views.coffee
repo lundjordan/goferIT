@@ -43,15 +43,16 @@ jQuery ->
     # ###############
     # HELPER CLASS -> SHARED
     class StoreSelectView extends Backbone.View
-        # el: '#products-view-head'
-        template: _.template ($ '#store-names-template').html()
         render: ->
+            console.log this.template()
             @$el.html this.template({})
             storeNames = app.Companies.models[0].get 'stores'
             @addToSelect(store.name) for store in storeNames
             @
         addToSelect: (storeName) ->
             @$('#store-name-select').append "<option>#{storeName}</option>"
+    class ProductsListStoreSelectView extends StoreSelectView
+        template: _.template ($ '#store-names-template').html()
     # ###############
 
     # ###############
@@ -62,7 +63,7 @@ jQuery ->
             'change #store-name-select': 'renderProductsTable'
         template: _.template ($ '#inventory-content-template').html()
         initialize: (options) ->
-            @storeSelectView = new StoreSelectView()
+            @storeSelectView = new ProductsListStoreSelectView()
             @productsTable = new ProductsTable()
         render: ->
             @$el.html this.template({})
@@ -117,7 +118,7 @@ jQuery ->
             'click #product-item-next-link': 'renderProductItemNextView'
         template: _.template ($ '#inventory-content-template').html()
         initialize: (options) ->
-            # @storeSelectView = new StoreSelectView()
+            # @storeSelectView = new ProductsListStoreSelectView()
             @productView =  new ProductItemBodyView()
         render: (productModel) ->
             @model = productModel
@@ -202,9 +203,13 @@ jQuery ->
         template: _.template ($ '#inventory-content-template').html()
         initialize: ->
             @productCreateBodyView =  new ProductCreateBodyView()
+            @storeSelectView = new StoreSelectView()
+            @storeSelectView.template = _.template ($ '#product-create-store-names-template').html()
         render: ->
             @$el.html this.template({})
             $("#inventory-view-body").html @productCreateBodyView.render().el
+            $("#product-create-store-names").html @storeSelectView.render().el
+            # $("#store-name-select").html @storeSelectView.render().el
     class ProductCreateBodyView extends Backbone.View
         template: _.template ($ '#product-create-template').html()
         render: ->

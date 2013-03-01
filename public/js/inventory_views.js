@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryControllerView, OrderListView, ProductCreateBodyView, ProductCreateView, ProductItemBodyView, ProductItemContentView, ProductItemSubQuantityView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListView, ProductsTable, StoreSelectView, _ref;
+    var InventoryControllerView, OrderListView, ProductCreateBodyView, ProductCreateView, ProductItemBodyView, ProductItemContentView, ProductItemSubQuantityView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListStoreSelectView, ProductsListView, ProductsTable, StoreSelectView, _ref;
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -78,10 +78,9 @@
         return StoreSelectView.__super__.constructor.apply(this, arguments);
       }
 
-      StoreSelectView.prototype.template = _.template(($('#store-names-template')).html());
-
       StoreSelectView.prototype.render = function() {
         var store, storeNames, _i, _len;
+        console.log(this.template());
         this.$el.html(this.template({}));
         storeNames = app.Companies.models[0].get('stores');
         for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
@@ -98,6 +97,19 @@
       return StoreSelectView;
 
     })(Backbone.View);
+    ProductsListStoreSelectView = (function(_super) {
+
+      __extends(ProductsListStoreSelectView, _super);
+
+      function ProductsListStoreSelectView() {
+        return ProductsListStoreSelectView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductsListStoreSelectView.prototype.template = _.template(($('#store-names-template')).html());
+
+      return ProductsListStoreSelectView;
+
+    })(StoreSelectView);
     ProductsListView = (function(_super) {
 
       __extends(ProductsListView, _super);
@@ -115,7 +127,7 @@
       ProductsListView.prototype.template = _.template(($('#inventory-content-template')).html());
 
       ProductsListView.prototype.initialize = function(options) {
-        this.storeSelectView = new StoreSelectView();
+        this.storeSelectView = new ProductsListStoreSelectView();
         return this.productsTable = new ProductsTable();
       };
 
@@ -371,12 +383,15 @@
       ProductCreateView.prototype.template = _.template(($('#inventory-content-template')).html());
 
       ProductCreateView.prototype.initialize = function() {
-        return this.productCreateBodyView = new ProductCreateBodyView();
+        this.productCreateBodyView = new ProductCreateBodyView();
+        this.storeSelectView = new StoreSelectView();
+        return this.storeSelectView.template = _.template(($('#product-create-store-names-template')).html());
       };
 
       ProductCreateView.prototype.render = function() {
         this.$el.html(this.template({}));
-        return $("#inventory-view-body").html(this.productCreateBodyView.render().el);
+        $("#inventory-view-body").html(this.productCreateBodyView.render().el);
+        return $("#product-create-store-names").html(this.storeSelectView.render().el);
       };
 
       return ProductCreateView;
