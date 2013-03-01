@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryControllerView, OrderListView, ProductItemBodyView, ProductItemContentView, ProductItemSubQuantityView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListView, ProductsTable, StoreSelectView, _ref;
+    var InventoryControllerView, OrderListView, ProductCreateBodyView, ProductCreateView, ProductItemBodyView, ProductItemContentView, ProductItemSubQuantityView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListView, ProductsTable, StoreSelectView, _ref;
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -19,32 +19,52 @@
         'click #product-menu-pill': 'renderProductsListView',
         'click #inventory-list-tab': 'renderProductsListView',
         'click #inventory-item-tab': 'renderProductDefaultItemView',
+        'click #inventory-create-tab': 'renderProductCreateView',
         'click #order-menu-pill': 'renderOrderListView'
       };
 
+      InventoryControllerView.prototype.initialize = function() {
+        return this.currentView = null;
+      };
+
       InventoryControllerView.prototype.renderProductsListView = function() {
-        var productsListView;
-        productsListView = new ProductsListView();
-        return productsListView.render();
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        this.currentView = new ProductsListView();
+        return this.currentView.render();
       };
 
       InventoryControllerView.prototype.renderProductDefaultItemView = function() {
-        var productItemView;
-        productItemView = new ProductItemView();
-        return productItemView.render(app.Products.models[0]);
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        this.currentView = new ProductItemView();
+        return this.currentView.render(app.Products.models[0]);
       };
 
       InventoryControllerView.prototype.renderProductSpecificItemView = function(model) {
-        var productItemView;
-        $('#inventory-item-tab a').tab('show');
-        productItemView = new ProductItemView();
-        return productItemView.render(model);
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        this.currentView = new ProductItemView();
+        return this.currentView.render(model);
+      };
+
+      InventoryControllerView.prototype.renderProductCreateView = function() {
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        this.currentView = new ProductCreateView();
+        return this.currentView.render();
       };
 
       InventoryControllerView.prototype.renderOrderListView = function() {
-        var orderListView;
-        orderListView = new OrderListView();
-        return orderListView.render();
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        this.currentView = new OrderListView();
+        return this.currentView.render();
       };
 
       return InventoryControllerView;
@@ -57,8 +77,6 @@
       function StoreSelectView() {
         return StoreSelectView.__super__.constructor.apply(this, arguments);
       }
-
-      StoreSelectView.prototype.el = '#products-view-head';
 
       StoreSelectView.prototype.template = _.template(($('#store-names-template')).html());
 
@@ -94,14 +112,17 @@
         'change #store-name-select': 'renderProductsTable'
       };
 
+      ProductsListView.prototype.template = _.template(($('#inventory-content-template')).html());
+
       ProductsListView.prototype.initialize = function(options) {
         this.storeSelectView = new StoreSelectView();
         return this.productsTable = new ProductsTable();
       };
 
       ProductsListView.prototype.render = function() {
-        this.storeSelectView.render();
-        return this.productsTable.render();
+        this.$el.html(this.template({}));
+        $("#inventory-view-head").html(this.storeSelectView.render().el);
+        return $("#inventory-view-body").html(this.productsTable.render().el);
       };
 
       ProductsListView.prototype.renderProductsTable = function() {
@@ -118,8 +139,6 @@
       function ProductsTable() {
         return ProductsTable.__super__.constructor.apply(this, arguments);
       }
-
-      ProductsTable.prototype.el = '#products-view-body';
 
       ProductsTable.prototype.template = _.template(($('#products-table-template')).html());
 
@@ -200,13 +219,16 @@
         'click #product-item-next-link': 'renderProductItemNextView'
       };
 
+      ProductItemView.prototype.template = _.template(($('#inventory-content-template')).html());
+
       ProductItemView.prototype.initialize = function(options) {
         return this.productView = new ProductItemBodyView();
       };
 
       ProductItemView.prototype.render = function(productModel) {
         this.model = productModel;
-        return this.productView.render(this.model);
+        this.$el.html(this.template({}));
+        return $("#inventory-view-body").html(this.productView.render(this.model).el);
       };
 
       ProductItemView.prototype.renderProductItemPrevView = function(event) {
@@ -229,8 +251,6 @@
       function ProductItemBodyView() {
         return ProductItemBodyView.__super__.constructor.apply(this, arguments);
       }
-
-      ProductItemBodyView.prototype.el = '#product-item-view-body';
 
       ProductItemBodyView.prototype.template = _.template(($('#product-view-template')).html());
 
@@ -271,7 +291,6 @@
       ProductItemContentView.prototype.template = _.template(($('#product-view-content-template')).html());
 
       ProductItemContentView.prototype.render = function(productModel) {
-        console.log(productModel.attributes);
         this.$el.html(this.template(productModel.attributes));
         return this;
       };
@@ -337,6 +356,48 @@
       };
 
       return ProductItemSubQuantityView;
+
+    })(Backbone.View);
+    ProductCreateView = (function(_super) {
+
+      __extends(ProductCreateView, _super);
+
+      function ProductCreateView() {
+        return ProductCreateView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductCreateView.prototype.el = '#product-create-view-content';
+
+      ProductCreateView.prototype.template = _.template(($('#inventory-content-template')).html());
+
+      ProductCreateView.prototype.initialize = function() {
+        return this.productCreateBodyView = new ProductCreateBodyView();
+      };
+
+      ProductCreateView.prototype.render = function() {
+        this.$el.html(this.template({}));
+        return $("#inventory-view-body").html(this.productCreateBodyView.render().el);
+      };
+
+      return ProductCreateView;
+
+    })(Backbone.View);
+    ProductCreateBodyView = (function(_super) {
+
+      __extends(ProductCreateBodyView, _super);
+
+      function ProductCreateBodyView() {
+        return ProductCreateBodyView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
+
+      ProductCreateBodyView.prototype.render = function() {
+        this.$el.html(this.template({}));
+        return this;
+      };
+
+      return ProductCreateBodyView;
 
     })(Backbone.View);
     OrderListView = (function(_super) {

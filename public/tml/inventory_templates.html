@@ -1,3 +1,8 @@
+<script type="text/template" id="inventory-content-template">
+  <div id='inventory-view-head'> </div>
+  <div id='inventory-view-body'> </div>
+</script>
+
 <script type="text/template" id="store-names-template">
   <div class="row">
     <label class='inline pull-right'>
@@ -73,7 +78,7 @@
           <li id='product-item-next-link'><a href="#">Next</a></li>
         </ul>
       </div>
-      <div id='product-view-content' class="span10 well">
+      <div id='product-view-content' class="span10">
       </div>
     </div>
   </div>
@@ -113,7 +118,8 @@
   <% } %>
 </script>
 
-<script type="text/template" id="product-add-template">
+
+<script type="text/template" id="product-create-template">
   <p class='lead'>add a product to your inventory</p>
   <form class="form-horizontal">
     <div class="control-group">
