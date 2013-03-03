@@ -44,7 +44,6 @@ jQuery ->
     # HELPER CLASS -> SHARED
     class StoreSelectView extends Backbone.View
         render: ->
-            console.log this.template()
             @$el.html this.template({})
             storeNames = app.Companies.models[0].get 'stores'
             @addToSelect(store.name) for store in storeNames
@@ -204,17 +203,36 @@ jQuery ->
         initialize: ->
             @productCreateBodyView =  new ProductCreateBodyView()
             @storeSelectView = new StoreSelectView()
+            @supplierSelectView = new SupplierSelectView()
             @storeSelectView.template = _.template ($ '#product-create-store-names-template').html()
         render: ->
             @$el.html this.template({})
             $("#inventory-view-body").html @productCreateBodyView.render().el
             $("#product-create-store-names").html @storeSelectView.render().el
+            $("#product-create-supplier-names").html @supplierSelectView.render().el
             # $("#store-name-select").html @storeSelectView.render().el
     class ProductCreateBodyView extends Backbone.View
+        events:
+            "click input[type=radio]": "quantityOptionInput"
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
             @
+        quantityOptionInput: (e) ->
+            console.log $(e.currentTarget).val()
+            if $(e.currentTarget).val() == "sub-total-selected"
+                $("#sub-total-quantity-modal").modal("toggle")
+            $('#grand-total-quantity-content').toggle()
+            $('#sub-total-quantity-content').toggle()
+    class SupplierSelectView extends Backbone.View
+        template: _.template ($ '#product-create-supplier-names-template').html()
+        render: ->
+            @$el.html this.template({})
+            supplierNames = app.Suppliers.pluck "name"
+            @addToSelect(name) for name in supplierNames
+            @
+        addToSelect: (supplierName) ->
+            @$('#supplier-name-select').append "<option>#{supplierName}</option>"
     # ###############
 
 

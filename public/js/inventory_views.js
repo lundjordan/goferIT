@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var InventoryControllerView, OrderListView, ProductCreateBodyView, ProductCreateView, ProductItemBodyView, ProductItemContentView, ProductItemSubQuantityView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListStoreSelectView, ProductsListView, ProductsTable, StoreSelectView, _ref;
+    var InventoryControllerView, OrderListView, ProductCreateBodyView, ProductCreateView, ProductItemBodyView, ProductItemContentView, ProductItemSubQuantityView, ProductItemSupplierNameView, ProductItemView, ProductListItemView, ProductsListStoreSelectView, ProductsListView, ProductsTable, StoreSelectView, SupplierSelectView, _ref;
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -80,7 +80,6 @@
 
       StoreSelectView.prototype.render = function() {
         var store, storeNames, _i, _len;
-        console.log(this.template());
         this.$el.html(this.template({}));
         storeNames = app.Companies.models[0].get('stores');
         for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
@@ -385,13 +384,15 @@
       ProductCreateView.prototype.initialize = function() {
         this.productCreateBodyView = new ProductCreateBodyView();
         this.storeSelectView = new StoreSelectView();
+        this.supplierSelectView = new SupplierSelectView();
         return this.storeSelectView.template = _.template(($('#product-create-store-names-template')).html());
       };
 
       ProductCreateView.prototype.render = function() {
         this.$el.html(this.template({}));
         $("#inventory-view-body").html(this.productCreateBodyView.render().el);
-        return $("#product-create-store-names").html(this.storeSelectView.render().el);
+        $("#product-create-store-names").html(this.storeSelectView.render().el);
+        return $("#product-create-supplier-names").html(this.supplierSelectView.render().el);
       };
 
       return ProductCreateView;
@@ -405,6 +406,10 @@
         return ProductCreateBodyView.__super__.constructor.apply(this, arguments);
       }
 
+      ProductCreateBodyView.prototype.events = {
+        "click input[type=radio]": "quantityOptionInput"
+      };
+
       ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
 
       ProductCreateBodyView.prototype.render = function() {
@@ -412,7 +417,44 @@
         return this;
       };
 
+      ProductCreateBodyView.prototype.quantityOptionInput = function(e) {
+        console.log($(e.currentTarget).val());
+        if ($(e.currentTarget).val() === "sub-total-selected") {
+          $("#sub-total-quantity-modal").modal("toggle");
+        }
+        $('#grand-total-quantity-content').toggle();
+        return $('#sub-total-quantity-content').toggle();
+      };
+
       return ProductCreateBodyView;
+
+    })(Backbone.View);
+    SupplierSelectView = (function(_super) {
+
+      __extends(SupplierSelectView, _super);
+
+      function SupplierSelectView() {
+        return SupplierSelectView.__super__.constructor.apply(this, arguments);
+      }
+
+      SupplierSelectView.prototype.template = _.template(($('#product-create-supplier-names-template')).html());
+
+      SupplierSelectView.prototype.render = function() {
+        var name, supplierNames, _i, _len;
+        this.$el.html(this.template({}));
+        supplierNames = app.Suppliers.pluck("name");
+        for (_i = 0, _len = supplierNames.length; _i < _len; _i++) {
+          name = supplierNames[_i];
+          this.addToSelect(name);
+        }
+        return this;
+      };
+
+      SupplierSelectView.prototype.addToSelect = function(supplierName) {
+        return this.$('#supplier-name-select').append("<option>" + supplierName + "</option>");
+      };
+
+      return SupplierSelectView;
 
     })(Backbone.View);
     OrderListView = (function(_super) {
