@@ -407,7 +407,9 @@
       }
 
       ProductCreateBodyView.prototype.events = {
-        "click input[type=radio]": "quantityOptionInput"
+        "click input[type=radio]": "quantityOptionInput",
+        "click #cancel-sub-total-options": "cancelSubTotalOptions",
+        "click #save-sub-total-options": "saveSubTotalOptions"
       };
 
       ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
@@ -420,10 +422,19 @@
       ProductCreateBodyView.prototype.quantityOptionInput = function(e) {
         console.log($(e.currentTarget).val());
         if ($(e.currentTarget).val() === "sub-total-selected") {
-          $("#sub-total-quantity-modal").modal("toggle");
+          return $("#sub-total-quantity-modal").modal("toggle");
         }
+      };
+
+      ProductCreateBodyView.prototype.cancelSubTotalOptions = function(e) {
+        $("#sub-total-quantity-modal").modal("toggle");
+        return $('input[name=totalOptionsRadio][value="grand-total-selected"]').prop('checked', true);
+      };
+
+      ProductCreateBodyView.prototype.saveSubTotalOptions = function(e) {
         $('#grand-total-quantity-content').toggle();
-        return $('#sub-total-quantity-content').toggle();
+        $('#sub-total-quantity-content').toggle();
+        return console.log($("#measurement-values-input").val());
       };
 
       return ProductCreateBodyView;

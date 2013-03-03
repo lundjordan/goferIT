@@ -214,6 +214,8 @@ jQuery ->
     class ProductCreateBodyView extends Backbone.View
         events:
             "click input[type=radio]": "quantityOptionInput"
+            "click #cancel-sub-total-options": "cancelSubTotalOptions"
+            "click #save-sub-total-options": "saveSubTotalOptions"
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
@@ -222,8 +224,15 @@ jQuery ->
             console.log $(e.currentTarget).val()
             if $(e.currentTarget).val() == "sub-total-selected"
                 $("#sub-total-quantity-modal").modal("toggle")
+        cancelSubTotalOptions: (e) ->
+            $("#sub-total-quantity-modal").modal("toggle")
+            $('input[name=totalOptionsRadio][value="grand-total-selected"]')
+                .prop 'checked', true
+        saveSubTotalOptions: (e) ->
             $('#grand-total-quantity-content').toggle()
             $('#sub-total-quantity-content').toggle()
+            console.log $("#measurement-values-input").val()
+
     class SupplierSelectView extends Backbone.View
         template: _.template ($ '#product-create-supplier-names-template').html()
         render: ->
