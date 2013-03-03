@@ -52,6 +52,26 @@ jQuery ->
             @$('#store-name-select').append "<option>#{storeName}</option>"
     class ProductsListStoreSelectView extends StoreSelectView
         template: _.template ($ '#store-names-template').html()
+    class ProductItemSubQuantityView extends Backbone.View
+        className: 'container-fluid'
+        template: _.template ($ '#product-view-sub-quantity-template').html()
+        render: (productSubQuants) ->
+            @$el.html this.template({})
+
+            # now let's add column 1 name and row 1 titles
+            tableHeaderValues = "<th>#{productSubQuants[0].measurementName}</th>"
+            tableRow1Values = "<td>Totals</td>"
+
+            # fill in the remaining rows/columns with the subquants
+            _.each productSubQuants, (elem) ->
+                tableHeaderValues += "<th>#{elem.measurementValue}</th>"
+                tableRow1Values += "<td>#{elem.quantity}</td>"
+
+            # finally append this to their respective th and td tags
+            @$('#product-sub-quantity-thead-tr').append tableHeaderValues
+            @$('#product-sub-quantity-tbody-td').append tableRow1Values
+
+            @
     # ###############
 
     # ###############
@@ -150,8 +170,12 @@ jQuery ->
             @$('#product-view-supplier-name')
                 .html @currentProductSupplier.render(productModel).el
             if productModel.attributes.subTotalQuantity
+                # first let's sort the subquantities for readibility in table
+                productSubQuants = productModel.attributes.subTotalQuantity
+                _.sortBy productSubQuants, (el) ->
+                    return el.measurementValue
                 @$('#sub-quantity-totals')
-                    .html @currentProductItemSubQuantity.render(productModel).el
+                    .html @currentProductItemSubQuantity.render(productSubQuants).el
     class ProductItemContentView extends Backbone.View
         className: 'container-fluid'
         template: _.template ($ '#product-view-content-template').html()
@@ -167,30 +191,6 @@ jQuery ->
                 @$el.html this.template(supplierName.attributes)
             else
                 @$el.html this.template({name: 'N/A'})
-            @
-    class ProductItemSubQuantityView extends Backbone.View
-        className: 'container-fluid'
-        template: _.template ($ '#product-view-sub-quantity-template').html()
-        render: (productModel) ->
-            # first let's sort the subquantities for readibility in table
-            productSubQuants = productModel.attributes.subTotalQuantity
-            _.sortBy productSubQuants, (el) ->
-                return el.measurementValue
-            @$el.html this.template({})
-
-            # now let's add column 1 name and row 1 titles
-            tableHeaderValues = "<th>#{productSubQuants[0].measurementName}</th>"
-            tableRow1Values = "<td>Totals</td>"
-
-            # fill in the remaining rows/columns with the subquants
-            _.each productSubQuants, (el) ->
-                tableHeaderValues += "<th>#{el.measurementValue}</th>"
-                tableRow1Values += "<td>#{el.quantity}</td>"
-
-            # finally append this to their respective th and td tags
-            @$('#product-sub-quantity-thead-tr').append tableHeaderValues
-            @$('#product-sub-quantity-tbody-td').append tableRow1Values
-
             @
     # ###############
     #
@@ -224,14 +224,33 @@ jQuery ->
             console.log $(e.currentTarget).val()
             if $(e.currentTarget).val() == "sub-total-selected"
                 $("#sub-total-quantity-modal").modal("toggle")
+            $('#grand-total-quantity-content').toggle()
         cancelSubTotalOptions: (e) ->
             $("#sub-total-quantity-modal").modal("toggle")
             $('input[name=totalOptionsRadio][value="grand-total-selected"]')
                 .prop 'checked', true
-        saveSubTotalOptions: (e) ->
             $('#grand-total-quantity-content').toggle()
-            $('#sub-total-quantity-content').toggle()
-            console.log $("#measurement-values-input").val()
+        saveSubTotalOptions: (e) ->
+            $("#sub-total-quantity-modal").modal("toggle")
+            measurementType = $("#measurement-type-input").val()
+            columnNamesString = $("#measurement-values-input").val()
+
+            # split and trim columnNamesString by ','
+            columnNamesArray = columnNamesString.split ','
+            for name, i in columnNamesArray
+                columnNamesArray[i] = name.replace(/(^\s+|\s+$)/g, '')
+
+            productSubQuants = []
+            for columnName in columnNamesArray
+                productSubQuants.push
+                    measurementName: measurementType
+                    measurementValue: columnName
+            # console.log productSubQuants
+            $('#sub-total-quantity-content')
+                .html (new ProductItemSubQuantityView()).render(productSubQuants).el
+            # $('#grand-total-quantity-content').toggle()
+            # $('#sub-total-quantity-content').toggle()
+            # console.log $('#sub-total-quantity-content')
 
     class SupplierSelectView extends Backbone.View
         template: _.template ($ '#product-create-supplier-names-template').html()

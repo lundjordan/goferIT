@@ -109,6 +109,35 @@
       return ProductsListStoreSelectView;
 
     })(StoreSelectView);
+    ProductItemSubQuantityView = (function(_super) {
+
+      __extends(ProductItemSubQuantityView, _super);
+
+      function ProductItemSubQuantityView() {
+        return ProductItemSubQuantityView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductItemSubQuantityView.prototype.className = 'container-fluid';
+
+      ProductItemSubQuantityView.prototype.template = _.template(($('#product-view-sub-quantity-template')).html());
+
+      ProductItemSubQuantityView.prototype.render = function(productSubQuants) {
+        var tableHeaderValues, tableRow1Values;
+        this.$el.html(this.template({}));
+        tableHeaderValues = "<th>" + productSubQuants[0].measurementName + "</th>";
+        tableRow1Values = "<td>Totals</td>";
+        _.each(productSubQuants, function(elem) {
+          tableHeaderValues += "<th>" + elem.measurementValue + "</th>";
+          return tableRow1Values += "<td>" + elem.quantity + "</td>";
+        });
+        this.$('#product-sub-quantity-thead-tr').append(tableHeaderValues);
+        this.$('#product-sub-quantity-tbody-td').append(tableRow1Values);
+        return this;
+      };
+
+      return ProductItemSubQuantityView;
+
+    })(Backbone.View);
     ProductsListView = (function(_super) {
 
       __extends(ProductsListView, _super);
@@ -276,13 +305,18 @@
       };
 
       ProductItemBodyView.prototype.renderProductContent = function(productModel) {
+        var productSubQuants;
         this.currentProduct = new ProductItemContentView();
         this.currentProductSupplier = new ProductItemSupplierNameView();
         this.currentProductItemSubQuantity = new ProductItemSubQuantityView();
         this.$('#product-view-content').html(this.currentProduct.render(productModel).el);
         this.$('#product-view-supplier-name').html(this.currentProductSupplier.render(productModel).el);
         if (productModel.attributes.subTotalQuantity) {
-          return this.$('#sub-quantity-totals').html(this.currentProductItemSubQuantity.render(productModel).el);
+          productSubQuants = productModel.attributes.subTotalQuantity;
+          _.sortBy(productSubQuants, function(el) {
+            return el.measurementValue;
+          });
+          return this.$('#sub-quantity-totals').html(this.currentProductItemSubQuantity.render(productSubQuants).el);
         }
       };
 
@@ -334,39 +368,6 @@
       };
 
       return ProductItemSupplierNameView;
-
-    })(Backbone.View);
-    ProductItemSubQuantityView = (function(_super) {
-
-      __extends(ProductItemSubQuantityView, _super);
-
-      function ProductItemSubQuantityView() {
-        return ProductItemSubQuantityView.__super__.constructor.apply(this, arguments);
-      }
-
-      ProductItemSubQuantityView.prototype.className = 'container-fluid';
-
-      ProductItemSubQuantityView.prototype.template = _.template(($('#product-view-sub-quantity-template')).html());
-
-      ProductItemSubQuantityView.prototype.render = function(productModel) {
-        var productSubQuants, tableHeaderValues, tableRow1Values;
-        productSubQuants = productModel.attributes.subTotalQuantity;
-        _.sortBy(productSubQuants, function(el) {
-          return el.measurementValue;
-        });
-        this.$el.html(this.template({}));
-        tableHeaderValues = "<th>" + productSubQuants[0].measurementName + "</th>";
-        tableRow1Values = "<td>Totals</td>";
-        _.each(productSubQuants, function(el) {
-          tableHeaderValues += "<th>" + el.measurementValue + "</th>";
-          return tableRow1Values += "<td>" + el.quantity + "</td>";
-        });
-        this.$('#product-sub-quantity-thead-tr').append(tableHeaderValues);
-        this.$('#product-sub-quantity-tbody-td').append(tableRow1Values);
-        return this;
-      };
-
-      return ProductItemSubQuantityView;
 
     })(Backbone.View);
     ProductCreateView = (function(_super) {
@@ -422,19 +423,36 @@
       ProductCreateBodyView.prototype.quantityOptionInput = function(e) {
         console.log($(e.currentTarget).val());
         if ($(e.currentTarget).val() === "sub-total-selected") {
-          return $("#sub-total-quantity-modal").modal("toggle");
+          $("#sub-total-quantity-modal").modal("toggle");
         }
+        return $('#grand-total-quantity-content').toggle();
       };
 
       ProductCreateBodyView.prototype.cancelSubTotalOptions = function(e) {
         $("#sub-total-quantity-modal").modal("toggle");
-        return $('input[name=totalOptionsRadio][value="grand-total-selected"]').prop('checked', true);
+        $('input[name=totalOptionsRadio][value="grand-total-selected"]').prop('checked', true);
+        return $('#grand-total-quantity-content').toggle();
       };
 
       ProductCreateBodyView.prototype.saveSubTotalOptions = function(e) {
-        $('#grand-total-quantity-content').toggle();
-        $('#sub-total-quantity-content').toggle();
-        return console.log($("#measurement-values-input").val());
+        var columnName, columnNamesArray, columnNamesString, i, measurementType, name, productSubQuants, _i, _j, _len, _len1;
+        $("#sub-total-quantity-modal").modal("toggle");
+        measurementType = $("#measurement-type-input").val();
+        columnNamesString = $("#measurement-values-input").val();
+        columnNamesArray = columnNamesString.split(',');
+        for (i = _i = 0, _len = columnNamesArray.length; _i < _len; i = ++_i) {
+          name = columnNamesArray[i];
+          columnNamesArray[i] = name.replace(/(^\s+|\s+$)/g, '');
+        }
+        productSubQuants = [];
+        for (_j = 0, _len1 = columnNamesArray.length; _j < _len1; _j++) {
+          columnName = columnNamesArray[_j];
+          productSubQuants.push({
+            measurementName: measurementType,
+            measurementValue: columnName
+          });
+        }
+        return $('#sub-total-quantity-content').html((new ProductItemSubQuantityView()).render(productSubQuants).el);
       };
 
       return ProductCreateBodyView;
