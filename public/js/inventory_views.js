@@ -417,6 +417,7 @@
 
       ProductCreateBodyView.prototype.render = function() {
         this.$el.html(this.template({}));
+        console.log($('#sub-total-quantity-content').html());
         return this;
       };
 
@@ -425,18 +426,22 @@
         if ($(e.currentTarget).val() === "sub-total-selected") {
           $("#sub-total-quantity-modal").modal("toggle");
         }
-        return $('#grand-total-quantity-content').toggle();
+        $('#grand-total-quantity-content').toggle();
+        return $('#sub-total-quantity-content').toggle();
       };
 
       ProductCreateBodyView.prototype.cancelSubTotalOptions = function(e) {
         $("#sub-total-quantity-modal").modal("toggle");
         $('input[name=totalOptionsRadio][value="grand-total-selected"]').prop('checked', true);
-        return $('#grand-total-quantity-content').toggle();
+        $('#grand-total-quantity-content').show();
+        return $('#sub-total-quantity-content').hide();
       };
 
       ProductCreateBodyView.prototype.saveSubTotalOptions = function(e) {
         var columnName, columnNamesArray, columnNamesString, i, measurementType, name, productSubQuants, _i, _j, _len, _len1;
         $("#sub-total-quantity-modal").modal("toggle");
+        $('#sub-total-quantity-content').show();
+        $('#grand-total-quantity-content').hide();
         measurementType = $("#measurement-type-input").val();
         columnNamesString = $("#measurement-values-input").val();
         columnNamesArray = columnNamesString.split(',');
@@ -449,7 +454,8 @@
           columnName = columnNamesArray[_j];
           productSubQuants.push({
             measurementName: measurementType,
-            measurementValue: columnName
+            measurementValue: columnName,
+            quantity: '<input class="input-mini" type="text">'
           });
         }
         return $('#sub-total-quantity-content').html((new ProductItemSubQuantityView()).render(productSubQuants).el);

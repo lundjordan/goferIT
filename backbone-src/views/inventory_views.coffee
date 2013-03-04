@@ -219,19 +219,24 @@ jQuery ->
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
+            console.log $('#sub-total-quantity-content').html()
             @
         quantityOptionInput: (e) ->
             console.log $(e.currentTarget).val()
             if $(e.currentTarget).val() == "sub-total-selected"
                 $("#sub-total-quantity-modal").modal("toggle")
             $('#grand-total-quantity-content').toggle()
+            $('#sub-total-quantity-content').toggle()
         cancelSubTotalOptions: (e) ->
             $("#sub-total-quantity-modal").modal("toggle")
             $('input[name=totalOptionsRadio][value="grand-total-selected"]')
                 .prop 'checked', true
-            $('#grand-total-quantity-content').toggle()
+            $('#grand-total-quantity-content').show()
+            $('#sub-total-quantity-content').hide()
         saveSubTotalOptions: (e) ->
             $("#sub-total-quantity-modal").modal("toggle")
+            $('#sub-total-quantity-content').show()
+            $('#grand-total-quantity-content').hide()
             measurementType = $("#measurement-type-input").val()
             columnNamesString = $("#measurement-values-input").val()
 
@@ -245,6 +250,7 @@ jQuery ->
                 productSubQuants.push
                     measurementName: measurementType
                     measurementValue: columnName
+                    quantity: '<input class="input-mini" type="text">'
             # console.log productSubQuants
             $('#sub-total-quantity-content')
                 .html (new ProductItemSubQuantityView()).render(productSubQuants).el

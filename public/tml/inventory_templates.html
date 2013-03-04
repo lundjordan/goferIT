@@ -125,93 +125,89 @@
     <h2> Create A New Product </h2>
   </div>
   <hr />
-  <form>
-    <div class="row-fluid">
+  <div class="row-fluid">
+    <form>
       <div class="span3 ">
-        <legend>Supply Chain</legend>
         <fieldset>
-          <div id="product-create-store-names"></div>
-          <div id="product-create-supplier-names"></div>
-        </fieldset>
-      </div>
-      <div class="span3">
-        <fieldset>
-          <legend>Description</legend>
           <label>Name</label>
           <input type="text" placeholder="Nexus 4">
           <label>Brand</label>
           <input type="text" placeholder="Google">
           <label>Category</label>
           <input type="text" placeholder="Smart Phones">
+        </fieldset>
+      </div>
+      <div class="span3">
+        <fieldset>
+          <div id="product-create-store-names"></div>
+          <div id="product-create-supplier-names"></div>
           <label>Price</label>
           <input type="text" placeholder="299.99">
           <label>Cost</label>
           <input type="text" placeholder="199.99">
         </fieldset>
       </div>
-      <div class="span4">
+      <div class="span6">
         <fieldset>
-          <legend>Quantity</legend>
-          <label class="radio">
-            <input type="radio" name="totalOptionsRadio" id="total-quantity-radio"
-            value="grand-total-selected" checked>
-            by grand total
-          </label>
-          <label class="radio">
-            <input type="radio" name="totalOptionsRadio" id="sub-quantity-radio"
-            value="sub-total-selected">
-            by sub total
-          </label>
-          <span class="help-block">Store quantity based on total amount
-            <strong>or</strong> by size, length, color, etc</span>
+          <div id="grand-total-quantity-content">
+            <label>Grand Total Quantity</label>
+            <input type="text" placeholder="9">
+          </div>
         </fieldset>
+        <div id="sub-total-quantity-content"> </div>
         <hr />
-        <div id="grand-total-quantity-content">
-          <label>Total</label>
-          <input type="text" placeholder="9">
+        <label class="radio">
+          <input type="radio" name="totalOptionsRadio" id="total-quantity-radio"
+          value="grand-total-selected" checked>
+          by grand total
+        </label>
+        <label class="radio">
+          <input type="radio" name="totalOptionsRadio" id="sub-quantity-radio"
+          value="sub-total-selected">
+          by sub totals
+        </label>
+        <span class="help-block">Store quantity based on total amount
+          <strong>or</strong> by size, length, color, etc</span>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Create</button>
+          <button type="button" class="btn">Clear</button>
         </div>
-        <div id="sub-total-quantity-content">
-        </div>
+      </div>
 
-        <div id="sub-total-quantity-modal" class="modal hide fade">
-          <div class="modal-header">
-            <button type="button" class="close"
-              data-dismiss="modal"
-              aria-hidden="true">&times;</button>
-            <h3>Sub Total Headings</h3>
-          </div>
-          <div class="modal-body">
-            <hr />
-            <fieldset>
-              <label>Measurement Type</label>
-              <input id="measurement-type-input" type="text" placeholder="eg:
-              Size, Color, or Length" value="size">
-              <span class="help-block">specify the measurement differentiator</span>
-            </fieldset>
-            <hr />
-            <label>Measurement Values</label>
-            <input id="measurement-values-input" class="input-xxlarge" type="text"
-            placeholder="small, med, large", value="small, med, large">
-            <span class="help-block">if your measurement type is 'size' above,
-              you could, for example, put 'small, med, large, xlarge'
-              separeted by commas below
-            </span>
-            <hr />
-          </div>
-          <div class="modal-footer">
-            <a href="#" id="cancel-sub-total-options" class="btn">Cancel</a>
-            <a href="#" id='save-sub-total-options' class="btn btn-primary">Save changes</a>
+      <div id="sub-total-quantity-modal" class="modal hide fade">
+        <div class="modal-header">
+          <button type="button" class="close"
+            data-dismiss="modal"
+            aria-hidden="true">&times;</button>
+          <h3>Sub Total Headings</h3>
+        </div>
+        <div class="modal-body">
+          <hr />
+          <fieldset>
+            <label>Measurement Type</label>
+            <input id="measurement-type-input" type="text" placeholder="eg:
+            Size, Color, or Length" value="size">
+            <span class="help-block">specify the measurement differentiator</span>
+          </fieldset>
+          <hr />
+          <label>Measurement Values</label>
+          <input id="measurement-values-input" class="input-xxlarge" type="text"
+          placeholder="small, med, large", value="small, med, large">
+          <span class="help-block">if your measurement type is 'size' above,
+            you could, for example, put 'small, med, large, xlarge'
+            separeted by commas below
+          </span>
+          <hr />
+        </div>
+        <div class="modal-footer">
+          <a href="#" id="cancel-sub-total-options" class="btn">Cancel</a>
+          <a href="#" id='save-sub-total-options' class="btn btn-primary">Create</a>
           </div>
         </div>
         <hr />
       </div>
-      <div class="span2">
-        <legend>Save Options</legend>
-        <button type="submit" class="btn">Clear</button>
-        <button type="submit" class="btn">Create</button>
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </script>
 
 <script type="text/template" id="product-create-store-names-template">
@@ -224,7 +220,7 @@
   <label>
     Supplier
   </label>
-  <select id='supplier-name-select'> </select>
+  <select id='supplier-name-select'><option></option> </select>
 </script>
 
 <script type="text/template" id="order-list-template">
