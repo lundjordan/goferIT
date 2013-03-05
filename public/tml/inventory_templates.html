@@ -126,34 +126,43 @@
   </div>
   <hr />
   <div class="row-fluid">
-    <form>
+    <form id='create-product-form'>
       <div class="span3 ">
-        <fieldset>
-          <label>Name</label>
-          <input type="text" placeholder="Nexus 4">
-          <label>Brand</label>
-          <input type="text" placeholder="Google">
-          <label>Category</label>
-          <input type="text" placeholder="Smart Phones">
-        </fieldset>
+        <div class="control-group">
+          <label class="control-label">Name</label>
+          <div class="controls">
+            <input type="text" name="productName" id="name-input" placeholder="Nexus 4">
+            <p class="help-block"></p>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Brand</label>
+          <div class="controls">
+            <input type="text" id="brand-input" placeholder="Google">
+            <p class="help-block"></p>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Category</label>
+          <div class="controls">
+            <input type="text" id="category-input" placeholder="Smart Phones">
+            <p class="help-block"></p>
+          </div>
+        </div>
       </div>
       <div class="span3">
-        <fieldset>
-          <div id="product-create-store-names"></div>
-          <div id="product-create-supplier-names"></div>
-          <label>Price</label>
-          <input type="text" placeholder="299.99">
-          <label>Cost</label>
-          <input type="text" placeholder="199.99">
-        </fieldset>
+        <div id="product-create-store-names"></div>
+        <div id="product-create-supplier-names"></div>
+        <label>Price</label>
+        <input type="text" placeholder="299.99">
+        <label>Cost</label>
+        <input type="text" placeholder="199.99">
       </div>
       <div class="span6">
-        <fieldset>
-          <div id="grand-total-quantity-content">
-            <label>Grand Total Quantity</label>
-            <input type="text" placeholder="9">
-          </div>
-        </fieldset>
+        <div id="grand-total-quantity-content">
+          <label>Grand Total Quantity</label>
+          <input type="text" placeholder="9">
+        </div>
         <div id="sub-total-quantity-content"> </div>
         <hr />
         <label class="radio">
@@ -169,7 +178,7 @@
         <span class="help-block">Store quantity based on total amount
           <strong>or</strong> by size, length, color, etc</span>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Create</button>
+          <button type="submit" class="btn btn-primary disabled">Create</button>
           <button type="button" class="btn">Clear</button>
         </div>
       </div>

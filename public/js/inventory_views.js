@@ -410,19 +410,21 @@
       ProductCreateBodyView.prototype.events = {
         "click input[type=radio]": "quantityOptionInput",
         "click #cancel-sub-total-options": "cancelSubTotalOptions",
-        "click #save-sub-total-options": "saveSubTotalOptions"
+        "click #save-sub-total-options": "saveSubTotalOptions",
+        "focusout": "validateForm"
       };
 
       ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
 
       ProductCreateBodyView.prototype.render = function() {
         this.$el.html(this.template({}));
-        console.log($('#sub-total-quantity-content').html());
+        this.validateForm();
         return this;
       };
 
+      ProductCreateBodyView.prototype.validateForm = function() {};
+
       ProductCreateBodyView.prototype.quantityOptionInput = function(e) {
-        console.log($(e.currentTarget).val());
         if ($(e.currentTarget).val() === "sub-total-selected") {
           $("#sub-total-quantity-modal").modal("toggle");
         }
