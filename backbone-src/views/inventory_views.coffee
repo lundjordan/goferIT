@@ -216,8 +216,7 @@ jQuery ->
             "click input[type=radio]": "quantityOptionInput"
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
-            "submit #create-new-product-button": "createNewProduct"
-            # "focusout": "validateForm"
+            "click #create-new-product-button": "createNewProduct"
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
@@ -244,8 +243,14 @@ jQuery ->
                     min: 1
         createNewProduct: (e) ->
             e.preventDefault()
-            console.log "made it here"
-            # @$("#create-product-form").submit()
+            if @$("#create-product-form").valid()
+                console.log "VALID!"
+                if app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val())
+                    # create a product
+                    console.log "CREATE!"
+            else
+                # show errors
+                console.log "ERRORS"
 
 
         quantityOptionInput: (e) ->

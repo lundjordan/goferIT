@@ -1,6 +1,6 @@
 # Product Model
 
-class Product extends Backbone.Model
+class Product extends Backbone.NestedModel
     idAttribute: "_id"
     initialize: (attributes, options) ->
         if !attributes.createdAt

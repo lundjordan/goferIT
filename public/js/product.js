@@ -22,7 +22,7 @@
 
     return Product;
 
-  })(Backbone.Model);
+  })(Backbone.NestedModel);
 
   this.app = (_ref = window.app) != null ? _ref : {};
 

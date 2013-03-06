@@ -34,6 +34,13 @@
       return this.at(indexCurrentModel + 1);
     };
 
+    Products.prototype.ifModelExists = function(productName, productBrand) {
+      return this.where({
+        'description.name': productName,
+        'description.brand': productBrand
+      }).length === 1;
+    };
+
     return Products;
 
   })(Backbone.Collection);
