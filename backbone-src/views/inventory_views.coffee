@@ -220,23 +220,17 @@ jQuery ->
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
-            @validateForm()
+            @validateCreateProductForm()
             @
-        validateForm: ->
-            @$("#create-product-form").validate
-                errorElement: "span"
-                errorClass: "help-block"
-                rules:
-                    productName:
-                        minlength: 2
-                        required: true
-                highlight: (input) ->
-                    ($(input)).closest(".control-group").addClass("error")
-                        .removeClass("success")
-                success: (span) ->
-                    ($(span)).closest(".control-group").addClass "success"
-                    span.text("OK!").addClass("success")
-                        .closest(".control-group").addClass "success"
+        validateCreateProductForm: ->
+            @validateForm @$("#create-product-form"),
+                productName:
+                    minlength: 2
+                    required: true
+                price:
+                    required: true
+                    decimalTwo: true
+
         quantityOptionInput: (e) ->
             if $(e.currentTarget).val() == "sub-total-selected"
                 $("#sub-total-quantity-modal").modal("toggle")

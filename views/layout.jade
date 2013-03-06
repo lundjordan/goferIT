@@ -21,7 +21,6 @@ html
     script(src='js/vendor/underscore-1.4.4.js')
     script(src='js/vendor/backbone-0.9.10.js')
     script(src='js/vendor/bootstrap-2.2.2.js')
-    // script(src='js/vendor/jqBootstrapValidation.js')
 
     block content
 
@@ -31,6 +30,7 @@ html
       include ../public/tml/inventory_templates.html
 
       // gofer scripts
+      script(src='js/formValidate.js')
       script(src='js/company.js')
       script(src='js/companies.js')
       script(src='js/supplier.js')
@@ -40,8 +40,3 @@ html
       script(src='js/inventory_views.js')
       script(src='js/main_app_view.js')
       script(src='js/routers.js')
-
-      // script
-      //   $(function () {
-      //     $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
-      //     } );

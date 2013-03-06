@@ -417,26 +417,19 @@
 
       ProductCreateBodyView.prototype.render = function() {
         this.$el.html(this.template({}));
-        this.validateForm();
+        this.validateCreateProductForm();
         return this;
       };
 
-      ProductCreateBodyView.prototype.validateForm = function() {
-        return this.$("#create-product-form").validate({
-          errorElement: "span",
-          errorClass: "help-block",
-          rules: {
-            productName: {
-              minlength: 2,
-              required: true
-            }
+      ProductCreateBodyView.prototype.validateCreateProductForm = function() {
+        return this.validateForm(this.$("#create-product-form"), {
+          productName: {
+            minlength: 2,
+            required: true
           },
-          highlight: function(input) {
-            return ($(input)).closest(".control-group").addClass("error").removeClass("success");
-          },
-          success: function(span) {
-            ($(span)).closest(".control-group").addClass("success");
-            return span.text("OK!").addClass("success").closest(".control-group").addClass("success");
+          price: {
+            required: true,
+            decimalTwo: true
           }
         });
       };

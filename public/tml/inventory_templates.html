@@ -132,36 +132,37 @@
           <label class="control-label" for="name-input">Name</label>
           <div class="controls">
             <input type="text" name="productName" id="name-input" placeholder="Nexus 4">
-            <span class="help-block"></span>
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Brand</label>
           <div class="controls">
-            <input type="text" id="brand-input" placeholder="Google">
-            <span class="help-block"></span>
+            <input type="text" id="brand-input" name='brand' placeholder="Google">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Category</label>
           <div class="controls">
-            <input type="text" id="category-input" placeholder="Smart Phones">
-            <span class="help-block"></span>
+            <input type="text" id="category-input" name='category' placeholder="Smart Phones">
           </div>
         </div>
       </div>
       <div class="span3">
         <div id="product-create-store-names"></div>
         <div id="product-create-supplier-names"></div>
-        <label>Price</label>
-        <input type="text" placeholder="299.99">
+        <div class="control-group">
+          <label class="control-label">Price</label>
+          <div class="controls">
+            <input type="text" id='price-input' name='price' placeholder="299.99">
+          </div>
+        </div>
         <label>Cost</label>
-        <input type="text" placeholder="199.99">
+        <input type="text" id='price-input' placeholder="199.99">
       </div>
       <div class="span6">
         <div id="grand-total-quantity-content">
           <label>Grand Total Quantity</label>
-          <input type="text" placeholder="9">
+          <input type="text" id='grand-total-input' placeholder="9">
         </div>
         <div id="sub-total-quantity-content"> </div>
         <hr />
