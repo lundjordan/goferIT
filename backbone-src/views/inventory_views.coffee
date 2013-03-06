@@ -216,27 +216,27 @@ jQuery ->
             "click input[type=radio]": "quantityOptionInput"
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
-            "focusout": "validateForm"
+            # "focusout": "validateForm"
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
             @validateForm()
             @
         validateForm: ->
-            # switch day
-            #     when "Mon" then go work
-            #     when "Tue" then go relax
-            #     when "Thu" then go iceFishing
-            #     when "Fri", "Sat"
-            #         if day is bingoDay
-            #             go bingo
-            #             go dancing
-            #     when "Sun" then go church
-            #     else go work
-            #     highlight: (label) ->
-            #         ($(label)).closest(".control-group").addClass "error"
-            #     success: (label) ->
-            #         label.text("OK!").addClass("valid").closest(".control-group").addClass "success"
+            @$("#create-product-form").validate
+                errorElement: "span"
+                errorClass: "help-block"
+                rules:
+                    productName:
+                        minlength: 2
+                        required: true
+                highlight: (input) ->
+                    ($(input)).closest(".control-group").addClass("error")
+                        .removeClass("success")
+                success: (span) ->
+                    ($(span)).closest(".control-group").addClass "success"
+                    span.text("OK!").addClass("success")
+                        .closest(".control-group").addClass "success"
         quantityOptionInput: (e) ->
             if $(e.currentTarget).val() == "sub-total-selected"
                 $("#sub-total-quantity-modal").modal("toggle")
