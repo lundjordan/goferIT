@@ -131,19 +131,19 @@
         <div class="control-group">
           <label class="control-label" for="name-input">Name</label>
           <div class="controls">
-            <input type="text" name="productName" id="name-input" placeholder="Nexus 4">
+            <input type="text" name="productName" id="name-input" value="Nexus 4">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Brand</label>
           <div class="controls">
-            <input type="text" id="brand-input" name='brand' placeholder="Google">
+            <input type="text" id="brand-input" name='brand' value="Google">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Category</label>
           <div class="controls">
-            <input type="text" id="category-input" name='category' placeholder="Smart Phones">
+            <input type="text" id="category-input" name='category' value="Smart Phones">
           </div>
         </div>
       </div>
@@ -153,16 +153,24 @@
         <div class="control-group">
           <label class="control-label">Price</label>
           <div class="controls">
-            <input type="text" id='price-input' name='price' placeholder="299.99">
+            <input type="text" id='price-input' name='price' value="299.99">
           </div>
         </div>
-        <label>Cost</label>
-        <input type="text" id='price-input' placeholder="199.99">
+        <div class="control-group">
+          <label class="control-label">Cost</label>
+          <div class="controls">
+            <input type="text" id='price-input' name="cost" value="199.99">
+          </div>
+        </div>
       </div>
       <div class="span6">
         <div id="grand-total-quantity-content">
-          <label>Grand Total Quantity</label>
-          <input type="text" id='grand-total-input' placeholder="9">
+          <div class="control-group">
+            <label class="control-label">Grand Total Quantity</label>
+            <div class="controls">
+              <input type="text" id='grand-total-input' name="grandTotal" value="9">
+            </div>
+          </div>
         </div>
         <div id="sub-total-quantity-content"> </div>
         <hr />
@@ -210,8 +218,8 @@
           <hr />
         </div>
         <div class="modal-footer">
-          <a href="#" id="cancel-sub-total-options" class="btn">Cancel</a>
-          <a href="#" id='save-sub-total-options' class="btn btn-primary">Create</a>
+          <a href="#" id="clear-new-product-button" class="btn">Cancel</a>
+          <a href="#" id='create-new-product-button' class="btn btn-primary">Create</a>
           </div>
         </div>
         <hr />

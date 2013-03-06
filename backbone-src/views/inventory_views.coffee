@@ -216,6 +216,7 @@ jQuery ->
             "click input[type=radio]": "quantityOptionInput"
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
+            "submit #create-new-product-button": "createNewProduct"
             # "focusout": "validateForm"
         template: _.template ($ '#product-create-template').html()
         render: ->
@@ -225,11 +226,27 @@ jQuery ->
         validateCreateProductForm: ->
             @validateForm @$("#create-product-form"),
                 productName:
-                    minlength: 2
+                    required: true
+                brand:
+                    required: true
+                category:
                     required: true
                 price:
                     required: true
                     decimalTwo: true
+                    min: 0.01
+                cost:
+                    required: true
+                    decimalTwo: true
+                    min: 0.01
+                grandTotal:
+                    required: true
+                    min: 1
+        createNewProduct: (e) ->
+            e.preventDefault()
+            console.log "made it here"
+            # @$("#create-product-form").submit()
+
 
         quantityOptionInput: (e) ->
             if $(e.currentTarget).val() == "sub-total-selected"

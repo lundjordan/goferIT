@@ -16,4 +16,3 @@ jQuery ->
                     span.text("OK!").addClass("success")
                         .closest(".control-group").addClass "success"
                 rules: rules
-            # Helper code

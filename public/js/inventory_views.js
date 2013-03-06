@@ -410,7 +410,8 @@
       ProductCreateBodyView.prototype.events = {
         "click input[type=radio]": "quantityOptionInput",
         "click #cancel-sub-total-options": "cancelSubTotalOptions",
-        "click #save-sub-total-options": "saveSubTotalOptions"
+        "click #save-sub-total-options": "saveSubTotalOptions",
+        "submit #create-new-product-button": "createNewProduct"
       };
 
       ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
@@ -424,14 +425,34 @@
       ProductCreateBodyView.prototype.validateCreateProductForm = function() {
         return this.validateForm(this.$("#create-product-form"), {
           productName: {
-            minlength: 2,
+            required: true
+          },
+          brand: {
+            required: true
+          },
+          category: {
             required: true
           },
           price: {
             required: true,
-            decimalTwo: true
+            decimalTwo: true,
+            min: 0.01
+          },
+          cost: {
+            required: true,
+            decimalTwo: true,
+            min: 0.01
+          },
+          grandTotal: {
+            required: true,
+            min: 1
           }
         });
+      };
+
+      ProductCreateBodyView.prototype.createNewProduct = function(e) {
+        e.preventDefault();
+        return console.log("made it here");
       };
 
       ProductCreateBodyView.prototype.quantityOptionInput = function(e) {
