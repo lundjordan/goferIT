@@ -244,13 +244,21 @@ jQuery ->
         createNewProduct: (e) ->
             e.preventDefault()
             if @$("#create-product-form").valid()
-                console.log "VALID!"
+                # valid
+
                 if app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val())
-                    # create a product
-                    console.log "CREATE!"
+                    # already exists
+                    message = "You already have a product by this name. " +
+                        "Please Change the product name and/or brand"
+                    alertWarning = new app.AlertView
+                    $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
+                else
+                    if $("#grand-total-quantity-content").is(":visible")
+                        # using only a grand total quantity
+                    else
+                        # using a sub total quantity
             else
-                # show errors
-                console.log "ERRORS"
+                # not valid
 
 
         quantityOptionInput: (e) ->

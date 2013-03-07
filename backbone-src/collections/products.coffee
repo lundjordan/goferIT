@@ -14,10 +14,6 @@ class Products extends Backbone.Collection
             return this.at 0
         @at indexCurrentModel+1
     ifModelExists: (productName, productBrand) ->
-        # console.log productName, productBrand
-        # console.log @where
-        #     'description.name': productName
-        #     'description.brand': productBrand
         @where(
             'description.name': productName
             'description.brand': productBrand

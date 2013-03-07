@@ -451,14 +451,22 @@
       };
 
       ProductCreateBodyView.prototype.createNewProduct = function(e) {
+        var alertWarning, message;
         e.preventDefault();
         if (this.$("#create-product-form").valid()) {
-          console.log("VALID!");
           if (app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val())) {
-            return console.log("CREATE!");
+            message = "You already have a product by this name. " + "Please Change the product name and/or brand";
+            alertWarning = new app.AlertView;
+            return $("#main-alert-div").html(alertWarning.render("alert-error", message).el);
+          } else {
+            if ($("#grand-total-quantity-content").is(":visible")) {
+
+            } else {
+
+            }
           }
         } else {
-          return console.log("ERRORS");
+
         }
       };
 

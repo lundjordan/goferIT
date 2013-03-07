@@ -13,6 +13,6 @@ jQuery ->
                         .removeClass("success")
                 success: (span) ->
                     ($(span)).closest(".control-group").addClass "success"
-                    span.text("OK!").addClass("success")
-                        .closest(".control-group").addClass "success"
+                    # span.text("OK!").addClass("success")
+                    #     .closest(".control-group").addClass "success"
                 rules: rules
