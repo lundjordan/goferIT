@@ -216,13 +216,13 @@ jQuery ->
             "click input[type=radio]": "quantityOptionInput"
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
-            "click #create-new-product-button": "createNewProduct"
+            "click #create-new-product-button": "checkValidityAndcreateNewProduct"
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
-            @validateCreateProductForm()
+            @setJQueryValidityRules()
             @
-        validateCreateProductForm: ->
+        setJQueryValidityRules: ->
             @validateForm @$("#create-product-form"),
                 productName:
                     required: true
@@ -241,51 +241,62 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
-        createNewProduct: (e) ->
+        checkValidityAndcreateNewProduct: (e) ->
             e.preventDefault()
-            if @$("#create-product-form").valid()
-                # valid
-                if app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val())
-                    # already exists
+            $("#main-alert-div").html("")
+            passesJQueryValidation = @$("#create-product-form").valid()
+
+            if passesJQueryValidation
+                isExistingProduct = app.Products.ifModelExists(
+                    $('#name-input').val(), $('#brand-input').val())
+                hasSubQuants = $("#grand-total-quantity-content").is(":hidden")
+
+                if isExistingProduct
                     message = "You already have a product by this name. " +
                         "Please Change the product name and/or brand"
                     alertWarning = new app.AlertView
                     $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
-                else
-                    if $("#grand-total-quantity-content").is(":visible")
-                        # using only a grand total quantity
-                    else
-                        # first get the values for all the subquant table cells
-                        types = []
-                        values = []
-                        $("th").each ->
-                            types.push $(this).html()
-                        $("td").each ->
-                            if $(this).html() isnt "Totals"
-                                values.push $(this).find("input").val()
+                    console.log "didn't pass existing product check"
+                    return # not valid
 
-                        # check to see if table sub quants are valid
-                        oneValueMoreThan0 = false
-                        anyValuesLessThan0 = false
-                        for value in values
-                            if parseInt(value, 10) > 0
-                                oneValueMoreThan0 = true
-                            if parseInt(value, 10) < 0
-                                anyValuesLessThan0 = true
-                        if not oneValueMoreThan0 or anyValuesLessThan0
-                            message = "For sub quantity totals, you must have at" +
-                                " least one value higher than 0. Only numbers are" +
-                                " accepted."
-                            alertWarning = new app.AlertView
-                            $("#main-alert-div").html(alertWarning.render(
-                                "alert-error alert-block", message).el)
-                        else
-                            # subquants valid
-                            console.log "subquants valid"
+                if hasSubQuants
+                    # first get the values for all the subquant table cells
+                    types = []
+                    values = []
+                    $("th").each ->
+                        types.push $(this).html()
+                    $("td").each ->
+                        if $(this).html() isnt "Totals"
+                            values.push $(this).find("input").val()
 
+                    if not @subQuantTotalValid(types, values)
+                        console.log "didn't pass subquants val"
+                        return # not valid
+
+                # made it here means the form is completely valid!
+                console.log "valid"
             else
-                # not valid
+                console.log "didn't pass $ val"
+                return # not valid
 
+        subQuantTotalValid: (types, values) ->
+            # check to see if table sub quants are valid
+            oneValueMoreThan0 = false
+            anyValuesLessThan0 = false
+            for value in values
+                if parseInt(value, 10) > 0
+                    oneValueMoreThan0 = true
+                if parseInt(value, 10) < 0
+                    anyValuesLessThan0 = true
+            if not oneValueMoreThan0 or anyValuesLessThan0
+                message = "For sub quantity totals, you must have at" +
+                    " least one value higher than 0. Only numbers are" +
+                    " accepted."
+                alertWarning = new app.AlertView
+                $("#main-alert-div").html(alertWarning.render(
+                    "alert-error alert-block", message).el)
+                return false
+            return true
 
         quantityOptionInput: (e) ->
             if $(e.currentTarget).val() == "sub-total-selected"

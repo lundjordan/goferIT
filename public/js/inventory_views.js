@@ -411,18 +411,18 @@
         "click input[type=radio]": "quantityOptionInput",
         "click #cancel-sub-total-options": "cancelSubTotalOptions",
         "click #save-sub-total-options": "saveSubTotalOptions",
-        "click #create-new-product-button": "createNewProduct"
+        "click #create-new-product-button": "checkValidityAndcreateNewProduct"
       };
 
       ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
 
       ProductCreateBodyView.prototype.render = function() {
         this.$el.html(this.template({}));
-        this.validateCreateProductForm();
+        this.setJQueryValidityRules();
         return this;
       };
 
-      ProductCreateBodyView.prototype.validateCreateProductForm = function() {
+      ProductCreateBodyView.prototype.setJQueryValidityRules = function() {
         return this.validateForm(this.$("#create-product-form"), {
           productName: {
             required: true
@@ -450,51 +450,63 @@
         });
       };
 
-      ProductCreateBodyView.prototype.createNewProduct = function(e) {
-        var alertWarning, anyValuesLessThan0, message, oneValueMoreThan0, types, value, values, _i, _len;
+      ProductCreateBodyView.prototype.checkValidityAndcreateNewProduct = function(e) {
+        var alertWarning, hasSubQuants, isExistingProduct, message, passesJQueryValidation, types, values;
         e.preventDefault();
-        if (this.$("#create-product-form").valid()) {
-          if (app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val())) {
+        $("#main-alert-div").html("");
+        passesJQueryValidation = this.$("#create-product-form").valid();
+        if (passesJQueryValidation) {
+          isExistingProduct = app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val());
+          hasSubQuants = $("#grand-total-quantity-content").is(":hidden");
+          if (isExistingProduct) {
             message = "You already have a product by this name. " + "Please Change the product name and/or brand";
             alertWarning = new app.AlertView;
-            return $("#main-alert-div").html(alertWarning.render("alert-error", message).el);
-          } else {
-            if ($("#grand-total-quantity-content").is(":visible")) {
-
-            } else {
-              types = [];
-              values = [];
-              $("th").each(function() {
-                return types.push($(this).html());
-              });
-              $("td").each(function() {
-                if ($(this).html() !== "Totals") {
-                  return values.push($(this).find("input").val());
-                }
-              });
-              oneValueMoreThan0 = false;
-              anyValuesLessThan0 = false;
-              for (_i = 0, _len = values.length; _i < _len; _i++) {
-                value = values[_i];
-                if (parseInt(value, 10) > 0) {
-                  oneValueMoreThan0 = true;
-                }
-                if (parseInt(value, 10) < 0) {
-                  anyValuesLessThan0 = true;
-                }
+            $("#main-alert-div").html(alertWarning.render("alert-error", message).el);
+            console.log("didn't pass existing product check");
+            return;
+          }
+          if (hasSubQuants) {
+            types = [];
+            values = [];
+            $("th").each(function() {
+              return types.push($(this).html());
+            });
+            $("td").each(function() {
+              if ($(this).html() !== "Totals") {
+                return values.push($(this).find("input").val());
               }
-              if (!oneValueMoreThan0 || anyValuesLessThan0) {
-                message = "For sub quantity totals, you must have at" + " least one value higher than 0. Only numbers are" + " accepted.";
-                alertWarning = new app.AlertView;
-                return $("#main-alert-div").html(alertWarning.render("alert-error alert-block", message).el);
-              } else {
-                return console.log("subquants valid");
-              }
+            });
+            if (!this.subQuantTotalValid(types, values)) {
+              console.log("didn't pass subquants val");
+              return;
             }
           }
+          return console.log("valid");
         } else {
-
+          console.log("didn't pass $ val");
         }
+      };
+
+      ProductCreateBodyView.prototype.subQuantTotalValid = function(types, values) {
+        var alertWarning, anyValuesLessThan0, message, oneValueMoreThan0, value, _i, _len;
+        oneValueMoreThan0 = false;
+        anyValuesLessThan0 = false;
+        for (_i = 0, _len = values.length; _i < _len; _i++) {
+          value = values[_i];
+          if (parseInt(value, 10) > 0) {
+            oneValueMoreThan0 = true;
+          }
+          if (parseInt(value, 10) < 0) {
+            anyValuesLessThan0 = true;
+          }
+        }
+        if (!oneValueMoreThan0 || anyValuesLessThan0) {
+          message = "For sub quantity totals, you must have at" + " least one value higher than 0. Only numbers are" + " accepted.";
+          alertWarning = new app.AlertView;
+          $("#main-alert-div").html(alertWarning.render("alert-error alert-block", message).el);
+          return false;
+        }
+        return true;
       };
 
       ProductCreateBodyView.prototype.quantityOptionInput = function(e) {
