@@ -10,7 +10,27 @@ restifyProducts = (app, restify, model) ->
                     res.send result.products
                 else
                     res.send (errMsg err)
-    app.post path,(restify.getCreateController model)
+
+    app.post path, (req, res) ->
+        (model.findOne {_company: req.user._company})
+            .populate('products._order')
+            .exec (err, stock) ->
+                if not err
+                    # product = {}
+                    # for key in req.body
+                    #     product[key] = req.body[key]
+                    # console.log product
+                    console.log req.body
+                    model.update { _id: stock.id }, { $push: req.body}, (err, stock) ->
+                        if not err
+                            return stock
+                            return "made it here"
+                        else
+                            return (errMsg err)
+                else
+                    res.send (errMsg err)
+
+    # app.post path, (restify.getCreateController model)
     app.get pathWithId, (restify.getReadController model)
     app.put pathWithId, (restify.getUpdateController model)
     app.del pathWithId, (restify.getDeleteController model)

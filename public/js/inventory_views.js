@@ -493,12 +493,13 @@
       };
 
       ProductCreateBodyView.prototype.createNewProduct = function(subQuants) {
-        var brand, category, cost, i, name, price, productModel, quant, quantity, subTotalQuantity, totalQuantity, _i, _j, _len, _len1, _ref, _ref1;
+        var brand, category, cost, i, name, price, productModel, quant, quantity, storeName, subTotalQuantity, totalQuantity, _i, _j, _len, _len1, _ref, _ref1;
         name = $("#name-input").val();
         brand = $("#brand-input").val();
         category = $("#category-input").val();
         price = parseFloat($("#price-input").val(), 10);
         cost = parseFloat($("#cost-input").val(), 10);
+        storeName = $("#store-name-select").val();
         totalQuantity = 0;
         subTotalQuantity = [];
         if (subQuants) {
@@ -524,13 +525,15 @@
             name: name,
             brand: brand
           },
+          storeName: storeName,
           category: category,
           price: price,
           cost: cost,
           totalQuantity: totalQuantity,
           subTotalQuantity: subTotalQuantity
         };
-        return console.log(productModel);
+        console.log(productModel);
+        return app.Products.create(productModel);
       };
 
       ProductCreateBodyView.prototype.subQuantTotalValid = function(types, values) {

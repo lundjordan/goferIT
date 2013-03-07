@@ -288,6 +288,7 @@ jQuery ->
             category = $("#category-input").val()
             price = parseFloat $("#price-input").val(), 10
             cost = parseFloat $("#cost-input").val(), 10
+            storeName = $("#store-name-select").val()
             totalQuantity = 0
             subTotalQuantity = []
 
@@ -306,12 +307,15 @@ jQuery ->
                 description:
                     name: name
                     brand: brand
+                storeName: storeName
                 category: category
                 price: price
                 cost: cost
                 totalQuantity: totalQuantity
                 subTotalQuantity: subTotalQuantity
             console.log productModel
+            app.Products.create productModel
+            # whoa I am SCARED!
 
 
 
