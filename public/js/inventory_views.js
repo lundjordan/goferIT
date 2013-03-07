@@ -411,7 +411,7 @@
         "click input[type=radio]": "quantityOptionInput",
         "click #cancel-sub-total-options": "cancelSubTotalOptions",
         "click #save-sub-total-options": "saveSubTotalOptions",
-        "click #create-new-product-button": "checkValidityAndcreateNewProduct"
+        "click #create-new-product-button": "checkValidityAndCreateNewProduct"
       };
 
       ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
@@ -450,8 +450,8 @@
         });
       };
 
-      ProductCreateBodyView.prototype.checkValidityAndcreateNewProduct = function(e) {
-        var alertWarning, hasSubQuants, isExistingProduct, message, passesJQueryValidation, types, values;
+      ProductCreateBodyView.prototype.checkValidityAndCreateNewProduct = function(e) {
+        var alertWarning, hasSubQuants, isExistingProduct, message, passesJQueryValidation, subQuantTypes, subQuantValues;
         e.preventDefault();
         $("#main-alert-div").html("");
         passesJQueryValidation = this.$("#create-product-form").valid();
@@ -466,25 +466,71 @@
             return;
           }
           if (hasSubQuants) {
-            types = [];
-            values = [];
+            subQuantTypes = [];
+            subQuantValues = [];
             $("th").each(function() {
-              return types.push($(this).html());
+              return subQuantTypes.push($(this).html());
             });
             $("td").each(function() {
               if ($(this).html() !== "Totals") {
-                return values.push($(this).find("input").val());
+                return subQuantValues.push($(this).find("input").val());
               }
             });
-            if (!this.subQuantTotalValid(types, values)) {
+            if (!this.subQuantTotalValid(subQuantTypes, subQuantValues)) {
               console.log("didn't pass subquants val");
               return;
             }
+            return this.createNewProduct({
+              subQuantTypes: subQuantTypes,
+              subQuantValues: subQuantValues
+            });
           }
-          return console.log("valid");
+          console.log("valid");
+          return this.createNewProduct();
         } else {
           console.log("didn't pass $ val");
         }
+      };
+
+      ProductCreateBodyView.prototype.createNewProduct = function(subQuants) {
+        var brand, category, cost, i, name, price, productModel, quant, quantity, subTotalQuantity, totalQuantity, _i, _j, _len, _len1, _ref, _ref1;
+        name = $("#name-input").val();
+        brand = $("#brand-input").val();
+        category = $("#category-input").val();
+        price = parseFloat($("#price-input").val(), 10);
+        cost = parseFloat($("#cost-input").val(), 10);
+        totalQuantity = 0;
+        subTotalQuantity = [];
+        if (subQuants) {
+          _ref = subQuants.subQuantValues;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            quant = _ref[_i];
+            totalQuantity += parseInt(quant, 10);
+          }
+          _ref1 = subQuants.subQuantValues;
+          for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
+            quantity = _ref1[i];
+            subTotalQuantity.push({
+              measurementName: subQuants.subQuantTypes[0],
+              measurementValue: subQuants.subQuantTypes[i + 1],
+              quantity: quantity
+            });
+          }
+        } else {
+          totalQuantity = parseInt($("#grand-total-input").val(), 10);
+        }
+        productModel = {
+          description: {
+            name: name,
+            brand: brand
+          },
+          category: category,
+          price: price,
+          cost: cost,
+          totalQuantity: totalQuantity,
+          subTotalQuantity: subTotalQuantity
+        };
+        return console.log(productModel);
       };
 
       ProductCreateBodyView.prototype.subQuantTotalValid = function(types, values) {

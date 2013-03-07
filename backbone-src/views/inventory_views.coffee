@@ -216,7 +216,7 @@ jQuery ->
             "click input[type=radio]": "quantityOptionInput"
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
-            "click #create-new-product-button": "checkValidityAndcreateNewProduct"
+            "click #create-new-product-button": "checkValidityAndCreateNewProduct"
         template: _.template ($ '#product-create-template').html()
         render: ->
             @$el.html this.template({})
@@ -241,7 +241,7 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
-        checkValidityAndcreateNewProduct: (e) ->
+        checkValidityAndCreateNewProduct: (e) ->
             e.preventDefault()
             $("#main-alert-div").html("")
             passesJQueryValidation = @$("#create-product-form").valid()
@@ -261,23 +261,61 @@ jQuery ->
 
                 if hasSubQuants
                     # first get the values for all the subquant table cells
-                    types = []
-                    values = []
+                    subQuantTypes = []
+                    subQuantValues = []
                     $("th").each ->
-                        types.push $(this).html()
+                        subQuantTypes.push $(this).html()
                     $("td").each ->
                         if $(this).html() isnt "Totals"
-                            values.push $(this).find("input").val()
+                            subQuantValues.push $(this).find("input").val()
 
-                    if not @subQuantTotalValid(types, values)
+                    if not @subQuantTotalValid(subQuantTypes, subQuantValues)
                         console.log "didn't pass subquants val"
                         return # not valid
+                    return @createNewProduct
+                        subQuantTypes: subQuantTypes
+                        subQuantValues: subQuantValues
 
                 # made it here means the form is completely valid!
                 console.log "valid"
+                @createNewProduct()
             else
                 console.log "didn't pass $ val"
                 return # not valid
+        createNewProduct: (subQuants) ->
+            name = $("#name-input").val()
+            brand = $("#brand-input").val()
+            category = $("#category-input").val()
+            price = parseFloat $("#price-input").val(), 10
+            cost = parseFloat $("#cost-input").val(), 10
+            totalQuantity = 0
+            subTotalQuantity = []
+
+            if subQuants
+                # this product has a subTotalQuantity
+                totalQuantity += parseInt(quant, 10) for quant in subQuants.subQuantValues
+                for quantity, i in subQuants.subQuantValues
+                    subTotalQuantity.push
+                        measurementName: subQuants.subQuantTypes[0]
+                        measurementValue: subQuants.subQuantTypes[i+1]
+                        quantity: quantity
+            else
+                # this product has a GrandTotalQuantity
+                totalQuantity = parseInt $("#grand-total-input").val(), 10
+            productModel =
+                description:
+                    name: name
+                    brand: brand
+                category: category
+                price: price
+                cost: cost
+                totalQuantity: totalQuantity
+                subTotalQuantity: subTotalQuantity
+            console.log productModel
+
+
+
+
 
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid
