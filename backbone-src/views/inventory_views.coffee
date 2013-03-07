@@ -245,7 +245,6 @@ jQuery ->
             e.preventDefault()
             if @$("#create-product-form").valid()
                 # valid
-
                 if app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val())
                     # already exists
                     message = "You already have a product by this name. " +
@@ -256,7 +255,34 @@ jQuery ->
                     if $("#grand-total-quantity-content").is(":visible")
                         # using only a grand total quantity
                     else
-                        # using a sub total quantity
+                        # first get the values for all the subquant table cells
+                        types = []
+                        values = []
+                        $("th").each ->
+                            types.push $(this).html()
+                        $("td").each ->
+                            if $(this).html() isnt "Totals"
+                                values.push $(this).find("input").val()
+
+                        # check to see if table sub quants are valid
+                        oneValueMoreThan0 = false
+                        anyValuesLessThan0 = false
+                        for value in values
+                            if parseInt(value, 10) > 0
+                                oneValueMoreThan0 = true
+                            if parseInt(value, 10) < 0
+                                anyValuesLessThan0 = true
+                        if not oneValueMoreThan0 or anyValuesLessThan0
+                            message = "For sub quantity totals, you must have at" +
+                                " least one value higher than 0. Only numbers are" +
+                                " accepted."
+                            alertWarning = new app.AlertView
+                            $("#main-alert-div").html(alertWarning.render(
+                                "alert-error alert-block", message).el)
+                        else
+                            # subquants valid
+                            console.log "subquants valid"
+
             else
                 # not valid
 
@@ -289,11 +315,9 @@ jQuery ->
                 productSubQuants.push
                     measurementName: measurementType
                     measurementValue: columnName
-                    quantity: '<input class="input-mini" type="text">'
+                    quantity: '<input class="input-mini" type="text" value="0">'
             $('#sub-total-quantity-content')
                 .html (new ProductItemSubQuantityView()).render(productSubQuants).el
-            # $('#grand-total-quantity-content').toggle()
-            # $('#sub-total-quantity-content').toggle()
 
 
     class SupplierSelectView extends Backbone.View

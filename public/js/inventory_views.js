@@ -451,7 +451,7 @@
       };
 
       ProductCreateBodyView.prototype.createNewProduct = function(e) {
-        var alertWarning, message;
+        var alertWarning, anyValuesLessThan0, message, oneValueMoreThan0, types, value, values, _i, _len;
         e.preventDefault();
         if (this.$("#create-product-form").valid()) {
           if (app.Products.ifModelExists($('#name-input').val(), $('#brand-input').val())) {
@@ -462,7 +462,34 @@
             if ($("#grand-total-quantity-content").is(":visible")) {
 
             } else {
-
+              types = [];
+              values = [];
+              $("th").each(function() {
+                return types.push($(this).html());
+              });
+              $("td").each(function() {
+                if ($(this).html() !== "Totals") {
+                  return values.push($(this).find("input").val());
+                }
+              });
+              oneValueMoreThan0 = false;
+              anyValuesLessThan0 = false;
+              for (_i = 0, _len = values.length; _i < _len; _i++) {
+                value = values[_i];
+                if (parseInt(value, 10) > 0) {
+                  oneValueMoreThan0 = true;
+                }
+                if (parseInt(value, 10) < 0) {
+                  anyValuesLessThan0 = true;
+                }
+              }
+              if (!oneValueMoreThan0 || anyValuesLessThan0) {
+                message = "For sub quantity totals, you must have at" + " least one value higher than 0. Only numbers are" + " accepted.";
+                alertWarning = new app.AlertView;
+                return $("#main-alert-div").html(alertWarning.render("alert-error alert-block", message).el);
+              } else {
+                return console.log("subquants valid");
+              }
             }
           }
         } else {
@@ -503,7 +530,7 @@
           productSubQuants.push({
             measurementName: measurementType,
             measurementValue: columnName,
-            quantity: '<input class="input-mini" type="text">'
+            quantity: '<input class="input-mini" type="text" value="0">'
           });
         }
         return $('#sub-total-quantity-content').html((new ProductItemSubQuantityView()).render(productSubQuants).el);
