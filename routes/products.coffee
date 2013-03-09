@@ -16,17 +16,18 @@ restifyProducts = (app, restify, model) ->
             .populate('products._order')
             .exec (err, stock) ->
                 if not err
-                    # product = {}
-                    # for key in req.body
-                    #     product[key] = req.body[key]
-                    # console.log product
-                    console.log req.body
-                    model.update { _id: stock.id }, { $push: req.body}, (err, stock) ->
-                        if not err
-                            return stock
-                            return "made it here"
-                        else
-                            return (errMsg err)
+                    model.update
+                        _id: stock.id
+                    ,
+                        $push:
+                            products: req.body
+                    ,
+                        (err, stock) ->
+                            if not err
+                                console.log stock.products
+                                return stock
+                            else
+                                return (errMsg err)
                 else
                     res.send (errMsg err)
 

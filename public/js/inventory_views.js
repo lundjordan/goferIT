@@ -311,7 +311,7 @@
         this.currentProductItemSubQuantity = new ProductItemSubQuantityView();
         this.$('#product-view-content').html(this.currentProduct.render(productModel).el);
         this.$('#product-view-supplier-name').html(this.currentProductSupplier.render(productModel).el);
-        if (productModel.attributes.subTotalQuantity) {
+        if (productModel.attributes.subTotalQuantity.length) {
           productSubQuants = productModel.attributes.subTotalQuantity;
           _.sortBy(productSubQuants, function(el) {
             return el.measurementValue;
@@ -497,8 +497,8 @@
         name = $("#name-input").val();
         brand = $("#brand-input").val();
         category = $("#category-input").val();
-        price = parseFloat($("#price-input").val(), 10);
-        cost = parseFloat($("#cost-input").val(), 10);
+        price = parseFloat($("#price-input").val(), 10) * 100;
+        cost = parseFloat($("#cost-input").val(), 10) * 100;
         storeName = $("#store-name-select").val();
         totalQuantity = 0;
         subTotalQuantity = [];

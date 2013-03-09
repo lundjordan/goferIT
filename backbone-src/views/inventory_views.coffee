@@ -169,7 +169,7 @@ jQuery ->
                 .html @currentProduct.render(productModel).el
             @$('#product-view-supplier-name')
                 .html @currentProductSupplier.render(productModel).el
-            if productModel.attributes.subTotalQuantity
+            if productModel.attributes.subTotalQuantity.length
                 # first let's sort the subquantities for readibility in table
                 productSubQuants = productModel.attributes.subTotalQuantity
                 _.sortBy productSubQuants, (el) ->
@@ -286,8 +286,8 @@ jQuery ->
             name = $("#name-input").val()
             brand = $("#brand-input").val()
             category = $("#category-input").val()
-            price = parseFloat $("#price-input").val(), 10
-            cost = parseFloat $("#cost-input").val(), 10
+            price = parseFloat($("#price-input").val(), 10) * 100
+            cost = parseFloat($("#cost-input").val(), 10) * 100
             storeName = $("#store-name-select").val()
             totalQuantity = 0
             subTotalQuantity = []
@@ -303,6 +303,7 @@ jQuery ->
             else
                 # this product has a GrandTotalQuantity
                 totalQuantity = parseInt $("#grand-total-input").val(), 10
+
             productModel =
                 description:
                     name: name
@@ -316,10 +317,6 @@ jQuery ->
             console.log productModel
             app.Products.create productModel
             # whoa I am SCARED!
-
-
-
-
 
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid
