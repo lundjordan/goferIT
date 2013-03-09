@@ -26,7 +26,7 @@ jQuery ->
                 @currentView.$el.html("")
             # $('#inventory-list-tab').removeClass('active')
             # $('#inventory-item-tab').addClass('active')
-            # $('#inventory-item-tab a').tab('show');
+            $('#inventory-item-tab a').tab('show');
             @currentView = new ProductItemView()
             @currentView.render model
         renderProductCreateView: ->
@@ -316,7 +316,6 @@ jQuery ->
                 subTotalQuantity: subTotalQuantity
             console.log productModel
             app.Products.create productModel
-            # whoa I am SCARED!
 
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid

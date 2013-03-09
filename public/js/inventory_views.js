@@ -47,6 +47,7 @@
         if (this.currentView) {
           this.currentView.$el.html("");
         }
+        $('#inventory-item-tab a').tab('show');
         this.currentView = new ProductItemView();
         return this.currentView.render(model);
       };
