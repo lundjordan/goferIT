@@ -42,13 +42,14 @@
         this.el = this.options.el;
         this.template = _.template(($(this.options.template)).html());
         if (this.options.storeSelectView) {
-          this.storeSelectView = new ItemsListStoreSelectView();
+          this.storeSelectView = new this.options.storeSelectView();
         }
         return this.itemsTable = new ItemsTable({
           collection: this.options.collection,
           template: this.options.tableTemplate,
           tableListID: this.options.tableListID,
-          itemTrTemplate: this.options.itemTrTemplate
+          itemTrTemplate: this.options.itemTrTemplate,
+          itemControllerView: this.options.itemControllerView
         });
       };
 
@@ -80,7 +81,8 @@
       ItemsTable.prototype.initialize = function() {
         this.template = _.template(($(this.options.template)).html());
         this.tableListID = this.options.tableListID;
-        return this.itemTrTemplate = this.options.itemTrTemplate;
+        this.itemTrTemplate = this.options.itemTrTemplate;
+        return this.itemControllerView = this.options.itemControllerView;
       };
 
       ItemsTable.prototype.render = function() {
@@ -93,7 +95,8 @@
         var view;
         view = new ItemListItemView({
           model: item,
-          template: this.itemTrTemplate
+          template: this.itemTrTemplate,
+          itemControllerView: this.itemControllerView
         });
         return (this.$(this.tableListID)).append(view.render().el);
       };
@@ -122,7 +125,9 @@
       };
 
       ItemListItemView.prototype.initialize = function() {
-        return this.template = _.template(($(this.options.template)).html());
+        this.template = _.template(($(this.options.template)).html());
+        this.itemView = this.options.itemView;
+        return this.itemControllerView = this.options.itemControllerView;
       };
 
       ItemListItemView.prototype.render = function() {
@@ -139,7 +144,9 @@
         return $(this.el).find('i').hide();
       };
 
-      ItemListItemView.prototype.renderItemItemView = function() {};
+      ItemListItemView.prototype.renderItemItemView = function() {
+        return this.itemControllerView.renderSpecificItemView(this.model);
+      };
 
       return ItemListItemView;
 

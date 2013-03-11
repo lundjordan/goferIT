@@ -18,12 +18,13 @@ jQuery ->
             @el = @options.el
             @template = _.template ($ @options.template).html()
             if @options.storeSelectView
-                @storeSelectView = new ItemsListStoreSelectView()
+                @storeSelectView = new @options.storeSelectView()
             @itemsTable = new ItemsTable
                 collection: @options.collection
                 template: @options.tableTemplate
                 tableListID: @options.tableListID
                 itemTrTemplate: @options.itemTrTemplate
+                itemControllerView: @options.itemControllerView
         render: ->
             @$el.html this.template({})
             if @storeSelectView
@@ -37,6 +38,7 @@ jQuery ->
             @template = _.template ($ @options.template).html()
             @tableListID = @options.tableListID
             @itemTrTemplate = @options.itemTrTemplate
+            @itemControllerView = @options.itemControllerView
         render: ->
             @$el.html this.template({})
             @addAll()
@@ -45,6 +47,7 @@ jQuery ->
             view = new ItemListItemView
                 model: item
                 template: @itemTrTemplate
+                itemControllerView: @itemControllerView
             (@$ @tableListID).append view.render().el
         addAll: ->
             @collection.each @addOne, @
@@ -56,6 +59,8 @@ jQuery ->
             'click #item-view-eye-link': 'renderItemItemView'
         initialize: ->
             @template = _.template ($ @options.template).html()
+            @itemView = @options.itemView 
+            @itemControllerView = @options.itemControllerView
         render: ->
             @$el.html this.template @model.attributes
             $(@el).find('i').hide()
@@ -67,8 +72,7 @@ jQuery ->
             # $('#item-options').html()
             $(@el).find('i').hide()
         renderItemItemView: ->
-            # app.appControllerView.itemControllerView
-            #     .renderItemSpecificItemView @model
+            @itemControllerView.renderSpecificItemView @model
     # ###############
 
     @app = window.app ? {}

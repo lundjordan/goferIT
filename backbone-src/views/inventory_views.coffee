@@ -14,18 +14,24 @@ jQuery ->
         renderProductsListView: ->
             if @currentView
                 @currentView.$el.html("")
-            @currentView = new ProductsListView()
+            @currentView = new app.ItemListView
+                collection: app.Products
+                el: "#products-list-view-content"
+                template: "#item-content-template"
+                storeSelectView: ProductsListStoreSelectView
+                tableTemplate: '#products-table-template'
+                tableListID: '#products-table-list'
+                itemTrTemplate: '#product-tr-template'
+                itemControllerView: @
             @currentView.render()
         renderProductDefaultItemView: ->
             if @currentView
                 @currentView.$el.html("")
             @currentView = new ProductItemView()
             @currentView.render app.Products.models[0]
-        renderProductSpecificItemView: (model) ->
+        renderSpecificItemView: (model) ->
             if @currentView
                 @currentView.$el.html("")
-            # $('#inventory-list-tab').removeClass('active')
-            # $('#inventory-item-tab').addClass('active')
             $('#inventory-item-tab a').tab('show')
             @currentView = new ProductItemView()
             @currentView.render model
@@ -75,55 +81,8 @@ jQuery ->
     # ###############
 
     # ###############
-    # Products List View Section
-    class ProductsListView extends Backbone.View
-        el: '#products-list-view-content'
-        events:
-            'change #store-name-select': 'renderProductsTable'
-        template: _.template ($ '#inventory-content-template').html()
-        initialize: (options) ->
-            @storeSelectView = new ProductsListStoreSelectView()
-            @productsTable = new ProductsTable()
-        render: ->
-            @$el.html this.template({})
-            $("#inventory-view-head").html @storeSelectView.render().el
-            $("#inventory-view-body").html @productsTable.render().el
-        renderProductsTable: ->
-            @productsTable.render()
-    # Products List View Section
-    class ProductsTable extends Backbone.View
-        template: _.template ($ '#products-table-template').html()
-        render: ->
-            @$el.html this.template({})
-            @addAll()
-            @
-        addOne: (product) ->
-            if $('#store-name-select').val() is product.get('storeName')
-                view = new ProductListItemView model: product
-                (@$ "#products-table-list").append view.render().el
-        addAll: ->
-            app.Products.each @addOne, @
-    # Products List View Section
-    class ProductListItemView extends Backbone.View
-        tagName: 'tr'
-        events:
-            'mouseover': 'showProductOptions'
-            'mouseout': 'hideProductOptions'
-            'click #product-view-eye-link': 'renderProductItemView'
-        template: _.template ($ '#product-tr-template').html()
-        render: ->
-            @$el.html this.template @model.attributes
-            $(@el).find('i').hide()
-            @
-        showProductOptions: (event) ->
-            # $('#item-options').prepend("<i class='icon-search'></i>")
-            $(@el).find('i').show()
-        hideProductOptions: (event) ->
-            # $('#item-options').html()
-            $(@el).find('i').hide()
-        renderProductItemView: ->
-            app.appControllerView.inventoryControllerView
-                .renderProductSpecificItemView @model
+    # Product List View Section
+    # -> comes from ItemListVIew in # helper_views.coffee
     # ###############
 
 
@@ -134,16 +93,16 @@ jQuery ->
         events:
             'click #product-item-prev-link': 'renderProductItemPrevView'
             'click #product-item-next-link': 'renderProductItemNextView'
-        template: _.template ($ '#inventory-content-template').html()
+        template: _.template ($ '#item-content-template').html()
         initialize: (options) ->
             # @storeSelectView = new ProductsListStoreSelectView()
             @productView =  new ProductItemBodyView()
         render: (productModel) ->
             @model = productModel
             @$el.html this.template({})
-            # @$("#inventory-view-head").html @storeSelectView.render().el
+            # @$("#item-view-head").html @storeSelectView.render().el
             # @storeSelectView.render()
-            $("#inventory-view-body").html @productView.render(@model).el
+            $("#item-view-body").html @productView.render(@model).el
         renderProductItemPrevView: (event) ->
             @model = app.Products.findPrev @model
             @productView.render @model
@@ -198,7 +157,7 @@ jQuery ->
     # Product Create Section
     class ProductCreateView extends Backbone.View
         el: '#product-create-view-content'
-        template: _.template ($ '#inventory-content-template').html()
+        template: _.template ($ '#item-content-template').html()
         initialize: ->
             @productCreateBodyView =  new ProductCreateBodyView()
             @storeSelectView = new StoreSelectView()
@@ -206,7 +165,7 @@ jQuery ->
             @storeSelectView.template = _.template ($ '#product-create-store-names-template').html()
         render: ->
             @$el.html this.template({})
-            $("#inventory-view-body").html @productCreateBodyView.render().el
+            $("#item-view-body").html @productCreateBodyView.render().el
             $("#product-create-store-names").html @storeSelectView.render().el
             $("#product-create-supplier-names").html @supplierSelectView.render().el
             # $("#store-name-select").html @storeSelectView.render().el
