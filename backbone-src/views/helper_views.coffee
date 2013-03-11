@@ -28,8 +28,8 @@ jQuery ->
         render: ->
             @$el.html this.template({})
             if @storeSelectView
-                $("#item-view-head").html @storeSelectView.render().el
-            $("#item-view-body").html @itemsTable.render().el
+                $("#root-backbone-view-head").html @storeSelectView.render().el
+            $("#root-backbone-view-body").html @itemsTable.render().el
         renderItemsTable: ->
             if @storeSelectView
                 @itemsTable.render()

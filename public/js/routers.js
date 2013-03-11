@@ -35,6 +35,8 @@
       GoferRouter.prototype.dashboard = function() {};
 
       GoferRouter.prototype.inventory = function() {
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         return app.appControllerView.inventoryRender();
       };
 

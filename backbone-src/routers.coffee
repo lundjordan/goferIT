@@ -18,6 +18,8 @@ jQuery ->
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->
+            $("#root-backbone-view-head").remove()
+            $("#root-backbone-view-body").remove()
             app.appControllerView.inventoryRender()
 
     @app.GoferRouter = GoferRouter

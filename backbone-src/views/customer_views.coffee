@@ -16,7 +16,7 @@ jQuery ->
             @currentView = new app.ItemListView
                 collection: app.Customers
                 el: "#customers-list-view-content"
-                template: "#item-content-template"
+                template: "#root-backbone-content-template"
                 tableTemplate: '#customers-table-template'
                 tableListID: '#customers-table-list'
                 itemTrTemplate: '#customer-tr-template'

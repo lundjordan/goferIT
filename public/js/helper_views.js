@@ -56,9 +56,9 @@
       ItemListView.prototype.render = function() {
         this.$el.html(this.template({}));
         if (this.storeSelectView) {
-          $("#item-view-head").html(this.storeSelectView.render().el);
+          $("#root-backbone-view-head").html(this.storeSelectView.render().el);
         }
-        return $("#item-view-body").html(this.itemsTable.render().el);
+        return $("#root-backbone-view-body").html(this.itemsTable.render().el);
       };
 
       ItemListView.prototype.renderItemsTable = function() {

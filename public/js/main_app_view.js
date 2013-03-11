@@ -27,10 +27,14 @@
       };
 
       AppControllerView.prototype.inventoryRender = function() {
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         return this.inventoryControllerView.renderProductsListView();
       };
 
       AppControllerView.prototype.peopleRender = function() {
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         return this.customerControllerView.renderCustomersListView();
       };
 

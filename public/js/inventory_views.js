@@ -34,7 +34,7 @@
         this.currentView = new app.ItemListView({
           collection: app.Products,
           el: "#products-list-view-content",
-          template: "#item-content-template",
+          template: "#root-backbone-content-template",
           storeSelectView: ProductsListStoreSelectView,
           tableTemplate: '#products-table-template',
           tableListID: '#products-table-list',
@@ -163,7 +163,7 @@
         'click #product-item-next-link': 'renderProductItemNextView'
       };
 
-      ProductItemView.prototype.template = _.template(($('#item-content-template')).html());
+      ProductItemView.prototype.template = _.template(($('#root-backbone-content-template')).html());
 
       ProductItemView.prototype.initialize = function(options) {
         return this.productView = new ProductItemBodyView();
@@ -172,7 +172,7 @@
       ProductItemView.prototype.render = function(productModel) {
         this.model = productModel;
         this.$el.html(this.template({}));
-        return $("#item-view-body").html(this.productView.render(this.model).el);
+        return $("#root-backbone-view-body").html(this.productView.render(this.model).el);
       };
 
       ProductItemView.prototype.renderProductItemPrevView = function(event) {
@@ -284,7 +284,7 @@
 
       ProductCreateView.prototype.el = '#product-create-view-content';
 
-      ProductCreateView.prototype.template = _.template(($('#item-content-template')).html());
+      ProductCreateView.prototype.template = _.template(($('#root-backbone-content-template')).html());
 
       ProductCreateView.prototype.initialize = function() {
         this.productCreateBodyView = new ProductCreateBodyView();
@@ -295,7 +295,7 @@
 
       ProductCreateView.prototype.render = function() {
         this.$el.html(this.template({}));
-        $("#item-view-body").html(this.productCreateBodyView.render().el);
+        $("#root-backbone-view-body").html(this.productCreateBodyView.render().el);
         $("#product-create-store-names").html(this.storeSelectView.render().el);
         return $("#product-create-supplier-names").html(this.supplierSelectView.render().el);
       };
