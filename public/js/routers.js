@@ -23,6 +23,7 @@
 
       GoferRouter.prototype.initialize = function() {
         app.Companies.fetch();
+        app.Customers.fetch();
         app.Suppliers.fetch();
         app.Products.fetch();
         return app.appControllerView = new app.AppControllerView({

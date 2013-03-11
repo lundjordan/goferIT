@@ -31,7 +31,7 @@
       };
 
       AppControllerView.prototype.peopleRender = function() {
-        return this.customerControllerView.renderCustomerListView();
+        return this.customerControllerView.renderCustomersListView();
       };
 
       AppControllerView.prototype.dashboardRender = function() {};

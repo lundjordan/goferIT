@@ -13,7 +13,7 @@ jQuery ->
         inventoryRender: ->
             @inventoryControllerView.renderProductsListView()
         peopleRender: ->
-            @customerControllerView.renderCustomerListView()
+            @customerControllerView.renderCustomersListView()
         dashboardRender: ->
 
     @app = window.app ? {}

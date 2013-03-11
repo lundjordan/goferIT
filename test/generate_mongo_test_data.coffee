@@ -171,6 +171,19 @@ async.series [
                 city: 'Vancouver'
                 country: 'Canada'
             dob: '1971-01-08'
+        ,
+            email: 'customer4@gmail.com'
+            _company: companyArray[0].id
+            name:
+                first: 'Jennie'
+                last: 'Hayes'
+            phone: 16049993333
+            address:
+                street: '4444 Hazer Street'
+                postalCode: 'vlr3d9'
+                city: 'Vancouver'
+                country: 'Canada'
+            dob: '1981-11-26'
         ]
         async.each customerObjs, (obj) ->
             createDocInModelHelper obj, Customer

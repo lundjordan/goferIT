@@ -92,7 +92,6 @@ jQuery ->
             @productsTable.render()
     # Products List View Section
     class ProductsTable extends Backbone.View
-        # el: '#products-view-body'
         template: _.template ($ '#products-table-template').html()
         render: ->
             @$el.html this.template({})
@@ -382,10 +381,6 @@ jQuery ->
 
 
     class OrderListView extends Backbone.View
-        el: '#order-list-view'
-        template: _.template ($ '#order-list-template').html()
-        render: ->
-            @$el.html this.template({})
 
     @app = window.app ? {}
     @app.InventoryControllerView = InventoryControllerView

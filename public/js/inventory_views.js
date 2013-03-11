@@ -637,14 +637,6 @@
         return OrderListView.__super__.constructor.apply(this, arguments);
       }
 
-      OrderListView.prototype.el = '#order-list-view';
-
-      OrderListView.prototype.template = _.template(($('#order-list-template')).html());
-
-      OrderListView.prototype.render = function() {
-        return this.$el.html(this.template({}));
-      };
-
       return OrderListView;
 
     })(Backbone.View);

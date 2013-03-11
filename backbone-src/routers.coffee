@@ -9,6 +9,7 @@ jQuery ->
             'inventory': 'inventory'
         initialize: ->
             app.Companies.fetch()
+            app.Customers.fetch()
             app.Suppliers.fetch()
             app.Products.fetch()
             app.appControllerView = new app.AppControllerView

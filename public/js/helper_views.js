@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var AlertView, _ref;
+    var AlertView, ItemListItemView, ItemListView, ItemsTable, _ref;
     AlertView = (function(_super) {
 
       __extends(AlertView, _super);
@@ -26,8 +26,127 @@
       return AlertView;
 
     })(Backbone.View);
+    ItemListView = (function(_super) {
+
+      __extends(ItemListView, _super);
+
+      function ItemListView() {
+        return ItemListView.__super__.constructor.apply(this, arguments);
+      }
+
+      ItemListView.prototype.events = {
+        'change #store-name-select': 'renderItemsTable'
+      };
+
+      ItemListView.prototype.initialize = function() {
+        this.el = this.options.el;
+        this.template = _.template(($(this.options.template)).html());
+        if (this.options.storeSelectView) {
+          this.storeSelectView = new ItemsListStoreSelectView();
+        }
+        return this.itemsTable = new ItemsTable({
+          collection: this.options.collection,
+          template: this.options.tableTemplate,
+          tableListID: this.options.tableListID,
+          itemTrTemplate: this.options.itemTrTemplate
+        });
+      };
+
+      ItemListView.prototype.render = function() {
+        this.$el.html(this.template({}));
+        if (this.storeSelectView) {
+          $("#item-view-head").html(this.storeSelectView.render().el);
+        }
+        return $("#item-view-body").html(this.itemsTable.render().el);
+      };
+
+      ItemListView.prototype.renderItemsTable = function() {
+        if (this.storeSelectView) {
+          return this.itemsTable.render();
+        }
+      };
+
+      return ItemListView;
+
+    })(Backbone.View);
+    ItemsTable = (function(_super) {
+
+      __extends(ItemsTable, _super);
+
+      function ItemsTable() {
+        return ItemsTable.__super__.constructor.apply(this, arguments);
+      }
+
+      ItemsTable.prototype.initialize = function() {
+        this.template = _.template(($(this.options.template)).html());
+        this.tableListID = this.options.tableListID;
+        return this.itemTrTemplate = this.options.itemTrTemplate;
+      };
+
+      ItemsTable.prototype.render = function() {
+        this.$el.html(this.template({}));
+        this.addAll();
+        return this;
+      };
+
+      ItemsTable.prototype.addOne = function(item) {
+        var view;
+        view = new ItemListItemView({
+          model: item,
+          template: this.itemTrTemplate
+        });
+        return (this.$(this.tableListID)).append(view.render().el);
+      };
+
+      ItemsTable.prototype.addAll = function() {
+        return this.collection.each(this.addOne, this);
+      };
+
+      return ItemsTable;
+
+    })(Backbone.View);
+    ItemListItemView = (function(_super) {
+
+      __extends(ItemListItemView, _super);
+
+      function ItemListItemView() {
+        return ItemListItemView.__super__.constructor.apply(this, arguments);
+      }
+
+      ItemListItemView.prototype.tagName = 'tr';
+
+      ItemListItemView.prototype.events = {
+        'mouseover': 'showItemOptions',
+        'mouseout': 'hideItemOptions',
+        'click #item-view-eye-link': 'renderItemItemView'
+      };
+
+      ItemListItemView.prototype.initialize = function() {
+        return this.template = _.template(($(this.options.template)).html());
+      };
+
+      ItemListItemView.prototype.render = function() {
+        this.$el.html(this.template(this.model.attributes));
+        $(this.el).find('i').hide();
+        return this;
+      };
+
+      ItemListItemView.prototype.showItemOptions = function(event) {
+        return $(this.el).find('i').show();
+      };
+
+      ItemListItemView.prototype.hideItemOptions = function(event) {
+        return $(this.el).find('i').hide();
+      };
+
+      ItemListItemView.prototype.renderItemItemView = function() {};
+
+      return ItemListItemView;
+
+    })(Backbone.View);
     this.app = (_ref = window.app) != null ? _ref : {};
-    return this.app.AlertView = AlertView;
+    this.app.AlertView = AlertView;
+    return this.app.ItemListView = ItemListView;
   });
 
 }).call(this);
