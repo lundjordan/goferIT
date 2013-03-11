@@ -22,7 +22,7 @@ block content
                   a#loginDropdown.dropdown-toggle(href='#', data-toggle="dropdown", role="button") Sign In <b class="caret"></b>
                   ul.dropdown-menu(style="padding: 15px; padding-bottom: 0px;", aria-labelledby="drop3", role="menu")
                     li(role="presentation")
-                      form(action='/login', method='post')
+                      form#login-form(action='/login', method='post')
                         fieldset
                           label Username
                           // input.span2(id="username", type="text", name="username", placeholder="Email")

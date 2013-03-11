@@ -26,7 +26,8 @@
         app.Suppliers.fetch();
         app.Products.fetch();
         return app.appControllerView = new app.AppControllerView({
-          inventoryControllerView: new app.InventoryControllerView
+          inventoryControllerView: new app.InventoryControllerView,
+          customerControllerView: new app.CustomerControllerView
         });
       };
 

@@ -32,7 +32,6 @@ block content
       <strong>Uh Oh!</strong> #{error_alert}
   div#main-alert-div
 
-
   div#main.container-fluid
     div.row-fluid
       div.span2
@@ -100,3 +99,40 @@ block content
                       #order-create.tab-pane
 
           div#people-main-content.tab-pane
+            div
+              h1 People
+                p.lead counting who matters most
+              ul.nav.nav-pills
+                li#customers-menu-pill.active
+                  a(href='#customers-main-view', data-toggle='tab') Customers
+                li(id-='id-', staff-menu-pill='staff-menu-pill')
+                  a(href='#staff-main-view', data-toggle='tab') Staff
+                li(id-='id-', suppliers-menu-pill='suppliers-menu-pill')
+                  a(href='#suppliers-main-view', data-toggle='tab') Suppliers
+              .tab-content
+                #customers-main-view.tab-pane.active
+                  .tabbable
+                    ul.nav.nav-tabs
+                      li#customers-list-tab.active
+                        a(href='#customers-list-view-content', data-toggle='tab') List
+                      li#customers-item-tab
+                        a(href='#customers-item-view-content', data-toggle='tab') View
+                      li#customers-create-tab
+                        a(href='#customers-create-view-content', data-toggle='tab') Create/Edit
+                    .tab-content
+                      #customers-list-view-content.tab-pane.active
+                      #customers-item-view-content.tab-pane
+                      #customers-create-view-content.tab-pane
+                #order-main-view.tab-pane
+                  .tabbable
+                    ul.nav.nav-tabs
+                      li.active
+                        a(href='#order-list', data-toggle='tab') List
+                      li
+                        a(href='#order-view', data-toggle='tab') View
+                      li
+                        a(href='#order-create', data-toggle='tab') Create/Edit
+                    .tab-content
+                      #order-list.tab-pane.active
+                      #order-view.tab-pane
+                      #order-create.tab-pane

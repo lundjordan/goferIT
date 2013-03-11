@@ -26,7 +26,7 @@ jQuery ->
                 @currentView.$el.html("")
             # $('#inventory-list-tab').removeClass('active')
             # $('#inventory-item-tab').addClass('active')
-            $('#inventory-item-tab a').tab('show');
+            $('#inventory-item-tab a').tab('show')
             @currentView = new ProductItemView()
             @currentView.render model
         renderProductCreateView: ->

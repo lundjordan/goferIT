@@ -6,10 +6,14 @@ jQuery ->
         events:
             'click #dashboard-link': "dashboardRender"
             'click #inventory-link': "inventoryRender"
+            'click #people-link': "peopleRender"
         initialize: ->
             @inventoryControllerView = @options.inventoryControllerView
+            @customerControllerView = @options.customerControllerView
         inventoryRender: ->
             @inventoryControllerView.renderProductsListView()
+        peopleRender: ->
+            @customerControllerView.renderCustomerListView()
         dashboardRender: ->
 
     @app = window.app ? {}

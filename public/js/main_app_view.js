@@ -17,15 +17,21 @@
 
       AppControllerView.prototype.events = {
         'click #dashboard-link': "dashboardRender",
-        'click #inventory-link': "inventoryRender"
+        'click #inventory-link': "inventoryRender",
+        'click #people-link': "peopleRender"
       };
 
       AppControllerView.prototype.initialize = function() {
-        return this.inventoryControllerView = this.options.inventoryControllerView;
+        this.inventoryControllerView = this.options.inventoryControllerView;
+        return this.customerControllerView = this.options.customerControllerView;
       };
 
       AppControllerView.prototype.inventoryRender = function() {
         return this.inventoryControllerView.renderProductsListView();
+      };
+
+      AppControllerView.prototype.peopleRender = function() {
+        return this.customerControllerView.renderCustomerListView();
       };
 
       AppControllerView.prototype.dashboardRender = function() {};
