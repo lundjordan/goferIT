@@ -34,7 +34,6 @@
         this.currentView = new app.ItemListView({
           collection: app.Products,
           el: "#products-list-view-content",
-          template: "#root-backbone-content-template",
           storeSelectView: ProductsListStoreSelectView,
           tableTemplate: '#products-table-template',
           tableListID: '#products-table-list',

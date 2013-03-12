@@ -16,7 +16,7 @@ jQuery ->
             $("#root-backbone-view-body").remove()
             @inventoryControllerView.renderProductsListView()
         peopleRender: ->
-            $('#customer-list-tab a').tab('show')
+            $('#customers-list-tab a').tab('show')
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
             @customerControllerView.renderCustomersListView()

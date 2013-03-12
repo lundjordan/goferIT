@@ -122,7 +122,7 @@
       ItemListItemView.prototype.events = {
         'mouseover': 'showItemOptions',
         'mouseout': 'hideItemOptions',
-        'click #item-view-eye-link': 'renderItemItemView'
+        'click #item-view-eye-link': 'renderSpecificItemView'
       };
 
       ItemListItemView.prototype.initialize = function() {
@@ -145,7 +145,8 @@
         return $(this.el).find('i').hide();
       };
 
-      ItemListItemView.prototype.renderItemItemView = function() {
+      ItemListItemView.prototype.renderSpecificItemView = function() {
+        console.log("made it to  renderSpecificItemView");
         return this.itemControllerView.renderSpecificItemView(this.model);
       };
 

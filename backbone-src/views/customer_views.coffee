@@ -19,6 +19,7 @@ jQuery ->
                 tableTemplate: '#customers-table-template'
                 tableListID: '#customers-table-list'
                 itemTrTemplate: '#customer-tr-template'
+                itemControllerView: @
             @currentView.render()
         renderCustomerDefaultItemView: ->
             if @currentView
@@ -28,14 +29,16 @@ jQuery ->
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
             @currentView.render app.Customers.models[0]
-        # renderCustomerSpecificItemView: (model) ->
-        #     if @currentView
-        #         @currentView.$el.html("")
-        #     # $('#customer-list-tab').removeClass('active')
-        #     # $('#customer-item-tab').addClass('active')
-        #     $('#customer-item-tab a').tab('show')
-        #     @currentView = new CustomerItemView()
-        #     @currentView.render model
+        renderSpecificItemView: (model) ->
+            console.log "made it here"
+            if @currentView
+                @currentView.$el.html("")
+            $('#customer-item-tab a').tab('show')
+            @currentView = new app.ItemView
+                el: "#customer-item-view-content"
+                singleLayoutTemplate: "#single-item-view-template"
+                singleContentTemplate: "#customer-view-content-template"
+            @currentView.render model
         # renderCustomerCreateView: ->
         #     if @currentView
         #         @currentView.$el.html("")

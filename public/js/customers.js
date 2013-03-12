@@ -16,6 +16,24 @@
 
     Customers.prototype.url = '/customers';
 
+    Customers.prototype.findPrev = function(currentModel) {
+      var indexCurrentModel;
+      indexCurrentModel = this.indexOf(currentModel);
+      if (indexCurrentModel === 0) {
+        return this.at(this.length - 1);
+      }
+      return this.at(indexCurrentModel - 1);
+    };
+
+    Customers.prototype.findNext = function(currentModel) {
+      var indexCurrentModel;
+      indexCurrentModel = this.indexOf(currentModel);
+      if (this.length === indexCurrentModel + 1) {
+        return this.at(0);
+      }
+      return this.at(indexCurrentModel + 1);
+    };
+
     return Customers;
 
   })(Backbone.Collection);

@@ -34,7 +34,8 @@
           el: "#customers-list-view-content",
           tableTemplate: '#customers-table-template',
           tableListID: '#customers-table-list',
-          itemTrTemplate: '#customer-tr-template'
+          itemTrTemplate: '#customer-tr-template',
+          itemControllerView: this
         });
         return this.currentView.render();
       };
@@ -49,6 +50,20 @@
           singleContentTemplate: "#customer-view-content-template"
         });
         return this.currentView.render(app.Customers.models[0]);
+      };
+
+      CustomerControllerView.prototype.renderSpecificItemView = function(model) {
+        console.log("made it here");
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        $('#customer-item-tab a').tab('show');
+        this.currentView = new app.ItemView({
+          el: "#customer-item-view-content",
+          singleLayoutTemplate: "#single-item-view-template",
+          singleContentTemplate: "#customer-view-content-template"
+        });
+        return this.currentView.render(model);
       };
 
       return CustomerControllerView;

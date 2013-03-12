@@ -56,7 +56,7 @@ jQuery ->
         events:
             'mouseover': 'showItemOptions'
             'mouseout': 'hideItemOptions'
-            'click #item-view-eye-link': 'renderItemItemView'
+            'click #item-view-eye-link': 'renderSpecificItemView'
         initialize: ->
             @template = _.template ($ @options.template).html()
             @itemView = @options.itemView 
@@ -71,7 +71,8 @@ jQuery ->
         hideItemOptions: (event) ->
             # $('#item-options').html()
             $(@el).find('i').hide()
-        renderItemItemView: ->
+        renderSpecificItemView: ->
+            console.log "made it to  renderSpecificItemView"
             @itemControllerView.renderSpecificItemView @model
     # ###############
 
