@@ -20,6 +20,7 @@ CustomerSchema = new mongoose.Schema
         city: String
         country: String
     dob: String
+    sex: String
     dateCreated:
         type: Date
         default: new Date().toISOString()

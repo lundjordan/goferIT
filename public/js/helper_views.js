@@ -146,7 +146,6 @@
       };
 
       ItemListItemView.prototype.renderSpecificItemView = function() {
-        console.log("made it to  renderSpecificItemView");
         return this.itemControllerView.renderSpecificItemView(this.model);
       };
 

@@ -72,7 +72,6 @@ jQuery ->
             # $('#item-options').html()
             $(@el).find('i').hide()
         renderSpecificItemView: ->
-            console.log "made it to  renderSpecificItemView"
             @itemControllerView.renderSpecificItemView @model
     # ###############
 

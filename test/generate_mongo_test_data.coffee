@@ -141,10 +141,11 @@ async.series [
             phone: 16049992222
             address:
                 street: '2222 Beetle Ave'
-                postalCode: '01'
+                postalCode: 'v7w5n8'
                 city: 'Vancouver'
                 country: 'Canada'
             dob: '1989-02-22'
+            sex: 'male'
         ,
             email: 'customer2@gmail.com'
             _company: companyArray[0].id
@@ -158,6 +159,7 @@ async.series [
                 city: 'West Vancouver'
                 country: 'Canada'
             dob: '1986-09-20'
+            sex: 'male'
         ,
             email: 'customer3@gmail.com'
             _company: companyArray[0].id
@@ -171,6 +173,7 @@ async.series [
                 city: 'Vancouver'
                 country: 'Canada'
             dob: '1971-01-08'
+            sex: 'male'
         ,
             email: 'customer4@gmail.com'
             _company: companyArray[0].id
@@ -184,6 +187,7 @@ async.series [
                 city: 'Vancouver'
                 country: 'Canada'
             dob: '1981-11-26'
+            sex: 'female'
         ]
         async.each customerObjs, (obj) ->
             createDocInModelHelper obj, Customer

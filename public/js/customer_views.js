@@ -45,6 +45,7 @@
           this.currentView.$el.html("");
         }
         this.currentView = new app.ItemView({
+          collection: app.Customers,
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
           singleContentTemplate: "#customer-view-content-template"
@@ -59,6 +60,7 @@
         }
         $('#customer-item-tab a').tab('show');
         this.currentView = new app.ItemView({
+          collection: app.Customers,
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
           singleContentTemplate: "#customer-view-content-template"

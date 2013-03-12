@@ -25,6 +25,7 @@ jQuery ->
             if @currentView
                 @currentView.$el.html("")
             @currentView = new app.ItemView
+                collection: app.Customers
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
@@ -35,6 +36,7 @@ jQuery ->
                 @currentView.$el.html("")
             $('#customer-item-tab a').tab('show')
             @currentView = new app.ItemView
+                collection: app.Customers
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
