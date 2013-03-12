@@ -27,12 +27,14 @@
       };
 
       AppControllerView.prototype.inventoryRender = function() {
+        $('#inventory-list-tab a').tab('show');
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         return this.inventoryControllerView.renderProductsListView();
       };
 
       AppControllerView.prototype.peopleRender = function() {
+        $('#customer-list-tab a').tab('show');
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         return this.customerControllerView.renderCustomersListView();

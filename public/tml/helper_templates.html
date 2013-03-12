@@ -1,3 +1,8 @@
+<script type="text/template" id="root-backbone-content-template">
+  <div id='root-backbone-view-head'> </div>
+  <div id='root-backbone-view-body'> </div>
+</script>
+
 <script type="text/template" id="alert-message-warning">
   <div class="alert fade in <%= alertType %>">
     <button type="button" class="close"
@@ -6,9 +11,24 @@
   </div>
 </script>
 
-<script type="text/template" id="root-backbone-content-template">
-  <div id='root-backbone-view-head'> </div>
-  <div id='root-backbone-view-body'> </div>
+<script type="text/template" id="single-item-view-template">
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span2">
+        <ul class="nav nav-list well">
+          <li class="nav-header">Tools</li>
+          <li><a href="#"><i class='icon-pencil'></i> Edit</a></li>
+          <li><a href="#"><i class='icon-trash'></i> Delete</a></li>
+        </ul>
+        <ul class="pager">
+          <li id='single-item-prev-link'><a href="#">Previous</a></li>
+          <li id='single-item-next-link'><a href="#">Next</a></li>
+        </ul>
+      </div>
+      <div id='single-item-view-content' class="span10">
+      </div>
+    </div>
+  </div>
 </script>
 
 

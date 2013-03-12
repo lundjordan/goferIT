@@ -11,10 +11,12 @@ jQuery ->
             @inventoryControllerView = @options.inventoryControllerView
             @customerControllerView = @options.customerControllerView
         inventoryRender: ->
+            $('#inventory-list-tab a').tab('show')
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
             @inventoryControllerView.renderProductsListView()
         peopleRender: ->
+            $('#customer-list-tab a').tab('show')
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
             @customerControllerView.renderCustomersListView()

@@ -2,11 +2,11 @@
 
 jQuery ->
     class CustomerControllerView extends Backbone.View
-        el: '#item-main-content'
+        el: '#people-main-content'
         events:
             'click #customer-menu-pill': 'renderCustomersListView'
-            'click #customer-list-tab': 'renderCustomersListView'
-            # 'click #customer-item-tab': 'renderCustomerDefaultItemView'
+            'click #customers-list-tab': 'renderCustomersListView'
+            'click #customer-item-tab': 'renderCustomerDefaultItemView'
             # 'click #customer-create-tab': 'renderCustomerCreateView'
         initialize: ->
             @currentView = null
@@ -16,16 +16,18 @@ jQuery ->
             @currentView = new app.ItemListView
                 collection: app.Customers
                 el: "#customers-list-view-content"
-                template: "#root-backbone-content-template"
                 tableTemplate: '#customers-table-template'
                 tableListID: '#customers-table-list'
                 itemTrTemplate: '#customer-tr-template'
             @currentView.render()
-        # renderCustomerDefaultItemView: ->
-        #     if @currentView
-        #         @currentView.$el.html("")
-        #     @currentView = new CustomerItemView()
-        #     @currentView.render app.Customers.models[0]
+        renderCustomerDefaultItemView: ->
+            if @currentView
+                @currentView.$el.html("")
+            @currentView = new app.ItemView
+                el: "#customer-item-view-content"
+                singleLayoutTemplate: "#single-item-view-template"
+                singleContentTemplate: "#customer-view-content-template"
+            @currentView.render app.Customers.models[0]
         # renderCustomerSpecificItemView: (model) ->
         #     if @currentView
         #         @currentView.$el.html("")

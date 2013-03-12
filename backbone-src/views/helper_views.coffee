@@ -12,11 +12,11 @@ jQuery ->
     # ###############
     # Items List View Section
     class ItemListView extends Backbone.View
+        template: _.template ($ '#root-backbone-content-template').html()
         events:
             'change #store-name-select': 'renderItemsTable'
         initialize: ->
             @el = @options.el
-            @template = _.template ($ @options.template).html()
             if @options.storeSelectView
                 @storeSelectView = new @options.storeSelectView()
             @itemsTable = new ItemsTable
@@ -75,6 +75,56 @@ jQuery ->
             @itemControllerView.renderSpecificItemView @model
     # ###############
 
+    # ###############
+    # Single Item View Section
+    class ItemView extends Backbone.View
+        template: _.template ($ '#root-backbone-content-template').html()
+        events:
+            'click #single-item-prev-link': 'renderSingleItemPrevView'
+            'click #single-item-next-link': 'renderSingleItemNextView'
+        initialize: (options) ->
+            @el = @options.el
+            # @storeSelectView = new SinglesListStoreSelectView()
+            @singleView =  new ItemBodyView
+                template: @options.singleLayoutTemplate
+                singleContentTemplate: @options.singleContentTemplate
+        render: (currentModel) ->
+            @currentModel = currentModel
+            @$el.html this.template({})
+            # @$("#root-backbone-view-head").html @storeSelectView.render().el
+            # @storeSelectView.render()
+            $("#root-backbone-view-body").html @singleView.render(@currentModel).el
+        renderSingleItemPrevView: (event) ->
+            @currentModel = @collection.findPrev @currentModel
+            @singleView.render @currentModel
+        renderSingleItemNextView: (event) ->
+            @currentModel = @collection.findNext @currentModel
+            @singleView.render @currentModel
+    # Single Item View Section
+    class ItemBodyView extends Backbone.View
+        initialize: ->
+            @template = _.template ($ @options.template).html()
+            @singleContentTemplate = @options.singleContentTemplate
+            @currentModelView = null
+        render: (currentModel) ->
+            @$el.html this.template({})
+            @renderSingleContent(currentModel)
+            @
+        renderSingleContent: (currentModel) ->
+            @currentModelView = new ItemContentView
+                template: @singleContentTemplate
+            @$('#single-item-view-content')
+                .html @currentModelView.render(currentModel).el
+    class ItemContentView extends Backbone.View
+        className: 'container-fluid'
+        initialize: ->
+            @template = _.template ($ @options.template).html()
+        render: (currentModel) ->
+            @$el.html this.template(currentModel.attributes)
+            @
+    # ###############
+
     @app = window.app ? {}
     @app.AlertView = AlertView
     @app.ItemListView = ItemListView
+    @app.ItemView = ItemView

@@ -13,11 +13,12 @@
         return CustomerControllerView.__super__.constructor.apply(this, arguments);
       }
 
-      CustomerControllerView.prototype.el = '#item-main-content';
+      CustomerControllerView.prototype.el = '#people-main-content';
 
       CustomerControllerView.prototype.events = {
         'click #customer-menu-pill': 'renderCustomersListView',
-        'click #customer-list-tab': 'renderCustomersListView'
+        'click #customers-list-tab': 'renderCustomersListView',
+        'click #customer-item-tab': 'renderCustomerDefaultItemView'
       };
 
       CustomerControllerView.prototype.initialize = function() {
@@ -31,12 +32,23 @@
         this.currentView = new app.ItemListView({
           collection: app.Customers,
           el: "#customers-list-view-content",
-          template: "#root-backbone-content-template",
           tableTemplate: '#customers-table-template',
           tableListID: '#customers-table-list',
           itemTrTemplate: '#customer-tr-template'
         });
         return this.currentView.render();
+      };
+
+      CustomerControllerView.prototype.renderCustomerDefaultItemView = function() {
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        this.currentView = new app.ItemView({
+          el: "#customer-item-view-content",
+          singleLayoutTemplate: "#single-item-view-template",
+          singleContentTemplate: "#customer-view-content-template"
+        });
+        return this.currentView.render(app.Customers.models[0]);
       };
 
       return CustomerControllerView;
