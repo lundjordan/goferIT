@@ -31,7 +31,7 @@
 
 
 
-<!--product single view templates-->
+<!--customer single view templates-->
 <script type="text/template" id="customer-view-content-template">
   <div class="row-fluid">
     <h3><%= name.last %>, <%= name.first %></h3>
@@ -57,6 +57,93 @@
     </div>
   </div>
 </script>
-<!--product single view templates-->
+<!--customer single view templates-->
 
+<!--customer create view templates-->
+<script type="text/template" id="customer-create-template">
+  <div class="row-fluid">
+    <form id='create-customer-form'>
+      <div class="span3 ">
+        <div class="control-group">
+          <label class="control-label" for="name-input">First Name*</label>
+          <div class="controls">
+            <input type="text" name="customerFirstName" id="first-name-input" value="Fred">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Last Name*</label>
+          <div class="controls">
+            <input type="text" id="last-name-input" name='lastName' value="Gomer">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Email*</label>
+          <div class="controls">
+            <input type="text" id="email-input" name='email' value="fred@gmail.com">
+          </div>
+        </div>
+      </div>
+      <div class="span3">
+        <div class="control-group">
+          <label class="control-label">Country*</label>
+          <div class="controls">
+            <div class="bfh-selectbox bfh-countries" data-country="US" data-flags="true">
+              <input type="hidden" value="">
+              <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
+                <span class="bfh-selectbox-option input-medium" data-option=""></span>
+                <b class="caret"></b>
+              </a>
+              <div class="bfh-selectbox-options">
+                <input type="text" class="bfh-selectbox-filter">
+                <div role="listbox">
+                  <ul role="option">
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="span6">
+      </div>
+      <hr />
+      <div class="row-fluid">
+        <div class="span3 offset9 ">
+          <input type="submit" id='create-new-product-button'
+          class="btn btn-primary" value='Create'>
+          <input type="button" id='clear-new-product-button'
+          class="btn" value='Clear'>
+        </div>
+      </div>
+    </form>
+  </div>
+</script>
+<!--customer create view templates-->
+
+        <!-- <div id="grand-total-quantity-content"> -->
+        <!--   <div class="control-group"> -->
+        <!--     <label class="control-label">Grand Total Quantity</label> -->
+        <!--     <div class="controls"> -->
+        <!--       <input type="text" id='grand-total-input' name="grandTotal" value="9"> -->
+        <!--     </div> -->
+        <!--   </div> -->
+        <!-- </div> -->
+        <!-- <div id="sub-total-quantity-content"> </div> -->
+        <!-- <hr /> -->
+        <!-- <label class="radio"> -->
+        <!--   <input type="radio" name="totalOptionsRadio" id="total-quantity-radio" -->
+        <!--   value="grand-total-selected" checked> -->
+        <!--   by grand total -->
+        <!-- </label> -->
+        <!-- <label class="radio"> -->
+        <!--   <input type="radio" name="totalOptionsRadio" id="sub-quantity-radio" -->
+        <!--   value="sub-total-selected"> -->
+        <!--   by sub totals -->
+        <!-- </label> -->
+        <!-- <div class="form-actions"> -->
+        <!--   <input type="submit" id='create-new-customer-button' -->
+        <!--   class="btn btn-primary" value='Create'> -->
+        <!--   <input type="button" id='clear-new-customer-button' -->
+        <!--   class="btn" value='Clear'> -->
+        <!-- </div> -->
 

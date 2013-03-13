@@ -14,7 +14,7 @@ jQuery ->
         renderProductsListView: ->
             if @currentView
                 @currentView.$el.html("")
-            @currentView = new app.ItemListView
+            @currentView = new app.GenericListView
                 collection: app.Products
                 el: "#products-list-view-content"
                 storeSelectView: ProductsListStoreSelectView

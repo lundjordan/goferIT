@@ -7,13 +7,13 @@ jQuery ->
             'click #customer-menu-pill': 'renderCustomersListView'
             'click #customers-list-tab': 'renderCustomersListView'
             'click #customer-item-tab': 'renderCustomerDefaultItemView'
-            # 'click #customer-create-tab': 'renderCustomerCreateView'
+            'click #customer-create-tab': 'renderCustomerCreateView'
         initialize: ->
             @currentView = null
         renderCustomersListView: ->
             if @currentView
                 @currentView.$el.html("")
-            @currentView = new app.ItemListView
+            @currentView = new app.GenericListView
                 collection: app.Customers
                 el: "#customers-list-view-content"
                 tableTemplate: '#customers-table-template'
@@ -24,7 +24,7 @@ jQuery ->
         renderCustomerDefaultItemView: ->
             if @currentView
                 @currentView.$el.html("")
-            @currentView = new app.ItemView
+            @currentView = new app.GenericSingleView
                 collection: app.Customers
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
@@ -35,17 +35,19 @@ jQuery ->
             if @currentView
                 @currentView.$el.html("")
             $('#customer-item-tab a').tab('show')
-            @currentView = new app.ItemView
+            @currentView = new app.GenericSingleView
                 collection: app.Customers
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
             @currentView.render model
-        # renderCustomerCreateView: ->
-        #     if @currentView
-        #         @currentView.$el.html("")
-        #     @currentView = new CustomerCreateView()
-        #     @currentView.render()
+        renderCustomerCreateView: ->
+            if @currentView
+                @currentView.$el.html("")
+            @currentView = new app.GenericCreateView
+                el: "#customer-create-view-content"
+                createFormTemplate: "#customer-create-template"
+            @currentView.render()
 
     # # ###############
     # Customers List View Section

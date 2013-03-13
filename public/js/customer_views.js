@@ -18,7 +18,8 @@
       CustomerControllerView.prototype.events = {
         'click #customer-menu-pill': 'renderCustomersListView',
         'click #customers-list-tab': 'renderCustomersListView',
-        'click #customer-item-tab': 'renderCustomerDefaultItemView'
+        'click #customer-item-tab': 'renderCustomerDefaultItemView',
+        'click #customer-create-tab': 'renderCustomerCreateView'
       };
 
       CustomerControllerView.prototype.initialize = function() {
@@ -29,7 +30,7 @@
         if (this.currentView) {
           this.currentView.$el.html("");
         }
-        this.currentView = new app.ItemListView({
+        this.currentView = new app.GenericListView({
           collection: app.Customers,
           el: "#customers-list-view-content",
           tableTemplate: '#customers-table-template',
@@ -44,7 +45,7 @@
         if (this.currentView) {
           this.currentView.$el.html("");
         }
-        this.currentView = new app.ItemView({
+        this.currentView = new app.GenericSingleView({
           collection: app.Customers,
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
@@ -59,13 +60,24 @@
           this.currentView.$el.html("");
         }
         $('#customer-item-tab a').tab('show');
-        this.currentView = new app.ItemView({
+        this.currentView = new app.GenericSingleView({
           collection: app.Customers,
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
           singleContentTemplate: "#customer-view-content-template"
         });
         return this.currentView.render(model);
+      };
+
+      CustomerControllerView.prototype.renderCustomerCreateView = function() {
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        this.currentView = new app.GenericCreateView({
+          el: "#customer-create-view-content",
+          createFormTemplate: "#customer-create-template"
+        });
+        return this.currentView.render();
       };
 
       return CustomerControllerView;

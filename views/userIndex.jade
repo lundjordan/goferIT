@@ -3,7 +3,8 @@ extends layout
 block content
 
   // Top Navbar
-  div#someID.navbar
+  // div#someID.navbar
+  div#someID.navbar.navbar-inverse
     div.navbar-inner
       div.container
         a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
@@ -62,9 +63,9 @@ block content
           div#dashboard-main-content.tab-pane
           div#pos-main-content.tab-pane
           div#inventory-main-content.tab-pane
+            div.page-header
+              h1 Inventory <small> everything on one shelf </small>
             div
-              h1 Inventory
-                p.lead everything on one shelf
               ul.nav.nav-pills
                 li#product-menu-pill.active
                   a(href='#inventory-main-view', data-toggle='tab') Stock
@@ -99,9 +100,9 @@ block content
                       #order-create.tab-pane
 
           div#people-main-content.tab-pane
+            div.page-header
+              h1 People <small> counting who matters most </small>
             div
-              h1 People
-                p.lead counting who matters most
               ul.nav.nav-pills
                 li#customers-menu-pill.active
                   a(href='#customers-main-view', data-toggle='tab') Customers

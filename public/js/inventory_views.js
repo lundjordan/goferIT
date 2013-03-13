@@ -31,7 +31,7 @@
         if (this.currentView) {
           this.currentView.$el.html("");
         }
-        this.currentView = new app.ItemListView({
+        this.currentView = new app.GenericListView({
           collection: app.Products,
           el: "#products-list-view-content",
           storeSelectView: ProductsListStoreSelectView,

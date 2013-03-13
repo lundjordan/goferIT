@@ -126,17 +126,10 @@
 <!--product single view templates-->
 
 
-
-
-
-
 <!--product create view templates-->
 <script type="text/template" id="product-create-template">
-  <div class="row-fluid">
-    <h2> Create A New Product </h2>
-  </div>
-  <div class="row-fluid">
-    <form id='create-product-form'>
+  <form id='create-product-form'>
+    <div class="row-fluid">
       <div class="span3 ">
         <div class="control-group">
           <label class="control-label" for="name-input">Name</label>
@@ -196,46 +189,48 @@
         </label>
         <span class="help-block">Store quantity based on total amount
           <strong>or</strong> by size, length, color, etc</span>
-        <div class="form-actions">
-          <input type="submit" id='create-new-product-button'
-          class="btn btn-primary" value='Create'>
-          <input type="button" id='clear-new-product-button'
-          class="btn" value='Clear'>
-        </div>
       </div>
-      <div id="sub-total-quantity-modal" class="modal hide fade">
-        <div class="modal-header">
-          <button type="button" class="close"
-            data-dismiss="modal"
-            aria-hidden="true">&times;</button>
-          <h3>Sub Total Headings</h3>
-        </div>
-        <div class="modal-body">
-          <hr />
-          <fieldset>
-            <label>Measurement Type</label>
-            <input id="measurement-type-input" type="text" placeholder="eg:
-            Size, Color, or Length" value="size">
-            <span class="help-block">specify the measurement differentiator</span>
-          </fieldset>
-          <hr />
-          <label>Measurement Values</label>
-          <input id="measurement-values-input" class="input-xxlarge" type="text"
-          placeholder="small, med, large", value="small, med, large">
-          <span class="help-block">if your measurement type is 'size' above,
-            you could, for example, put 'small, med, large, xlarge'
-            separeted by commas below
-          </span>
-          <hr />
-        </div>
-        <div class="modal-footer">
-          <a href="#" id="cancel-sub-total-options" class="btn">Cancel</a>
-          <a href="#" id='save-sub-total-options' class="btn btn-primary">Create</a>
-          </div>
-        </div>
-        <hr />
+    </div>
+    <hr />
+    <div class="row-fluid">
+      <div class="span3 offset9 ">
+        <input type="submit" id='create-new-product-button'
+        class="btn btn-primary" value='Create'>
+        <input type="button" id='clear-new-product-button'
+        class="btn" value='Clear'>
       </div>
-    </form>
+    </div>
+  </form>
+  <div id="sub-total-quantity-modal" class="modal hide fade">
+    <div class="modal-header">
+      <button type="button" class="close"
+        data-dismiss="modal"
+        aria-hidden="true">&times;</button>
+      <h3>Sub Total Headings</h3>
+    </div>
+    <div class="modal-body">
+      <hr />
+      <fieldset>
+        <label>Measurement Type</label>
+        <input id="measurement-type-input" type="text" placeholder="eg:
+        Size, Color, or Length" value="size">
+        <span class="help-block">specify the measurement differentiator</span>
+      </fieldset>
+      <hr />
+      <label>Measurement Values</label>
+      <input id="measurement-values-input" class="input-xxlarge" type="text"
+      placeholder="small, med, large", value="small, med, large">
+      <span class="help-block">if your measurement type is 'size' above,
+        you could, for example, put 'small, med, large, xlarge'
+        separeted by commas below
+      </span>
+      <hr />
+    </div>
+    <div class="modal-footer">
+      <a href="#" id="cancel-sub-total-options" class="btn">Cancel</a>
+      <a href="#" id='save-sub-total-options' class="btn btn-primary">Create</a>
+      </div>
+    </div>
   </div>
 </script>
 <script type="text/template" id="product-create-store-names-template">
