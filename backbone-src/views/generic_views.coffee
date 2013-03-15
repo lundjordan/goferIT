@@ -32,7 +32,9 @@ jQuery ->
                 $("#root-backbone-view-head").html @storeSelectView.render().el
             $("#root-backbone-view-body").html @itemsTable.render().el
         renderItemsTable: ->
+            console.log 'made it outer'
             if @storeSelectView
+                console.log @itemsTable
                 @itemsTable.render()
     class ItemsTable extends Backbone.View
         initialize: ->
@@ -45,11 +47,20 @@ jQuery ->
             @addAll()
             @
         addOne: (item) ->
-            view = new SingleListItemView
-                model: item
-                template: @itemTrTemplate
-                itemControllerView: @itemControllerView
-            (@$ @tableListID).append view.render().el
+            if $('#store-name-select')
+                if $('#store-name-select').val() is item.get('storeName')
+                    view = new SingleListItemView
+                        model: item
+                        template: @itemTrTemplate
+                        itemControllerView: @itemControllerView
+                    (@$ @tableListID).append view.render().el
+            else
+                view = new SingleListItemView
+                    model: item
+                    template: @itemTrTemplate
+                    itemControllerView: @itemControllerView
+                (@$ @tableListID).append view.render().el
+
         addAll: ->
             @collection.each @addOne, @
     class SingleListItemView extends Backbone.View
@@ -153,10 +164,14 @@ jQuery ->
             @
         setBootstrapFormHelperInputs: ->
             @$('form select.bfh-countries, span.bfh-countries, div.bfh-countries').each ->
-                console.log "setBootstrapFormHelperInputs called"
+                # console.log "setBootstrapFormHelperInputs countries called"
                 inputField = $(this)
                 inputField.bfhcountries inputField.data()
-        setJQueryValidityRules: ->
+            @$('form select.bfh-states, span.bfh-states, div.bfh-states').each ->
+                # console.log "setBootstrapFormHelperInputs states called"
+                inputField = $(this)
+                inputField.bfhstates inputField.data()
+        # setJQueryValidityRules: ->
         #     @validateForm @$("#create-item-form"),
         #         itemName:
         #             required: true

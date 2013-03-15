@@ -163,10 +163,20 @@ jQuery ->
             @storeSelectView.template = _.template ($ '#product-create-store-names-template').html()
         render: ->
             @$el.html this.template({})
+            $("#root-backbone-view-head").html @productCreateBodyView.render().el
             $("#root-backbone-view-body").html @productCreateBodyView.render().el
             $("#product-create-store-names").html @storeSelectView.render().el
             $("#product-create-supplier-names").html @supplierSelectView.render().el
             # $("#store-name-select").html @storeSelectView.render().el
+    class ProductCreateBodyView extends Backbone.View
+        events:
+            "click input[type=radio]": "quantityOptionInput"
+            "click #cancel-sub-total-options": "cancelSubTotalOptions"
+            "click #save-sub-total-options": "saveSubTotalOptions"
+            "click #create-new-product-button": "checkValidityAndCreateNewProduct"
+        template: _.template ($ '#product-create-template').html()
+        render: ->
+            @$el.html this.template({})
     class ProductCreateBodyView extends Backbone.View
         events:
             "click input[type=radio]": "quantityOptionInput"
@@ -212,7 +222,7 @@ jQuery ->
                         "Please Change the product name and/or brand"
                     alertWarning = new app.AlertView
                     $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
-                    console.log "didn't pass existing product check"
+                    # console.log "didn't pass existing product check"
                     return # not valid
 
                 if hasSubQuants
@@ -226,17 +236,17 @@ jQuery ->
                             subQuantValues.push $(this).find("input").val()
 
                     if not @subQuantTotalValid(subQuantTypes, subQuantValues)
-                        console.log "didn't pass subquants val"
+                        # console.log "didn't pass subquants val"
                         return # not valid
                     return @createNewProduct
                         subQuantTypes: subQuantTypes
                         subQuantValues: subQuantValues
 
                 # made it here means the form is completely valid!
-                console.log "valid"
+                # console.log "valid"
                 @createNewProduct()
             else
-                console.log "didn't pass $ val"
+                # console.log "didn't pass $ val"
                 return # not valid
         createNewProduct: (subQuants) ->
             name = $("#name-input").val()

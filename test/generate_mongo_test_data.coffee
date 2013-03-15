@@ -484,6 +484,7 @@ async.series [
         storeName = companyArray[0].stores[0].name
         product.storeName =  storeName for product in stock1.products
         product.storeName =  storeName for product in stock2.products
+        stock1.products[3].storeName = companyArray[0].stores[1].name
 
         stock1.save (err) ->
             if err

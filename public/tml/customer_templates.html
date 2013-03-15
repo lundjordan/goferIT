@@ -59,6 +59,7 @@
 </script>
 <!--customer single view templates-->
 
+
 <!--customer create view templates-->
 <script type="text/template" id="customer-create-template">
   <div class="row-fluid">
@@ -67,19 +68,19 @@
         <div class="control-group">
           <label class="control-label" for="name-input">First Name*</label>
           <div class="controls">
-            <input type="text" name="customerFirstName" id="first-name-input" value="Fred">
+            <input type="text" name="customerFirstName" id="first-name-input" placeholder="Fred">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Last Name*</label>
           <div class="controls">
-            <input type="text" id="last-name-input" name='lastName' value="Gomer">
+            <input type="text" id="last-name-input" name='lastName' placeholder="Gomer">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Email*</label>
           <div class="controls">
-            <input type="text" id="email-input" name='email' value="fred@gmail.com">
+            <input type="text" id="email-input" name='email' placeholder="fred@gmail.com">
           </div>
         </div>
       </div>
@@ -87,7 +88,7 @@
         <div class="control-group">
           <label class="control-label">Country*</label>
           <div class="controls">
-            <div class="bfh-selectbox bfh-countries" data-country="US" data-flags="true">
+            <div id="countries_input" class="bfh-selectbox bfh-countries" data-country="CA" data-flags="true">
               <input type="hidden" value="">
               <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
                 <span class="bfh-selectbox-option input-medium" data-option=""></span>
@@ -103,7 +104,12 @@
             </div>
           </div>
         </div>
-      </div>
+        <div class="control-group">
+          <label class="control-label">State/Province*</label>
+          <div class="controls">
+            <select class="input-medium bfh-states" data-country="countries_input"></select>
+          </div>
+        </div>
       <div class="span6">
       </div>
       <hr />

@@ -294,12 +294,37 @@
 
       ProductCreateView.prototype.render = function() {
         this.$el.html(this.template({}));
+        $("#root-backbone-view-head").html(this.productCreateBodyView.render().el);
         $("#root-backbone-view-body").html(this.productCreateBodyView.render().el);
         $("#product-create-store-names").html(this.storeSelectView.render().el);
         return $("#product-create-supplier-names").html(this.supplierSelectView.render().el);
       };
 
       return ProductCreateView;
+
+    })(Backbone.View);
+    ProductCreateBodyView = (function(_super) {
+
+      __extends(ProductCreateBodyView, _super);
+
+      function ProductCreateBodyView() {
+        return ProductCreateBodyView.__super__.constructor.apply(this, arguments);
+      }
+
+      ProductCreateBodyView.prototype.events = {
+        "click input[type=radio]": "quantityOptionInput",
+        "click #cancel-sub-total-options": "cancelSubTotalOptions",
+        "click #save-sub-total-options": "saveSubTotalOptions",
+        "click #create-new-product-button": "checkValidityAndCreateNewProduct"
+      };
+
+      ProductCreateBodyView.prototype.template = _.template(($('#product-create-template')).html());
+
+      ProductCreateBodyView.prototype.render = function() {
+        return this.$el.html(this.template({}));
+      };
+
+      return ProductCreateBodyView;
 
     })(Backbone.View);
     ProductCreateBodyView = (function(_super) {
@@ -365,7 +390,6 @@
             message = "You already have a product by this name. " + "Please Change the product name and/or brand";
             alertWarning = new app.AlertView;
             $("#main-alert-div").html(alertWarning.render("alert-error", message).el);
-            console.log("didn't pass existing product check");
             return;
           }
           if (hasSubQuants) {
@@ -380,7 +404,6 @@
               }
             });
             if (!this.subQuantTotalValid(subQuantTypes, subQuantValues)) {
-              console.log("didn't pass subquants val");
               return;
             }
             return this.createNewProduct({
@@ -388,10 +411,9 @@
               subQuantValues: subQuantValues
             });
           }
-          console.log("valid");
           return this.createNewProduct();
         } else {
-          console.log("didn't pass $ val");
+
         }
       };
 

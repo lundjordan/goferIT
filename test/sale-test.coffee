@@ -112,11 +112,11 @@ describe "sale model mongo CRUD", ->
                                 throw err
                             stock = new Stock
                                 _company: company._id
-                                storeName: company.stores[0].name
                                 products: [
                                     description:
                                         brand: 'Bauer'
                                         name: 'Vapor X4.0'
+                                    storeName: company.stores[0].name
                                     category: 'Hockey Skates'
                                     cost: 30000
                                     price: 40000

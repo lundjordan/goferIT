@@ -35,10 +35,11 @@
     };
 
     Products.prototype.ifModelExists = function(productName, productBrand) {
+      console.log(productName, productBrand);
       return this.where({
         'description.name': productName,
         'description.brand': productBrand
-      }).length === 1;
+      }).length > 0;
     };
 
     return Products;
