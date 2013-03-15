@@ -32,9 +32,7 @@ jQuery ->
                 $("#root-backbone-view-head").html @storeSelectView.render().el
             $("#root-backbone-view-body").html @itemsTable.render().el
         renderItemsTable: ->
-            console.log 'made it outer'
             if @storeSelectView
-                console.log @itemsTable
                 @itemsTable.render()
     class ItemsTable extends Backbone.View
         initialize: ->
@@ -164,13 +162,20 @@ jQuery ->
             @
         setBootstrapFormHelperInputs: ->
             @$('form select.bfh-countries, span.bfh-countries, div.bfh-countries').each ->
-                # console.log "setBootstrapFormHelperInputs countries called"
                 inputField = $(this)
                 inputField.bfhcountries inputField.data()
             @$('form select.bfh-states, span.bfh-states, div.bfh-states').each ->
-                # console.log "setBootstrapFormHelperInputs states called"
                 inputField = $(this)
                 inputField.bfhstates inputField.data()
+            @$('div.bfh-datepicker').each ->
+                inputField = $(this)
+                inputField.bfhdatepicker inputField.data()
+            @$('form input:text.bfh-phone, span.bfh-phone').each ->
+                console.log 'made it to phone call'
+                inputField = $(this)
+                inputField.bfhphone inputField.data()
+
+
         # setJQueryValidityRules: ->
         #     @validateForm @$("#create-item-form"),
         #         itemName:

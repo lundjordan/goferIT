@@ -294,7 +294,7 @@ jQuery ->
                     anyValuesLessThan0 = true
             if not oneValueMoreThan0 or anyValuesLessThan0
                 message = "For sub quantity totals, you must have at" +
-                    " least one value higher than 0. Only numbers are" +
+                    " least one value higher than: 0. Only positive numbers are" +
                     " accepted."
                 alertWarning = new app.AlertView
                 $("#main-alert-div").html(alertWarning.render(

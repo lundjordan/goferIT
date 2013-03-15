@@ -475,7 +475,7 @@
           }
         }
         if (!oneValueMoreThan0 || anyValuesLessThan0) {
-          message = "For sub quantity totals, you must have at" + " least one value higher than 0. Only numbers are" + " accepted.";
+          message = "For sub quantity totals, you must have at" + " least one value higher than: 0. Only positive numbers are" + " accepted.";
           alertWarning = new app.AlertView;
           $("#main-alert-div").html(alertWarning.render("alert-error alert-block", message).el);
           return false;
