@@ -15,7 +15,7 @@
     "jade": "*",
     "connect-flash": "~0.1.0",
     "mongoose": "3.5.5",
-    "bcrypt": "~0.7.3",
+    "bcrypt": "~0.7.5",
     "connect-mongodb": "~1.1.5",
     "async": "~0.2.5",
     "mongodb": "~1.2.12"
