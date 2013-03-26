@@ -17,7 +17,7 @@
 <script type="text/template" id="customer-tr-template">
   <td>
     <a href='#' id='item-view-eye-link'><i class='icon-eye-open'></i><a>
-    <i class='icon-pencil'></i>
+    <a href='#' id='item-view-edit-link'><i class='icon-pencil'></i><a>
     <i class='icon-trash'></i>
     <%= name.last %>
   </td>
@@ -68,19 +68,20 @@
         <div class="control-group">
           <label class="control-label" for="name-input">First Name*</label>
           <div class="controls">
-            <input type="text" name="firstName" id="first-name-input" value="Fred">
+            <input type="text" name="firstName" id="first-name-input"
+            placeholder="Fred">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Last Name*</label>
           <div class="controls">
-            <input type="text" id="last-name-input" name='lastName' value="Gomer">
+            <input type="text" id="last-name-input" name='lastName' placeholder="Gomer">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Email*</label>
           <div class="controls">
-            <input type="text" id="email-input" name='email' value="fred@gmail.com">
+            <input type="text" id="email-input" name='email' placeholder="fred@gmail.com">
           </div>
         </div>
       </div>
@@ -89,14 +90,14 @@
           <label class="control-label">Address</label>
           <div class="controls">
             <input class="input-large" name='address' id='address-input'
-              type="text" value="123 Easy Street">
+              type="text" placeholder="123 Easy Street">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">City</label>
           <div class="controls">
             <input class="input-large" type="text" name='city' id='city-input'
-              value="Cityville">
+              placeholder="Cityville">
           </div>
         </div>
         <div class="control-group">
@@ -105,7 +106,8 @@
             <div id="countries_input" class="bfh-selectbox bfh-countries"
               data-country="CA" data-flags="true">
               <input type="hidden" value="">
-              <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
+              <a class="bfh-selectbox-toggle" role="button"
+                data-toggle="bfh-selectbox" href="#">
                 <span class="bfh-selectbox-option input-medium"
                   id='country-span' name='country' data-option=""></span>
                 <b class="caret"></b>
@@ -133,14 +135,14 @@
           <label class="control-label">Zip/Postal</label>
           <div class="controls">
             <input class="input-small" id='zip-input' name='zip' 
-              type="text" value="90210">
+              type="text" placeholder="90210">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Phone</label>
           <div class="controls">
             <input type="text" class="input-medium bfh-phone"
-              value='(604)929-1566' data-country="countries_input" name='phone'
+              placeholder='(604)929-1566' data-country="countries_input" name='phone'
               id='phone-input'>
           </div>
         </div>
@@ -203,30 +205,173 @@
 </script>
 <!--customer create view templates-->
 
-        <!-- <div id="grand-total-quantity-content"> -->
-        <!--   <div class="control-group"> -->
-        <!--     <label class="control-label">Grand Total Quantity</label> -->
-        <!--     <div class="controls"> -->
-        <!--       <input type="text" id='grand-total-input' name="grandTotal" value="9"> -->
-        <!--     </div> -->
-        <!--   </div> -->
-        <!-- </div> -->
-        <!-- <div id="sub-total-quantity-content"> </div> -->
-        <!-- <hr /> -->
-        <!-- <label class="radio"> -->
-        <!--   <input type="radio" name="totalOptionsRadio" id="total-quantity-radio" -->
-        <!--   value="grand-total-selected" checked> -->
-        <!--   by grand total -->
-        <!-- </label> -->
-        <!-- <label class="radio"> -->
-        <!--   <input type="radio" name="totalOptionsRadio" id="sub-quantity-radio" -->
-        <!--   value="sub-total-selected"> -->
-        <!--   by sub totals -->
-        <!-- </label> -->
-        <!-- <div class="form-actions"> -->
-        <!--   <input type="submit" id='create-new-customer-button' -->
-        <!--   class="btn btn-primary" value='Create'> -->
-        <!--   <input type="button" id='clear-new-customer-button' -->
-        <!--   class="btn" value='Clear'> -->
-        <!-- </div> -->
-
+<!--customer edit view templates-->
+<script type="text/template" id="customer-edit-template">
+  <div class="row-fluid">
+    <form id='create-item-form'>
+      <div class="span3 ">
+        <div class="control-group">
+          <label class="control-label" for="name-input">First Name*</label>
+          <div class="controls">
+            <input type="text" name="firstName" id="first-name-input"
+              value=<%= name.first || "" %>>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Last Name*</label>
+          <div class="controls">
+            <input type="text" id="last-name-input" name='lastName'
+              value=<%= name.last || "" %>>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Email*</label>
+          <div class="controls">
+            <input type="text" id="email-input" name='email'
+              value=<%= email || "" %>>
+          </div>
+        </div>
+      </div>
+      <div class="span3">
+        <div class="control-group">
+          <label class="control-label">Address</label>
+          <div class="controls">
+            <input class="input-large" name='address' id='address-input'
+              type="text" value=<%= address.street || "" %>>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">City</label>
+          <div class="controls">
+            <input class="input-large" type="text" name='city' id='city-input'
+              value=<%= address.city || "" %>>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Country</label>
+          <div class="controls">
+            <div id="countries_input" class="bfh-selectbox bfh-countries"
+              data-country=<%= address.country || "" %> data-flags="true">
+              <input type="hidden" value="">
+              <a class="bfh-selectbox-toggle" role="button"
+                data-toggle="bfh-selectbox" href="#">
+                <span class="bfh-selectbox-option input-medium"
+                  id='country-span' name='country' data-option=""></span>
+                <b class="caret"></b>
+              </a>
+              <div class="bfh-selectbox-options">
+                <input type="text" class="bfh-selectbox-filter">
+                <div role="listbox">
+                  <ul role="option">
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">State/Province</label>
+          <div class="controls">
+            <% if (address.state === undefined) { %>
+              <select class="input-medium bfh-states" data-country="countries_input"
+                name='state' id='state-select'></select>
+            <% } else { %>
+              <% console.log(address.state); %>
+              <input name='state' id='state-select'
+                value="<%= address.state %>"></input>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <div class="span6">
+        <div class="control-group">
+          <label class="control-label">Zip/Postal</label>
+          <div class="controls">
+            <input class="input-small" id='zip-input' name='zip' 
+              type="text" value=<%= address.postalCode %>>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Phone</label>
+          <div class="controls">
+            <% if (phone === undefined) { %>
+              <input type="text" class="input-medium bfh-phone"
+                data-country="countries_input" name='phone'
+                id='phone-input'>
+            <% } else { %>
+              <input type="text" value=<%= phone %> name='phone'
+                id='phone-input'>
+            <% } %>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Date Of Birth</label>
+          <div class="controls">
+            <div class="bfh-datepicker" data-format="y-m-d" data-date=<%= dob %>>
+              <div class="input-prepend bfh-datepicker-toggle" data-toggle="bfh-datepicker">
+                <span class="add-on"><i class="icon-calendar"></i></span>
+                <input type="text" class="input-medium" id='dob-input'
+                  name='dob' readonly>
+              </div>
+              <div class="bfh-datepicker-calendar">
+                <table class="calendar table table-bordered">
+                  <thead>
+                    <tr class="months-header">
+                      <th class="month" colspan="4">
+                        <a class="previous" href="#"><i class="icon-chevron-left"></i></a>
+                        <span></span>
+                        <a class="next" href="#"><i class="icon-chevron-right"></i></a>
+                      </th>
+                      <th class="year" colspan="3">
+                        <a class="previous" href="#"><i class="icon-chevron-left"></i></a>
+                        <span></span>
+                        <a class="next" href="#"><i class="icon-chevron-right"></i></a>
+                      </th>
+                    </tr>
+                    <tr class="days-header">
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% if (sex === "male") { %>
+          <label class="radio">
+            <input type="radio" name="sexRadio" id="male-radio-input"
+            value="male" checked>
+            Male
+          </label>
+          <label class="radio">
+            <input type="radio" name="sexRadio" id="female-radio-input"
+            value="female">
+            Female
+          </label>
+          <% } else { %>
+          <label class="radio">
+            <input type="radio" name="sexRadio" id="male-radio-input"
+            value="male">
+            Male
+          </label>
+          <label class="radio">
+            <input type="radio" name="sexRadio" id="female-radio-input"
+            value="female" checked>
+            Female
+          </label>
+          <% } %>
+      </div>
+      <hr />
+      <div class="row-fluid">
+        <div class="span3 offset9 ">
+          <input type="submit" id='create-new-item-button'
+          class="btn btn-primary" value='Update'>
+          <input type="button" id='clear-new-item-button'
+          class="btn" value='Clear'>
+        </div>
+      </div>
+    </form>
+  </div>
+</script>
+<!--customer create view templates-->

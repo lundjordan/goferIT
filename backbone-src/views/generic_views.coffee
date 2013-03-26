@@ -68,6 +68,7 @@ jQuery ->
             'mouseover': 'showItemOptions'
             'mouseout': 'hideItemOptions'
             'click #item-view-eye-link': 'renderSpecificItemView'
+            'click #item-view-edit-link': 'renderSpecificEditView'
         initialize: ->
             @template = _.template ($ @options.template).html()
             @itemView = @options.itemView 
@@ -84,6 +85,8 @@ jQuery ->
             $(@el).find('i').hide()
         renderSpecificItemView: ->
             @itemControllerView.renderSpecificItemView @model
+        renderSpecificEditView: ->
+            @itemControllerView.renderSpecificEditView @model
     # ###############
 
     # ###############
@@ -142,12 +145,13 @@ jQuery ->
         initialize: ->
             @el = @options.el
             @itemCreateBodyView = new ItemCreateBodyView
+                model: @options.model
                 template: @options.createFormTemplate
                 formRules: @options.formRules
-                isUniqueItemFunction: @options.isUniqueItemFunction
-                createNewItemFunction: @options.createNewItemFunction
+                isValidMongoEntryFunction: @options.isValidMongoEntryFunction
+                commitFormSubmitFunction: @options.commitFormSubmitFunction
         render: ->
-            @$el.html this.template({})
+            @$el.html this.template()
             $("#root-backbone-view-body").html @itemCreateBodyView.render().el
     class ItemCreateBodyView extends Backbone.View
         events:
@@ -155,10 +159,14 @@ jQuery ->
         initialize: ->
             @template = _.template ($ @options.template).html()
             @formRules = @options.formRules
-            @isUniqueItem = @options.isUniqueItemFunction
-            @createNewItem = @options.createNewItemFunction
+            @isUniqueItem = @options.isValidMongoEntryFunction
+            @createNewItem = @options.commitFormSubmitFunction
         render: ->
-            @$el.html this.template({})
+            if @model
+                console.log @model.attributes
+                @$el.html this.template(@model.attributes)
+            else
+                @$el.html this.template({})
             @setBootstrapFormHelperInputs()
             @setJQueryValidityRules()
             @

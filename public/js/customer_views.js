@@ -5,50 +5,6 @@
 
   jQuery(function() {
     var CustomerControllerView, createNewCustomer, isUniqueCustomer, _ref;
-    isUniqueCustomer = function() {
-      var alertWarning, isUniqueItem, message;
-      isUniqueItem = app.Customers.where({
-        email: $('#email-input').val()
-      }).length < 1;
-      if (isUniqueItem) {
-        return true;
-      } else {
-        message = "You already have a customer by this email.";
-        alertWarning = new app.AlertView({
-          alertType: 'warning'
-        });
-        $("#root-backbone-alert-view").html(alertWarning.render("alert-error", message).el);
-        return false;
-      }
-    };
-    createNewCustomer = function(subQuants) {
-      var alertWarning, country, countrySpanHTML, customerModel, message;
-      countrySpanHTML = $("#country-span").html();
-      country = countrySpanHTML.slice(countrySpanHTML.search('</i>') + 4).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-      customerModel = {
-        name: {
-          first: $("#first-name-input").val(),
-          last: $("#last-name-input").val()
-        },
-        email: $("#email-input").val(),
-        phone: $("#phone-input").val(),
-        address: {
-          street: $("#address-input").val(),
-          postalCode: $("#zip-input").val(),
-          city: $("#city-input").val(),
-          state: $("#state-select").val(),
-          country: country
-        },
-        dob: $("#dob-input").val(),
-        sex: $('input[name=sexRadio]:checked').val()
-      };
-      app.Customers.create(customerModel);
-      message = "You have added a new customer!";
-      alertWarning = new app.AlertView({
-        alertType: 'success'
-      });
-      return $("#root-backbone-alert-view").html(alertWarning.render("alert-success", message).el);
-    };
     CustomerControllerView = (function(_super) {
 
       __extends(CustomerControllerView, _super);
@@ -131,8 +87,35 @@
               email: true
             }
           },
-          isUniqueItemFunction: isUniqueCustomer,
-          createNewItemFunction: createNewCustomer
+          isValidMongoEntryFunction: isUniqueCustomer,
+          commitFormSubmitFunction: createNewCustomer
+        });
+        return this.currentView.render();
+      };
+
+      CustomerControllerView.prototype.renderSpecificEditView = function(model) {
+        if (this.currentView) {
+          this.currentView.$el.html("");
+        }
+        $('#customer-create-tab a').tab('show');
+        this.currentView = new app.GenericCreateView({
+          model: model,
+          el: "#customer-create-view-content",
+          createFormTemplate: "#customer-edit-template",
+          formRules: {
+            firstName: {
+              required: true
+            },
+            lastName: {
+              required: true
+            },
+            email: {
+              required: true,
+              email: true
+            }
+          },
+          isValidMongoEntryFunction: isUniqueCustomer,
+          commitFormSubmitFunction: createNewCustomer
         });
         return this.currentView.render();
       };
@@ -140,6 +123,48 @@
       return CustomerControllerView;
 
     })(Backbone.View);
+    isUniqueCustomer = function() {
+      var alertWarning, isUniqueItem, message;
+      isUniqueItem = app.Customers.where({
+        email: $('#email-input').val()
+      }).length < 1;
+      if (isUniqueItem) {
+        return true;
+      } else {
+        message = "You already have a customer by this email.";
+        alertWarning = new app.AlertView({
+          alertType: 'warning'
+        });
+        $("#root-backbone-alert-view").html(alertWarning.render("alert-error", message).el);
+        return false;
+      }
+    };
+    createNewCustomer = function(subQuants) {
+      var alertWarning, customerModel, message;
+      customerModel = {
+        name: {
+          first: $("#first-name-input").val(),
+          last: $("#last-name-input").val()
+        },
+        email: $("#email-input").val(),
+        phone: $("#phone-input").val(),
+        address: {
+          street: $("#address-input").val(),
+          postalCode: $("#zip-input").val(),
+          city: $("#city-input").val(),
+          state: $("#state-select").val(),
+          country: BFHCountriesList[$("#countries_input")]
+        },
+        dob: $("#dob-input").val(),
+        sex: $('input[name=sexRadio]:checked').val()
+      };
+      app.Customers.create(customerModel);
+      message = "You have added a new customer!";
+      alertWarning = new app.AlertView({
+        alertType: 'success'
+      });
+      return $("#root-backbone-alert-view").html(alertWarning.render("alert-success", message).el);
+    };
     this.app = (_ref = window.app) != null ? _ref : {};
     return this.app.CustomerControllerView = CustomerControllerView;
   });

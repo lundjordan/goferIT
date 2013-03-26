@@ -1,45 +1,6 @@
 # Customer Views
 
 jQuery ->
-    # helper functions for creating a new Customers
-    isUniqueCustomer = ->
-        isUniqueItem = app.Customers.
-            where(email: $('#email-input').val()).length < 1
-        if isUniqueItem
-            return true # unique
-        else
-            message = "You already have a customer by this email."
-            alertWarning = new app.AlertView
-                alertType: 'warning'
-            $("#root-backbone-alert-view").
-                html(alertWarning.render( "alert-error", message).el)
-            return false # not unique
-    createNewCustomer = (subQuants) ->
-        # bootstrapFormHelper makes getting country string annoying
-        countrySpanHTML = $("#country-span").html()
-        country = countrySpanHTML.slice(countrySpanHTML.search('</i>')+4).
-                replace(/^\s\s*/, '').replace(/\s\s*$/, '')
-
-        customerModel =
-            name:
-                first: $("#first-name-input").val()
-                last: $("#last-name-input").val()
-            email: $("#email-input").val()
-            phone: $("#phone-input").val()
-            address:
-                street: $("#address-input").val()
-                postalCode: $("#zip-input").val()
-                city: $("#city-input").val()
-                state: $("#state-select").val()
-                country: country
-            dob: $("#dob-input").val()
-            sex: $('input[name=sexRadio]:checked').val()
-        app.Customers.create customerModel
-        message = "You have added a new customer!"
-        alertWarning = new app.AlertView
-            alertType: 'success'
-        $("#root-backbone-alert-view").
-            html(alertWarning.render( "alert-success", message).el)
 
     class CustomerControllerView extends Backbone.View
         el: '#people-main-content'
@@ -94,8 +55,27 @@ jQuery ->
                     email:
                         required: true
                         email: true
-                isUniqueItemFunction: isUniqueCustomer
-                createNewItemFunction: createNewCustomer
+                isValidMongoEntryFunction: isUniqueCustomer
+                commitFormSubmitFunction: createNewCustomer
+            @currentView.render()
+        renderSpecificEditView: (model) ->
+            if @currentView
+                @currentView.$el.html("")
+            $('#customer-create-tab a').tab('show')
+            @currentView = new app.GenericCreateView
+                model: model
+                el: "#customer-create-view-content"
+                createFormTemplate: "#customer-edit-template"
+                formRules:
+                    firstName:
+                        required: true
+                    lastName:
+                        required: true
+                    email:
+                        required: true
+                        email: true
+                isValidMongoEntryFunction: isUniqueCustomer
+                commitFormSubmitFunction: createNewCustomer
             @currentView.render()
 
     # # ###############
@@ -103,6 +83,45 @@ jQuery ->
     # -> comes from ItemListVIew in # generic_views.coffee
     # ###############
 
+    # helper functions for creating a new Customers
+    isUniqueCustomer = ->
+        isUniqueItem = app.Customers.
+            where(email: $('#email-input').val()).length < 1
+        if isUniqueItem
+            return true # unique
+        else
+            message = "You already have a customer by this email."
+            alertWarning = new app.AlertView
+                alertType: 'warning'
+            $("#root-backbone-alert-view").
+                html(alertWarning.render( "alert-error", message).el)
+            return false # not unique
+    createNewCustomer = (subQuants) ->
+        # bootstrapFormHelper makes getting country string annoying
+        # countrySpanHTML = $("#country-span").html()
+        # country = countrySpanHTML.slice(countrySpanHTML.search('</i>')+4).
+        #         replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+
+        customerModel =
+            name:
+                first: $("#first-name-input").val()
+                last: $("#last-name-input").val()
+            email: $("#email-input").val()
+            phone: $("#phone-input").val()
+            address:
+                street: $("#address-input").val()
+                postalCode: $("#zip-input").val()
+                city: $("#city-input").val()
+                state: $("#state-select").val()
+                country: BFHCountriesList[$("#countries_input")]
+            dob: $("#dob-input").val()
+            sex: $('input[name=sexRadio]:checked').val()
+        app.Customers.create customerModel
+        message = "You have added a new customer!"
+        alertWarning = new app.AlertView
+            alertType: 'success'
+        $("#root-backbone-alert-view").
+            html(alertWarning.render( "alert-success", message).el)
 
     @app = window.app ? {}
     @app.CustomerControllerView = CustomerControllerView

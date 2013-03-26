@@ -79,13 +79,13 @@ async.series [
             name:
                 first: 'Nadroj'
                 last: 'dnul'
-            phone: '16049291111'
+            phone: '(604)929-3333'
             address:
                 street: '1234 sesame street'
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
             dob: '1986-09-20'
             title: 'admin'
         ,
@@ -95,13 +95,13 @@ async.series [
             name:
                 first: 'Connor'
                 last: 'Fitzpatrick'
-            phone: '16049292222'
+            phone: '(604)929-4444'
             address:
                 street: '2468 Badger Road'
                 postalCode: 'v7w-6h2'
                 city: 'North Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
             dob: '1990-08-12'
             title: 'employee'
         ,
@@ -111,13 +111,13 @@ async.series [
             name:
                 first: 'Jennifer'
                 last: 'Hayes'
-            phone: '16049292222'
+            phone: '(604)929-5555'
             address:
                 street: '1111 apple grove'
                 postalCode: 'v7w8p5'
                 city: 'West Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
             dob: '1981-06-11'
             title: 'employee'
         ]
@@ -141,13 +141,13 @@ async.series [
             name:
                 first: 'Martin'
                 last: 'Brennan'
-            phone: "16049992222"
+            phone: '(604)929-6666'
             address:
                 street: '2222 Beetle Ave'
                 postalCode: 'v7w5n8'
                 city: 'Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
             dob: '1989-02-22'
             sex: 'male'
         ,
@@ -156,13 +156,13 @@ async.series [
             name:
                 first: 'Joe'
                 last: 'Skully'
-            phone: "16049992222"
+            phone: '(604)929-7777'
             address:
                 street: '1234 sesame street'
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
             dob: '1986-09-20'
             sex: 'male'
         ,
@@ -171,13 +171,13 @@ async.series [
             name:
                 first: 'Sanzhar'
                 last: 'Kushekbayev'
-            phone: "16049992222"
+            phone: '(604)929-8888'
             address:
                 street: '3333 Simple Street'
                 postalCode: 'vlr2d5'
                 city: 'Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
             dob: '1971-01-08'
             sex: 'male'
         ,
@@ -186,13 +186,13 @@ async.series [
             name:
                 first: 'Jennie'
                 last: 'Hayes'
-            phone: "16049993333"
+            phone: '(604)929-9999'
             address:
                 street: '4444 Hazer Street'
                 postalCode: 'vlr3d9'
                 city: 'Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
             dob: '1981-11-26'
             sex: 'female'
         ]
@@ -214,35 +214,35 @@ async.series [
             email: 'abc@gmail.com'
             _company: companyArray[0].id
             name: 'abc suppliers'
-            phone: '16049290000'
+            phone: '(604)929-0000'
             address:
                 street: ''
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
         ,
             email: 'def@gmail.com'
             _company: companyArray[0].id
             name: 'def big co'
-            phone: '16049299999'
+            phone: '(604)929-2233'
             address:
                 street: '9999 baffle place'
                 postalCode: 'v7w3e5'
                 city: 'Burnaby'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
         ,
             email: 'ghi@gmail.com'
             _company: companyArray[0].id
             name: 'ghi gear4U'
-            phone: '16049298888'
+            phone: '(604)929-3344'
             address:
                 street: '777 west hastings'
                 postalCode: 'v7w3e7'
                 city: 'Vancouver'
                 state: 'British Columbia'
-                country: 'Canada'
+                country: 'CA'
         ]
         async.each supplierObjs, (obj) ->
             createDocInModelHelper obj, Supplier
