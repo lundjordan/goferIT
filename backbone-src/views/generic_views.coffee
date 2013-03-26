@@ -137,7 +137,6 @@ jQuery ->
     # ###############
     # Item Create Section
     class GenericCreateView extends Backbone.View
-        # el: '#item-create-view-content' <- TODO add el to GenericCreateView creation
         template: _.template ($ '#root-backbone-content-template').html()
         initialize: ->
             @el = @options.el
@@ -173,85 +172,18 @@ jQuery ->
                 inputField.bfhphone inputField.data()
         setJQueryValidityRules: ->
             @validateForm @$("#create-item-form"), @formRules
-            console.log "validating form with #{@formRules}"
         checkValidityAndCreateNewItem: (e) ->
             e.preventDefault()
             $("#main-alert-div").html("")
             passesJQueryValidation = @$("#create-item-form").valid()
 
             if passesJQueryValidation
-                console.log "passed"
-            else
-                console.log "failed"
-        #         isExistingItem = app.Items.ifModelExists(
-        #             $('#name-input').val(), $('#brand-input').val())
-        #         hasSubQuants = $("#grand-total-quantity-content").is(":hidden")
+                console.log "passed $ val"
+                if @isUniqueItem()
+                    @createNewItem()
+            console.log "didn't pass val"
+            return
 
-        #         if isExistingItem
-        #             message = "You already have a item by this name. " +
-        #                 "Please Change the item name and/or brand"
-        #             alertWarning = new app.AlertView
-        #             $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
-        #             console.log "didn't pass existing item check"
-        #             return # not valid
-
-        #         if hasSubQuants
-        #             # first get the values for all the subquant table cells
-        #             subQuantTypes = []
-        #             subQuantValues = []
-        #             $("th").each ->
-        #                 subQuantTypes.push $(this).html()
-        #             $("td").each ->
-        #                 if $(this).html() isnt "Totals"
-        #                     subQuantValues.push $(this).find("input").val()
-
-        #             if not @subQuantTotalValid(subQuantTypes, subQuantValues)
-        #                 console.log "didn't pass subquants val"
-        #                 return # not valid
-        #             return @createNewItem
-        #                 subQuantTypes: subQuantTypes
-        #                 subQuantValues: subQuantValues
-
-        #         # made it here means the form is completely valid!
-        #         console.log "valid"
-        #         @createNewItem()
-        #     else
-        #         console.log "didn't pass $ val"
-        #         return # not valid
-        # createNewItem: (subQuants) ->
-        #     name = $("#name-input").val()
-        #     brand = $("#brand-input").val()
-        #     category = $("#category-input").val()
-        #     price = parseFloat($("#price-input").val(), 10) * 100
-        #     cost = parseFloat($("#cost-input").val(), 10) * 100
-        #     storeName = $("#store-name-select").val()
-        #     totalQuantity = 0
-        #     subTotalQuantity = []
-
-        #     if subQuants
-        #         # this item has a subTotalQuantity
-        #         totalQuantity += parseInt(quant, 10) for quant in subQuants.subQuantValues
-        #         for quantity, i in subQuants.subQuantValues
-        #             subTotalQuantity.push
-        #                 measurementName: subQuants.subQuantTypes[0]
-        #                 measurementValue: subQuants.subQuantTypes[i+1]
-        #                 quantity: quantity
-        #     else
-        #         # this item has a GrandTotalQuantity
-        #         totalQuantity = parseInt $("#grand-total-input").val(), 10
-
-        #     itemModel =
-        #         description:
-        #             name: name
-        #             brand: brand
-        #         storeName: storeName
-        #         category: category
-        #         price: price
-        #         cost: cost
-        #         totalQuantity: totalQuantity
-        #         subTotalQuantity: subTotalQuantity
-        #     console.log itemModel
-        #     app.Items.create itemModel
 
 
 

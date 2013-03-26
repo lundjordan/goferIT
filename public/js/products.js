@@ -35,7 +35,6 @@
     };
 
     Products.prototype.ifModelExists = function(productName, productBrand) {
-      console.log(productName, productBrand);
       return this.where({
         'description.name': productName,
         'description.brand': productBrand
