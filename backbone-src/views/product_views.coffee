@@ -351,4 +351,3 @@ jQuery ->
 
     @app = window.app ? {}
     @app.InventoryControllerView = InventoryControllerView
-

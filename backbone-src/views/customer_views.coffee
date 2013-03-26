@@ -1,6 +1,37 @@
 # Customer Views
 
 jQuery ->
+    # helper functions for creating a new Customers
+    isUniqueCustomer = ->
+        isUniqueItem = app.Customers.
+            where(email: $('#email-input')).length < 1
+        if not isUniqueItem
+            message = "You already have a customer by this email."
+            alertWarning = new app.AlertView
+            $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
+            return false # not unique
+        return true # unique
+    createNewCustomer = (subQuants) ->
+        # bootstrapFormHelper makes getting country string annoying
+        countrySpanHTML = $("#country-span").html()
+        country = countrySpanHTML.slice(countrySpanHTML.search('</i>')+4).
+                replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+
+        customerModel =
+            firstName: $("#first-name-input").val()
+            lastName: $("#last-name-input").val()
+            email: $("#email-input").val()
+            address: $("#address-input").val()
+            city: $("#city-input").val()
+            country: country
+            state: $("#state-select").val()
+            zip: $("#zip-input").val()
+            phone: $("#phone-input").val()
+            dob: $("#dob-input").val()
+            sex: $('input[name=sexRadio]:checked').val()
+        console.log customerModel
+        # app.Items.create itemModel
+
     class CustomerControllerView extends Backbone.View
         el: '#people-main-content'
         events:
@@ -43,7 +74,7 @@ jQuery ->
         renderCustomerCreateView: ->
             if @currentView
                 @currentView.$el.html("")
-            @currentView = new CustomerCreateView
+            @currentView = new app.GenericCreateView
                 el: "#customer-create-view-content"
                 createFormTemplate: "#customer-create-template"
                 formRules:
@@ -54,6 +85,8 @@ jQuery ->
                     email:
                         required: true
                         email: true
+                isUniqueItemFunction: isUniqueCustomer
+                createNewItemFunction: createNewCustomer
             @currentView.render()
 
     # # ###############
@@ -61,40 +94,6 @@ jQuery ->
     # -> comes from ItemListVIew in # generic_views.coffee
     # ###############
 
-    class CustomerCreateView extends app.GenericCreateView
-        initialize: ->
-            @el = @options.el
-            @itemCreateBodyView = new CustomerCreateBodyView
-                template: @options.createFormTemplate
-                formRules: @options.formRules
-    class CustomerCreateBodyView extends app.ItemCreateBodyView
-        isUniqueItem: ->
-            isUniqueItem = app.Customers.
-                where(email: $('#email-input')).length > 0
-
-            if not isUniqueItem
-                message = "You already have a customer by this email. " +
-                alertWarning = new app.AlertView
-                $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
-                console.log "didn't pass existing customer check"
-                return false # not unique
-            return true # unique
-
-        createNewItem: (subQuants) ->
-            customerModel =
-                firstName: $("#first-name-input").val() or null
-                lastName: $("#last-name-input").val() or null
-                email: $("#email-input").val() or null
-                address: $("#address-input").val() or null
-                city: $("#city-input").val() or null
-                country: $("#country-input").val() or null
-                state: $("#state-input").val() or null
-                zip: $("#zip-input").val() or null
-                phone: $("#phone-input").val() or null
-                dob: $("#dob-input").val() or null
-                sex: $('input[name=sexRadio]:checked').val() or null
-            console.log customerModel
-            # app.Items.create itemModel
 
     @app = window.app ? {}
     @app.CustomerControllerView = CustomerControllerView

@@ -143,6 +143,8 @@ jQuery ->
             @itemCreateBodyView = new ItemCreateBodyView
                 template: @options.createFormTemplate
                 formRules: @options.formRules
+                isUniqueItemFunction: @options.isUniqueItemFunction
+                createNewItemFunction: @options.createNewItemFunction
         render: ->
             @$el.html this.template({})
             $("#root-backbone-view-body").html @itemCreateBodyView.render().el
@@ -152,6 +154,8 @@ jQuery ->
         initialize: ->
             @template = _.template ($ @options.template).html()
             @formRules = @options.formRules
+            @isUniqueItem = @options.isUniqueItemFunction
+            @createNewItem = @options.createNewItemFunction
         render: ->
             @$el.html this.template({})
             @setBootstrapFormHelperInputs()
@@ -181,7 +185,7 @@ jQuery ->
                 console.log "passed $ val"
                 if @isUniqueItem()
                     @createNewItem()
-            console.log "didn't pass val"
+            console.log "didn't pass existing customer check"
             return
 
 

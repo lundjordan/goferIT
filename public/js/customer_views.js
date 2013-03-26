@@ -4,7 +4,39 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var CustomerControllerView, CustomerCreateBodyView, CustomerCreateView, _ref;
+    var CustomerControllerView, createNewCustomer, isUniqueCustomer, _ref;
+    isUniqueCustomer = function() {
+      var alertWarning, isUniqueItem, message;
+      isUniqueItem = app.Customers.where({
+        email: $('#email-input')
+      }).length < 1;
+      if (!isUniqueItem) {
+        message = "You already have a customer by this email.";
+        alertWarning = new app.AlertView;
+        $("#main-alert-div").html(alertWarning.render("alert-error", message).el);
+        return false;
+      }
+      return true;
+    };
+    createNewCustomer = function(subQuants) {
+      var country, countrySpanHTML, customerModel;
+      countrySpanHTML = $("#country-span").html();
+      country = countrySpanHTML.slice(countrySpanHTML.search('</i>') + 4).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      customerModel = {
+        firstName: $("#first-name-input").val(),
+        lastName: $("#last-name-input").val(),
+        email: $("#email-input").val(),
+        address: $("#address-input").val(),
+        city: $("#city-input").val(),
+        country: country,
+        state: $("#state-select").val(),
+        zip: $("#zip-input").val(),
+        phone: $("#phone-input").val(),
+        dob: $("#dob-input").val(),
+        sex: $('input[name=sexRadio]:checked').val()
+      };
+      return console.log(customerModel);
+    };
     CustomerControllerView = (function(_super) {
 
       __extends(CustomerControllerView, _super);
@@ -72,7 +104,7 @@
         if (this.currentView) {
           this.currentView.$el.html("");
         }
-        this.currentView = new CustomerCreateView({
+        this.currentView = new app.GenericCreateView({
           el: "#customer-create-view-content",
           createFormTemplate: "#customer-create-template",
           formRules: {
@@ -86,7 +118,9 @@
               required: true,
               email: true
             }
-          }
+          },
+          isUniqueItemFunction: isUniqueCustomer,
+          createNewItemFunction: createNewCustomer
         });
         return this.currentView.render();
       };
@@ -94,68 +128,6 @@
       return CustomerControllerView;
 
     })(Backbone.View);
-    CustomerCreateView = (function(_super) {
-
-      __extends(CustomerCreateView, _super);
-
-      function CustomerCreateView() {
-        return CustomerCreateView.__super__.constructor.apply(this, arguments);
-      }
-
-      CustomerCreateView.prototype.initialize = function() {
-        this.el = this.options.el;
-        return this.itemCreateBodyView = new CustomerCreateBodyView({
-          template: this.options.createFormTemplate,
-          formRules: this.options.formRules
-        });
-      };
-
-      return CustomerCreateView;
-
-    })(app.GenericCreateView);
-    CustomerCreateBodyView = (function(_super) {
-
-      __extends(CustomerCreateBodyView, _super);
-
-      function CustomerCreateBodyView() {
-        return CustomerCreateBodyView.__super__.constructor.apply(this, arguments);
-      }
-
-      CustomerCreateBodyView.prototype.isUniqueItem = function() {
-        var alertWarning, isUniqueItem, message;
-        isUniqueItem = app.Customers.where({
-          email: $('#email-input')
-        }).length > 0;
-        if (!isUniqueItem) {
-          message = "You already have a customer by this email. " + (alertWarning = new app.AlertView);
-          $("#main-alert-div").html(alertWarning.render("alert-error", message).el);
-          console.log("didn't pass existing customer check");
-          return false;
-        }
-        return true;
-      };
-
-      CustomerCreateBodyView.prototype.createNewItem = function(subQuants) {
-        var customerModel;
-        customerModel = {
-          firstName: $("#first-name-input").val() || null,
-          lastName: $("#last-name-input").val() || null,
-          email: $("#email-input").val() || null,
-          address: $("#address-input").val() || null,
-          city: $("#city-input").val() || null,
-          country: $("#country-input").val() || null,
-          state: $("#state-input").val() || null,
-          zip: $("#zip-input").val() || null,
-          phone: $("#phone-input").val() || null,
-          dob: $("#dob-input").val() || null,
-          sex: $('input[name=sexRadio]:checked').val() || null
-        };
-        return console.log(customerModel);
-      };
-
-      return CustomerCreateBodyView;
-
-    })(app.ItemCreateBodyView);
     this.app = (_ref = window.app) != null ? _ref : {};
     return this.app.CustomerControllerView = CustomerControllerView;
   });
