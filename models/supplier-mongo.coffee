@@ -15,6 +15,7 @@ SupplierSchema = new mongoose.Schema
         street: String
         postalCode: String
         city: String
+        state: String
         country: String
     dateCreated:
         type: Date

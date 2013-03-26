@@ -4,13 +4,16 @@ jQuery ->
     # helper functions for creating a new Customers
     isUniqueCustomer = ->
         isUniqueItem = app.Customers.
-            where(email: $('#email-input')).length < 1
-        if not isUniqueItem
+            where(email: $('#email-input').val()).length < 1
+        if isUniqueItem
+            return true # unique
+        else
             message = "You already have a customer by this email."
             alertWarning = new app.AlertView
-            $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
+                alertType: 'warning'
+            $("#root-backbone-alert-view").
+                html(alertWarning.render( "alert-error", message).el)
             return false # not unique
-        return true # unique
     createNewCustomer = (subQuants) ->
         # bootstrapFormHelper makes getting country string annoying
         countrySpanHTML = $("#country-span").html()
@@ -18,19 +21,25 @@ jQuery ->
                 replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
         customerModel =
-            firstName: $("#first-name-input").val()
-            lastName: $("#last-name-input").val()
+            name:
+                first: $("#first-name-input").val()
+                last: $("#last-name-input").val()
             email: $("#email-input").val()
-            address: $("#address-input").val()
-            city: $("#city-input").val()
-            country: country
-            state: $("#state-select").val()
-            zip: $("#zip-input").val()
             phone: $("#phone-input").val()
+            address:
+                street: $("#address-input").val()
+                postalCode: $("#zip-input").val()
+                city: $("#city-input").val()
+                state: $("#state-select").val()
+                country: country
             dob: $("#dob-input").val()
             sex: $('input[name=sexRadio]:checked').val()
-        console.log customerModel
-        # app.Items.create itemModel
+        app.Customers.create customerModel
+        message = "You have added a new customer!"
+        alertWarning = new app.AlertView
+            alertType: 'success'
+        $("#root-backbone-alert-view").
+            html(alertWarning.render( "alert-success", message).el)
 
     class CustomerControllerView extends Backbone.View
         el: '#people-main-content'

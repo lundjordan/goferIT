@@ -220,9 +220,10 @@ jQuery ->
                 if isExistingProduct
                     message = "You already have a product by this name. " +
                         "Please Change the product name and/or brand"
-                    alertWarning = new app.AlertView
-                    $("#main-alert-div").html(alertWarning.render( "alert-error", message).el)
-                    # console.log "didn't pass existing product check"
+                    alertWarningView = new app.AlertView
+                        alertType: 'warning'
+                    alertHTML = alertWarningView.render("alert-error", message).el
+                    $("#root-backbone-alert-view").html(alertHTML)
                     return # not valid
 
                 if hasSubQuants
@@ -283,6 +284,12 @@ jQuery ->
             console.log productModel
             app.Products.create productModel
 
+            message = "You have added a new customer!"
+            alertWarning = new app.AlertView
+                alertType: 'success'
+            $("#root-backbone-alert-view").
+                html(alertWarning.render( "alert-success", message).el)
+
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid
             oneValueMoreThan0 = false
@@ -296,7 +303,7 @@ jQuery ->
                 message = "For sub quantity totals, you must have at" +
                     " least one value higher than: 0. Only positive numbers are" +
                     " accepted."
-                alertWarning = new app.AlertView
+                alertWarning = new app.AlertView 'error'
                 $("#main-alert-div").html(alertWarning.render(
                     "alert-error alert-block", message).el)
                 return false

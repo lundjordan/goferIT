@@ -84,6 +84,7 @@ async.series [
                 street: '1234 sesame street'
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
             dob: '1986-09-20'
             title: 'admin'
@@ -99,6 +100,7 @@ async.series [
                 street: '2468 Badger Road'
                 postalCode: 'v7w-6h2'
                 city: 'North Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
             dob: '1990-08-12'
             title: 'employee'
@@ -114,6 +116,7 @@ async.series [
                 street: '1111 apple grove'
                 postalCode: 'v7w8p5'
                 city: 'West Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
             dob: '1981-06-11'
             title: 'employee'
@@ -138,11 +141,12 @@ async.series [
             name:
                 first: 'Martin'
                 last: 'Brennan'
-            phone: 16049992222
+            phone: "16049992222"
             address:
                 street: '2222 Beetle Ave'
                 postalCode: 'v7w5n8'
                 city: 'Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
             dob: '1989-02-22'
             sex: 'male'
@@ -152,11 +156,12 @@ async.series [
             name:
                 first: 'Joe'
                 last: 'Skully'
-            phone: 16049992222
+            phone: "16049992222"
             address:
                 street: '1234 sesame street'
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
             dob: '1986-09-20'
             sex: 'male'
@@ -166,11 +171,12 @@ async.series [
             name:
                 first: 'Sanzhar'
                 last: 'Kushekbayev'
-            phone: 16049992222
+            phone: "16049992222"
             address:
                 street: '3333 Simple Street'
                 postalCode: 'vlr2d5'
                 city: 'Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
             dob: '1971-01-08'
             sex: 'male'
@@ -180,11 +186,12 @@ async.series [
             name:
                 first: 'Jennie'
                 last: 'Hayes'
-            phone: 16049993333
+            phone: "16049993333"
             address:
                 street: '4444 Hazer Street'
                 postalCode: 'vlr3d9'
                 city: 'Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
             dob: '1981-11-26'
             sex: 'female'
@@ -212,6 +219,7 @@ async.series [
                 street: ''
                 postalCode: 'v7w4c9'
                 city: 'West Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
         ,
             email: 'def@gmail.com'
@@ -222,6 +230,7 @@ async.series [
                 street: '9999 baffle place'
                 postalCode: 'v7w3e5'
                 city: 'Burnaby'
+                state: 'British Columbia'
                 country: 'Canada'
         ,
             email: 'ghi@gmail.com'
@@ -232,6 +241,7 @@ async.series [
                 street: '777 west hastings'
                 postalCode: 'v7w3e7'
                 city: 'Vancouver'
+                state: 'British Columbia'
                 country: 'Canada'
         ]
         async.each supplierObjs, (obj) ->

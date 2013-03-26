@@ -23,12 +23,15 @@ exports.getListController = (model) ->
 #
 exports.getCreateController = (model) ->
     return (req, res) ->
-        #console.log('create', req.body);
+        console.log 'create', req.body
         m = new model req.body
+        m._company = req.user._company
         m.save (err) ->
             if not err
+                console.log m
                 return m
             else
+                console.log errMsg(err)
                 return (errMsg err)
 
 #------------------------------

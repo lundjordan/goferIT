@@ -2,7 +2,8 @@
 
 jQuery ->
     class AlertView extends Backbone.View
-        template: _.template ($ '#alert-message-warning').html()
+        initialize: ->
+            @template = _.template ($ "#alert-message-#{@options.alertType}").html()
         render: (alertType, message) ->
             @$el.html this.template
                 alertType: alertType
@@ -182,10 +183,8 @@ jQuery ->
             passesJQueryValidation = @$("#create-item-form").valid()
 
             if passesJQueryValidation
-                console.log "passed $ val"
                 if @isUniqueItem()
-                    @createNewItem()
-            console.log "didn't pass existing customer check"
+                    return @createNewItem()
             return
 
 

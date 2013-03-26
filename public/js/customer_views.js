@@ -8,34 +8,46 @@
     isUniqueCustomer = function() {
       var alertWarning, isUniqueItem, message;
       isUniqueItem = app.Customers.where({
-        email: $('#email-input')
+        email: $('#email-input').val()
       }).length < 1;
-      if (!isUniqueItem) {
+      if (isUniqueItem) {
+        return true;
+      } else {
         message = "You already have a customer by this email.";
-        alertWarning = new app.AlertView;
-        $("#main-alert-div").html(alertWarning.render("alert-error", message).el);
+        alertWarning = new app.AlertView({
+          alertType: 'warning'
+        });
+        $("#root-backbone-alert-view").html(alertWarning.render("alert-error", message).el);
         return false;
       }
-      return true;
     };
     createNewCustomer = function(subQuants) {
-      var country, countrySpanHTML, customerModel;
+      var alertWarning, country, countrySpanHTML, customerModel, message;
       countrySpanHTML = $("#country-span").html();
       country = countrySpanHTML.slice(countrySpanHTML.search('</i>') + 4).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
       customerModel = {
-        firstName: $("#first-name-input").val(),
-        lastName: $("#last-name-input").val(),
+        name: {
+          first: $("#first-name-input").val(),
+          last: $("#last-name-input").val()
+        },
         email: $("#email-input").val(),
-        address: $("#address-input").val(),
-        city: $("#city-input").val(),
-        country: country,
-        state: $("#state-select").val(),
-        zip: $("#zip-input").val(),
         phone: $("#phone-input").val(),
+        address: {
+          street: $("#address-input").val(),
+          postalCode: $("#zip-input").val(),
+          city: $("#city-input").val(),
+          state: $("#state-select").val(),
+          country: country
+        },
         dob: $("#dob-input").val(),
         sex: $('input[name=sexRadio]:checked').val()
       };
-      return console.log(customerModel);
+      app.Customers.create(customerModel);
+      message = "You have added a new customer!";
+      alertWarning = new app.AlertView({
+        alertType: 'success'
+      });
+      return $("#root-backbone-alert-view").html(alertWarning.render("alert-success", message).el);
     };
     CustomerControllerView = (function(_super) {
 
