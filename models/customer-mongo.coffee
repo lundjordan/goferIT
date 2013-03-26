@@ -13,7 +13,7 @@ CustomerSchema = new mongoose.Schema
             type: String, required: true
         last:
             type: String, required: true
-    phone: Number
+    phone: String
     address:
         street: String
         postalCode: String

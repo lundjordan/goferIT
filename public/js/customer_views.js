@@ -55,7 +55,6 @@
       };
 
       CustomerControllerView.prototype.renderSpecificItemView = function(model) {
-        console.log("made it here");
         if (this.currentView) {
           this.currentView.$el.html("");
         }
@@ -75,7 +74,19 @@
         }
         this.currentView = new app.GenericCreateView({
           el: "#customer-create-view-content",
-          createFormTemplate: "#customer-create-template"
+          createFormTemplate: "#customer-create-template",
+          formRules: {
+            firstName: {
+              required: true
+            },
+            lastName: {
+              required: true
+            },
+            email: {
+              required: true,
+              email: true
+            }
+          }
         });
         return this.currentView.render();
       };

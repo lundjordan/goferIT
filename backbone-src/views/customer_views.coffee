@@ -31,7 +31,6 @@ jQuery ->
                 singleContentTemplate: "#customer-view-content-template"
             @currentView.render app.Customers.models[0]
         renderSpecificItemView: (model) ->
-            console.log "made it here"
             if @currentView
                 @currentView.$el.html("")
             $('#customer-item-tab a').tab('show')
@@ -47,11 +46,19 @@ jQuery ->
             @currentView = new app.GenericCreateView
                 el: "#customer-create-view-content"
                 createFormTemplate: "#customer-create-template"
+                formRules:
+                    firstName:
+                        required: true
+                    lastName:
+                        required: true
+                    email:
+                        required: true
+                        email: true
             @currentView.render()
 
     # # ###############
     # Customers List View Section
-    # -> comes from ItemListVIew in # helper_views.coffee
+    # -> comes from ItemListVIew in # generic_views.coffee
     # ###############
 
     # ###############

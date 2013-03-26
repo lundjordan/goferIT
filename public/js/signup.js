@@ -56,8 +56,7 @@
       return ($(input)).closest(".control-group").addClass("error").removeClass("success");
     },
     success: function(span) {
-      ($(span)).closest(".control-group").addClass("success");
-      return span.text("OK!").addClass("success").closest(".control-group").addClass("success");
+      return ($(span)).closest(".control-group").addClass("success");
     }
   });
   return ($('#signupConfirm')).on('click', function(e) {

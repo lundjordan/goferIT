@@ -143,22 +143,20 @@ jQuery ->
             @el = @options.el
             @itemCreateBodyView = new ItemCreateBodyView
                 template: @options.createFormTemplate
+                formRules: @options.formRules
         render: ->
             @$el.html this.template({})
             $("#root-backbone-view-body").html @itemCreateBodyView.render().el
     class ItemCreateBodyView extends Backbone.View
-        # events:
-            # "click input[type=radio]": "quantityOptionInput"
-            # "click #cancel-sub-total-options": "cancelSubTotalOptions"
-            # "click #save-sub-total-options": "saveSubTotalOptions"
-            # "click #create-new-item-button": "checkValidityAndCreateNewItem"
+        events:
+            "click #create-new-item-button": "checkValidityAndCreateNewItem"
         initialize: ->
             @template = _.template ($ @options.template).html()
-        # template: _.template ($ '#item-create-template').html() TODO add this
-        # to initialization
+            @formRules = @options.formRules
         render: ->
             @$el.html this.template({})
             @setBootstrapFormHelperInputs()
+            @setJQueryValidityRules()
             @
         setBootstrapFormHelperInputs: ->
             @$('form select.bfh-countries, span.bfh-countries, div.bfh-countries').each ->
@@ -171,36 +169,20 @@ jQuery ->
                 inputField = $(this)
                 inputField.bfhdatepicker inputField.data()
             @$('form input:text.bfh-phone, span.bfh-phone').each ->
-                console.log 'made it to phone call'
                 inputField = $(this)
                 inputField.bfhphone inputField.data()
+        setJQueryValidityRules: ->
+            @validateForm @$("#create-item-form"), @formRules
+            console.log "validating form with #{@formRules}"
+        checkValidityAndCreateNewItem: (e) ->
+            e.preventDefault()
+            $("#main-alert-div").html("")
+            passesJQueryValidation = @$("#create-item-form").valid()
 
-
-        # setJQueryValidityRules: ->
-        #     @validateForm @$("#create-item-form"),
-        #         itemName:
-        #             required: true
-        #         brand:
-        #             required: true
-        #         category:
-        #             required: true
-        #         price:
-        #             required: true
-        #             decimalTwo: true
-        #             min: 0.01
-        #         cost:
-        #             required: true
-        #             decimalTwo: true
-        #             min: 0.01
-        #         grandTotal:
-        #             required: true
-        #             min: 1
-        # checkValidityAndCreateNewItem: (e) ->
-        #     e.preventDefault()
-        #     $("#main-alert-div").html("")
-        #     passesJQueryValidation = @$("#create-item-form").valid()
-
-        #     if passesJQueryValidation
+            if passesJQueryValidation
+                console.log "passed"
+            else
+                console.log "failed"
         #         isExistingItem = app.Items.ifModelExists(
         #             $('#name-input').val(), $('#brand-input').val())
         #         hasSubQuants = $("#grand-total-quantity-content").is(":hidden")

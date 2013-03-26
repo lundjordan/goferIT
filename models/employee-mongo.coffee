@@ -17,7 +17,7 @@ EmployeeSchema = new mongoose.Schema
         type: String, required: true
     hash:
         type: String, required: true
-    phone: Number
+    phone: String
     address:
         street: String
         postalCode: String

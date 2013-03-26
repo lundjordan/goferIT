@@ -10,7 +10,7 @@ SupplierSchema = new mongoose.Schema
         type: String, unique: true, required: true
     name:
         type: String, required: true
-    phone: Number
+    phone: String
     address:
         street: String
         postalCode: String
