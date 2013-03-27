@@ -20,6 +20,7 @@ jQuery ->
                 tableTemplate: '#customers-table-template'
                 tableListID: '#customers-table-list'
                 itemTrTemplate: '#customer-tr-template'
+                deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
             @currentView.render()
         renderCustomerDefaultItemView: ->
@@ -30,6 +31,7 @@ jQuery ->
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
+                deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
             @currentView.render app.Customers.models[0]
         renderSpecificItemView: (model) ->
@@ -41,6 +43,7 @@ jQuery ->
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
+                deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
             @currentView.render model
         renderCustomerCreateView: ->

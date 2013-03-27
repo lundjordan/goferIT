@@ -36,6 +36,7 @@
           tableTemplate: '#customers-table-template',
           tableListID: '#customers-table-list',
           itemTrTemplate: '#customer-tr-template',
+          deleteModalTemplate: "#customer-view-delete-template",
           itemControllerView: this
         });
         return this.currentView.render();
@@ -50,6 +51,7 @@
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
           singleContentTemplate: "#customer-view-content-template",
+          deleteModalTemplate: "#customer-view-delete-template",
           itemControllerView: this
         });
         return this.currentView.render(app.Customers.models[0]);
@@ -65,6 +67,7 @@
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
           singleContentTemplate: "#customer-view-content-template",
+          deleteModalTemplate: "#customer-view-delete-template",
           itemControllerView: this
         });
         return this.currentView.render(model);

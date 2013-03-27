@@ -1,6 +1,26 @@
 # Alert View
 
 jQuery ->
+    # ###############
+    # Helper Generic Views
+    class ConfirmDeleteModal extends Backbone.View
+        events:
+            'click #delete-confirmed-button': 'confirmedDeletion'
+        initialize: ->
+            @template = _.template ($ @options.template).html()
+        render: ->
+            @$el.html this.template @model.attributes
+            @
+        confirmedDeletion: ->
+            custName = "#{@model.get('name').first} #{@model.get('name').last}"
+            $("#delete-customer-modal").modal 'hide'
+            @model.destroy()
+            message = "You have successfully removed the Customer: #{custName}"
+            alertInfo = new AlertView
+                alertType: 'info'
+            $("#root-backbone-alert-view").
+                html(alertInfo.render( "alert-info", message).el)
+
     class AlertView extends Backbone.View
         initialize: ->
             @template = _.template ($ "#alert-message-#{@options.alertType}").html()
@@ -9,7 +29,7 @@ jQuery ->
                 alertType: alertType
                 message: message
             @
-
+    # ###############
 
     # ###############
     # Items List View Section
@@ -27,6 +47,7 @@ jQuery ->
                 tableListID: @options.tableListID
                 itemTrTemplate: @options.itemTrTemplate
                 itemControllerView: @options.itemControllerView
+                deleteModalTemplate: @options.deleteModalTemplate
         render: ->
             @$el.html this.template({})
             if @storeSelectView
@@ -37,10 +58,13 @@ jQuery ->
                 @itemsTable.render()
     class ItemsTable extends Backbone.View
         initialize: ->
+            _.bindAll @, 'render'
+            @collection.on 'remove', @render
             @template = _.template ($ @options.template).html()
             @tableListID = @options.tableListID
             @itemTrTemplate = @options.itemTrTemplate
             @itemControllerView = @options.itemControllerView
+            @deleteModalTemplate = @options.deleteModalTemplate
         render: ->
             @$el.html this.template({})
             @addAll()
@@ -52,12 +76,14 @@ jQuery ->
                         model: item
                         template: @itemTrTemplate
                         itemControllerView: @itemControllerView
+                        deleteModalTemplate: @deleteModalTemplate
                     (@$ @tableListID).append view.render().el
             else
                 view = new SingleListItemView
                     model: item
                     template: @itemTrTemplate
                     itemControllerView: @itemControllerView
+                    deleteModalTemplate: @deleteModalTemplate
                 (@$ @tableListID).append view.render().el
 
         addAll: ->
@@ -69,10 +95,12 @@ jQuery ->
             'mouseout': 'hideItemOptions'
             'click #item-view-eye-link': 'renderSpecificItemView'
             'click #item-view-edit-link': 'renderSpecificEditView'
+            'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: ->
             @template = _.template ($ @options.template).html()
             @itemView = @options.itemView 
             @itemControllerView = @options.itemControllerView
+            @deleteModalTemplate = @options.deleteModalTemplate
         render: ->
             @$el.html this.template @model.attributes
             $(@el).find('i').hide()
@@ -87,7 +115,14 @@ jQuery ->
             @itemControllerView.renderSpecificItemView @model
         renderSpecificEditView: ->
             @itemControllerView.renderSpecificEditView @model
+        renderSpecificDeleteView: ->
+            @deleteView =  new ConfirmDeleteModal
+                model: @model
+                template: @deleteModalTemplate
+            $("#root-backbone-view-body").append @deleteView.render().el
+            $("#delete-customer-modal").modal 'show'
     # ###############
+
 
     # ###############
     # Single Item View Section
@@ -97,13 +132,19 @@ jQuery ->
             'click #single-item-prev-link': 'renderSingleItemPrevView'
             'click #single-item-next-link': 'renderSingleItemNextView'
             'click #item-view-edit-link': 'renderSpecificEditView'
+            'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: (options) ->
+            _.bindAll @, 'renderNextAvailableModel'
+            @collection.on 'remove', @renderNextAvailableModel
             @el = @options.el
             @itemControllerView = @options.itemControllerView
+            @deleteModalTemplate = @options.deleteModalTemplate
             # @storeSelectView = new SinglesListStoreSelectView()
             @singleView =  new ItemLayoutView
                 template: @options.singleLayoutTemplate
                 singleContentTemplate: @options.singleContentTemplate
+        renderNextAvailableModel: ->
+            @render @collection.models[0]
         render: (currentModel) ->
             @currentModel = currentModel
             @$el.html this.template({})
@@ -118,6 +159,12 @@ jQuery ->
             @singleView.render @currentModel
         renderSpecificEditView: (model) ->
             @itemControllerView.renderSpecificEditView @currentModel
+        renderSpecificDeleteView: ->
+            @deleteView =  new ConfirmDeleteModal
+                model: @currentModel
+                template: @deleteModalTemplate
+            $("#root-backbone-view-body").append @deleteView.render().el
+            $("#delete-customer-modal").modal 'show'
     # Single Item View Section
     class ItemLayoutView extends Backbone.View
         initialize: ->

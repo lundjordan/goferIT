@@ -29,10 +29,10 @@ exports.getCreateController = (model) ->
         m.save (err) ->
             if not err
                 console.log m
-                return m
+                res.send m
             else
                 console.log errMsg(err)
-                return (errMsg err)
+                res.send (errMsg err)
 
 #------------------------------
 # Read
@@ -78,6 +78,8 @@ exports.getDeleteController = (model) ->
                 result.remove()
                 result.save (err) ->
                     if not err
+                        console.log result
                         return {}
                     else
+                        console.log(errMsg err)
                         return (errMsg err)

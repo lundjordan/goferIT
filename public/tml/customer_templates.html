@@ -18,7 +18,7 @@
   <td>
     <a href='#' id='item-view-eye-link'><i class='icon-eye-open'></i><a>
     <a href='#' id='item-view-edit-link'><i class='icon-pencil'></i><a>
-    <i class='icon-trash'></i>
+    <a href='#' id='item-view-delete-link'><i class='icon-trash'></i><a>
     <%= name.last %>
   </td>
   <td><%= name.first %> </td>
@@ -29,6 +29,26 @@
 <!--customer list view templates-->
 
 
+<!--customer single view templates-->
+<script type="text/template" id="customer-view-delete-template">
+  <div id="delete-customer-modal" class="modal hide fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"
+        aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Delete Customer: <%= name.first %> <%= name.last %></h3>
+    </div>
+    <div class="modal-body">
+      <p>Warning! This cannot be undone...</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal"
+        aria-hidden="true">Cancel</button>
+       <a href="#" id='delete-confirmed-button' class="btn btn-primary">Confirm Deletion</a>
+    </div>
+  </div>
+</script>
 
 
 <!--customer single view templates-->

@@ -5,7 +5,7 @@
 </script>
 
 <script type="text/template" id="alert-message-warning">
-  <div class="alert fade in <%= alertType %>">
+  <div class="alert <%= alertType %>">
     <button type="button" class="close"
       data-dismiss="alert">&times;</button>
     <strong>Whoops!</strong> <%= message %>
@@ -13,10 +13,18 @@
 </script>
 
 <script type="text/template" id="alert-message-success">
-  <div class="alert fade in <%= alertType %>">
+  <div class="alert <%= alertType %>">
     <button type="button" class="close"
       data-dismiss="alert">&times;</button>
     <strong>Wahoo!</strong> <%= message %>
+  </div>
+</script>
+
+<script type="text/template" id="alert-message-info">
+  <div class="alert <%= alertType %>">
+    <button type="button" class="close"
+      data-dismiss="alert">&times;</button>
+    <strong>Success!</strong> <%= message %>
   </div>
 </script>
 
@@ -31,7 +39,11 @@
               <i class='icon-pencil'></i> Edit
             </a>
           </li>
-          <li><a href="#"><i class='icon-trash'></i> Delete</a></li>
+          <li>
+            <a href="#" id='item-view-delete-link'>
+              <i class='icon-trash'></i> Delete
+            </a>
+          </li>
         </ul>
         <ul class="pager">
           <li id='single-item-prev-link'><a href="#">Prev</a></li>
