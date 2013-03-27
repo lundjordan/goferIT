@@ -27,7 +27,6 @@
       };
 
       CustomerControllerView.prototype.renderCustomersListView = function() {
-        console.log("made it here");
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         this.currentView = new app.GenericListView({

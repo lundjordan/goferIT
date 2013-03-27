@@ -7,7 +7,7 @@ jQuery ->
         events:
             'click #employees-menu-pill': 'renderEmployeesListView'
             'click #employees-list-tab': 'renderEmployeesListView'
-            # 'click #employee-item-tab': 'renderEmployeeDefaultItemView'
+            'click #employee-item-tab': 'renderEmployeeDefaultItemView'
             # 'click #employee-create-tab': 'renderEmployeeCreateView'
         initialize: ->
             @currentView = null
@@ -24,29 +24,30 @@ jQuery ->
                 deleteModalTemplate: "#employee-view-delete-template"
                 itemControllerView: @
             @currentView.render()
-        # renderEmployeeDefaultItemView: ->
-        #     if @currentView
-        #         @currentView.$el.html("")
-        #     @currentView = new app.GenericSingleView
-        #         collection: app.Employees
-        #         el: "#employee-item-view-content"
-        #         singleLayoutTemplate: "#single-item-view-template"
-        #         singleContentTemplate: "#employee-view-content-template"
-        #         deleteModalTemplate: "#employee-view-delete-template"
-        #         itemControllerView: @
-        #     @currentView.render app.Employees.models[0]
-        # renderSpecificItemView: (model) ->
-        #     if @currentView
-        #         @currentView.$el.html("")
-        #     $('#employee-item-tab a').tab('show')
-        #     @currentView = new app.GenericSingleView
-        #         collection: app.Employees
-        #         el: "#employee-item-view-content"
-        #         singleLayoutTemplate: "#single-item-view-template"
-        #         singleContentTemplate: "#employee-view-content-template"
-        #         deleteModalTemplate: "#employee-view-delete-template"
-        #         itemControllerView: @
-        #     @currentView.render model
+        renderEmployeeDefaultItemView: ->
+            $("#root-backbone-view-head").remove()
+            $("#root-backbone-view-body").remove()
+
+            @currentView = new app.GenericSingleView
+                collection: app.Employees
+                el: "#employee-item-view-content"
+                singleLayoutTemplate: "#single-item-view-template"
+                singleContentTemplate: "#employee-view-content-template"
+                deleteModalTemplate: "#employee-view-delete-template"
+                itemControllerView: @
+            @currentView.render app.Employees.models[0]
+        renderSpecificItemView: (model) ->
+            if @currentView
+                @currentView.$el.html("")
+            $('#employee-item-tab a').tab('show')
+            @currentView = new app.GenericSingleView
+                collection: app.Employees
+                el: "#employee-item-view-content"
+                singleLayoutTemplate: "#single-item-view-template"
+                singleContentTemplate: "#employee-view-content-template"
+                deleteModalTemplate: "#employee-view-delete-template"
+                itemControllerView: @
+            @currentView.render model
         # renderEmployeeCreateView: ->
         #     if @currentView
         #         @currentView.$el.html("")

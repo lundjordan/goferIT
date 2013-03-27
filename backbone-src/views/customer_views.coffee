@@ -12,7 +12,6 @@ jQuery ->
         initialize: ->
             @currentView = null
         renderCustomersListView: ->
-            console.log "made it here"
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
 
