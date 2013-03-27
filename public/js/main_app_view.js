@@ -23,7 +23,8 @@
 
       AppControllerView.prototype.initialize = function() {
         this.inventoryControllerView = this.options.inventoryControllerView;
-        return this.customerControllerView = this.options.customerControllerView;
+        this.customerControllerView = this.options.customerControllerView;
+        return this.employeeControllerView = this.options.employeeControllerView;
       };
 
       AppControllerView.prototype.inventoryRender = function() {

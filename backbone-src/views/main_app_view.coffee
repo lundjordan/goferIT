@@ -10,7 +10,7 @@ jQuery ->
         initialize: ->
             @inventoryControllerView = @options.inventoryControllerView
             @customerControllerView = @options.customerControllerView
-            # @employeeControllerView = @options.employeeControllerView
+            @employeeControllerView = @options.employeeControllerView
         inventoryRender: ->
             $('#inventory-list-tab a').tab('show')
             $("#root-backbone-view-head").remove()

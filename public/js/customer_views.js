@@ -16,7 +16,7 @@
       CustomerControllerView.prototype.el = '#people-main-content';
 
       CustomerControllerView.prototype.events = {
-        'click #customer-menu-pill': 'renderCustomersListView',
+        'click #customers-menu-pill': 'renderCustomersListView',
         'click #customers-list-tab': 'renderCustomersListView',
         'click #customer-item-tab': 'renderCustomerDefaultItemView',
         'click #customer-create-tab': 'renderCustomerCreateView'
@@ -27,15 +27,15 @@
       };
 
       CustomerControllerView.prototype.renderCustomersListView = function() {
-        if (this.currentView) {
-          this.currentView.$el.html("");
-        }
+        console.log("made it here");
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         this.currentView = new app.GenericListView({
           collection: app.Customers,
           el: "#customers-list-view-content",
-          tableTemplate: '#customers-table-template',
-          tableListID: '#customers-table-list',
-          itemTrTemplate: '#customer-tr-template',
+          tableTemplate: "#customers-table-template",
+          tableListID: "#customers-table-list",
+          itemTrTemplate: "#customer-tr-template",
           deleteModalTemplate: "#customer-view-delete-template",
           itemControllerView: this
         });
@@ -43,9 +43,8 @@
       };
 
       CustomerControllerView.prototype.renderCustomerDefaultItemView = function() {
-        if (this.currentView) {
-          this.currentView.$el.html("");
-        }
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         this.currentView = new app.GenericSingleView({
           collection: app.Customers,
           el: "#customer-item-view-content",
@@ -58,9 +57,8 @@
       };
 
       CustomerControllerView.prototype.renderSpecificItemView = function(model) {
-        if (this.currentView) {
-          this.currentView.$el.html("");
-        }
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         $('#customer-item-tab a').tab('show');
         this.currentView = new app.GenericSingleView({
           collection: app.Customers,
@@ -74,6 +72,8 @@
       };
 
       CustomerControllerView.prototype.renderCustomerCreateView = function() {
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         if (this.currentView) {
           this.currentView.$el.html("");
         }
@@ -99,9 +99,8 @@
       };
 
       CustomerControllerView.prototype.renderSpecificEditView = function(model) {
-        if (this.currentView) {
-          this.currentView.$el.html("");
-        }
+        $("#root-backbone-view-head").remove();
+        $("#root-backbone-view-body").remove();
         $('#customer-create-tab a').tab('show');
         this.currentView = new app.GenericCreateView({
           model: model,

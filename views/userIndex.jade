@@ -110,9 +110,9 @@ block content
               ul.nav.nav-pills
                 li#customers-menu-pill.active
                   a(href='#customers-main-view', data-toggle='tab') Customers
-                li(id-='id-', staff-menu-pill='staff-menu-pill')
-                  a(href='#staff-main-view', data-toggle='tab') Staff
-                li(id-='id-', suppliers-menu-pill='suppliers-menu-pill')
+                li#employees-menu-pill
+                  a(href='#employees-main-view', data-toggle='tab') Staff
+                li#suppliers-menu-pill
                   a(href='#suppliers-main-view', data-toggle='tab') Suppliers
               .tab-content
                 #customers-main-view.tab-pane.active
@@ -128,16 +128,16 @@ block content
                       #customers-list-view-content.tab-pane.active
                       #customer-item-view-content.tab-pane
                       #customer-create-view-content.tab-pane
-                #staff-main-view.tab-pane
+                #employees-main-view.tab-pane
                   .tabbable
                     ul.nav.nav-tabs
-                      li.active
-                        a(href='#staff-list-view-content', data-toggle='tab') List
-                      li
-                        a(href='#staff-item-view-content', data-toggle='tab') View
-                      li
-                        a(href='#staff-create-view-content', data-toggle='tab') Create/Edit
+                      li#employees-list-tab.active
+                        a(href='#employees-list-view-content', data-toggle='tab') List
+                      li#employee-item-tab
+                        a(href='#employee-item-view-content', data-toggle='tab') View
+                      li#employee-create-tab
+                        a(href='#employee-create-view-content', data-toggle='tab') Create/Edit
                     .tab-content
-                      #staff-list-view-content.tab-pane.active
-                      #staff-item-view-content.tab-pane
-                      #staff-create-view-content.tab-pane
+                      #employees-list-view-content.tab-pane.active
+                      #employee-item-view-content.tab-pane
+                      #employee-create-view-content.tab-pane
