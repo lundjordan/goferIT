@@ -16,7 +16,7 @@
       CustomerControllerView.prototype.el = '#people-main-content';
 
       CustomerControllerView.prototype.events = {
-        'click #customers-menu-pill': 'renderCustomersListView',
+        'click #customers-menu-pill': 'renderCustomersFirstView',
         'click #customers-list-tab': 'renderCustomersListView',
         'click #customer-item-tab': 'renderCustomerDefaultItemView',
         'click #customer-create-tab': 'renderCustomerCreateView'
@@ -26,7 +26,13 @@
         return this.currentView = null;
       };
 
+      CustomerControllerView.prototype.renderCustomersFirstView = function() {
+        $('#customers-list-tab a').tab('show');
+        return this.renderCustomersListView();
+      };
+
       CustomerControllerView.prototype.renderCustomersListView = function() {
+        $("#root-backbone-alert-view").remove();
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         this.currentView = new app.GenericListView({
@@ -42,6 +48,7 @@
       };
 
       CustomerControllerView.prototype.renderCustomerDefaultItemView = function() {
+        $("#root-backbone-alert-view").remove();
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         this.currentView = new app.GenericSingleView({
@@ -56,6 +63,7 @@
       };
 
       CustomerControllerView.prototype.renderSpecificItemView = function(model) {
+        $("#root-backbone-alert-view").remove();
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         $('#customer-item-tab a').tab('show');
@@ -71,6 +79,7 @@
       };
 
       CustomerControllerView.prototype.renderCustomerCreateView = function() {
+        $("#root-backbone-alert-view").remove();
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         if (this.currentView) {
@@ -98,6 +107,7 @@
       };
 
       CustomerControllerView.prototype.renderSpecificEditView = function(model) {
+        $("#root-backbone-alert-view").remove();
         $("#root-backbone-view-head").remove();
         $("#root-backbone-view-body").remove();
         $('#customer-create-tab a').tab('show');

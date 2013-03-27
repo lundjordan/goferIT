@@ -5,13 +5,17 @@ jQuery ->
     class CustomerControllerView extends Backbone.View
         el: '#people-main-content'
         events:
-            'click #customers-menu-pill': 'renderCustomersListView'
+            'click #customers-menu-pill': 'renderCustomersFirstView'
             'click #customers-list-tab': 'renderCustomersListView'
             'click #customer-item-tab': 'renderCustomerDefaultItemView'
             'click #customer-create-tab': 'renderCustomerCreateView'
         initialize: ->
             @currentView = null
+        renderCustomersFirstView: ->
+            $('#customers-list-tab a').tab('show')
+            @renderCustomersListView()
         renderCustomersListView: ->
+            $("#root-backbone-alert-view").remove()
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
 
@@ -25,6 +29,7 @@ jQuery ->
                 itemControllerView: @
             @currentView.render()
         renderCustomerDefaultItemView: ->
+            $("#root-backbone-alert-view").remove()
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
 
@@ -37,6 +42,7 @@ jQuery ->
                 itemControllerView: @
             @currentView.render app.Customers.models[0]
         renderSpecificItemView: (model) ->
+            $("#root-backbone-alert-view").remove()
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
 
@@ -50,6 +56,7 @@ jQuery ->
                 itemControllerView: @
             @currentView.render model
         renderCustomerCreateView: ->
+            $("#root-backbone-alert-view").remove()
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
 
@@ -70,6 +77,7 @@ jQuery ->
                 commitFormSubmitFunction: createNewCustomer
             @currentView.render()
         renderSpecificEditView: (model) ->
+            $("#root-backbone-alert-view").remove()
             $("#root-backbone-view-head").remove()
             $("#root-backbone-view-body").remove()
 
