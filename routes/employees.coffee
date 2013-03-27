@@ -1,7 +1,7 @@
 
 restifyEmployees = (app, restify, model) ->
     path = "/employees"
-    pathWithId = "employees/:id"
+    pathWithId = "/employees/:id"
 
     app.get path, (restify.getListController model)
     app.post path,(restify.getCreateController model)

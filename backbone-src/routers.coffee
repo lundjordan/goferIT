@@ -10,11 +10,13 @@ jQuery ->
         initialize: ->
             app.Companies.fetch()
             app.Customers.fetch()
+            app.Employees.fetch()
             app.Suppliers.fetch()
             app.Products.fetch()
             app.appControllerView = new app.AppControllerView
                 inventoryControllerView: new app.InventoryControllerView
                 customerControllerView: new app.CustomerControllerView
+                employeeControllerView: new app.EmployeeControllerView
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->

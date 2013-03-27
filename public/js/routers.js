@@ -24,11 +24,13 @@
       GoferRouter.prototype.initialize = function() {
         app.Companies.fetch();
         app.Customers.fetch();
+        app.Employees.fetch();
         app.Suppliers.fetch();
         app.Products.fetch();
         return app.appControllerView = new app.AppControllerView({
           inventoryControllerView: new app.InventoryControllerView,
-          customerControllerView: new app.CustomerControllerView
+          customerControllerView: new app.CustomerControllerView,
+          employeeControllerView: new app.EmployeeControllerView
         });
       };
 
