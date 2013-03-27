@@ -74,8 +74,9 @@ jQuery ->
                     email:
                         required: true
                         email: true
-                isValidMongoEntryFunction: isUniqueCustomer
-                commitFormSubmitFunction: createNewCustomer
+                isValidMongoEntryFunction: ->
+                    return true # if it passes form validation, that's fine
+                commitFormSubmitFunction: updateExistingCustomer
             @currentView.render()
 
     # # ###############
@@ -96,12 +97,7 @@ jQuery ->
             $("#root-backbone-alert-view").
                 html(alertWarning.render( "alert-error", message).el)
             return false # not unique
-    createNewCustomer = (subQuants) ->
-        # bootstrapFormHelper makes getting country string annoying
-        # countrySpanHTML = $("#country-span").html()
-        # country = countrySpanHTML.slice(countrySpanHTML.search('</i>')+4).
-        #         replace(/^\s\s*/, '').replace(/\s\s*$/, '')
-
+    createNewCustomer = ->
         customerModel =
             name:
                 first: $("#first-name-input").val()
@@ -118,6 +114,27 @@ jQuery ->
             sex: $('input[name=sexRadio]:checked').val()
         app.Customers.create customerModel
         message = "You have added a new customer!"
+        alertWarning = new app.AlertView
+            alertType: 'success'
+        $("#root-backbone-alert-view").
+            html(alertWarning.render( "alert-success", message).el)
+
+    updateExistingCustomer = ->
+        customerModel =
+            name:
+                first: $("#first-name-input").val()
+                last: $("#last-name-input").val()
+            phone: $("#phone-input").val()
+            address:
+                street: $("#address-input").val()
+                postalCode: $("#zip-input").val()
+                city: $("#city-input").val()
+                state: $("#state-select").val()
+                country: BFHCountriesList[$("#countries_input")]
+            dob: $("#dob-input").val()
+            sex: $('input[name=sexRadio]:checked').val()
+        @model.save customerModel
+        message = "Your changes, if any, have been saved!"
         alertWarning = new app.AlertView
             alertType: 'success'
         $("#root-backbone-alert-view").

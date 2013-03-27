@@ -51,15 +51,18 @@ exports.getReadController = (model) ->
 #
 exports.getUpdateController = (model) ->
     return (req, res) ->
-        #console.log('update', req.body);
+        console.log('update', req.body)
         model.findById req.params.id, (err, result) ->
-            for key in req.body
-                result[key] = req.body[key]
+            for key, value of req.body
+                # console.log("req.body key: " + key)
+                result[key] = value
 
             result.save (err) ->
                 if not err
+                    console.log result
                     return result
                 else
+                    console.log(errMsg err)
                     return (errMsg err)
 
 #------------------------------

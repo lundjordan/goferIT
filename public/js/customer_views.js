@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var CustomerControllerView, createNewCustomer, isUniqueCustomer, _ref;
+    var CustomerControllerView, createNewCustomer, isUniqueCustomer, updateExistingCustomer, _ref;
     CustomerControllerView = (function(_super) {
 
       __extends(CustomerControllerView, _super);
@@ -114,8 +114,10 @@
               email: true
             }
           },
-          isValidMongoEntryFunction: isUniqueCustomer,
-          commitFormSubmitFunction: createNewCustomer
+          isValidMongoEntryFunction: function() {
+            return true;
+          },
+          commitFormSubmitFunction: updateExistingCustomer
         });
         return this.currentView.render();
       };
@@ -139,7 +141,7 @@
         return false;
       }
     };
-    createNewCustomer = function(subQuants) {
+    createNewCustomer = function() {
       var alertWarning, customerModel, message;
       customerModel = {
         name: {
@@ -160,6 +162,31 @@
       };
       app.Customers.create(customerModel);
       message = "You have added a new customer!";
+      alertWarning = new app.AlertView({
+        alertType: 'success'
+      });
+      return $("#root-backbone-alert-view").html(alertWarning.render("alert-success", message).el);
+    };
+    updateExistingCustomer = function() {
+      var alertWarning, customerModel, message;
+      customerModel = {
+        name: {
+          first: $("#first-name-input").val(),
+          last: $("#last-name-input").val()
+        },
+        phone: $("#phone-input").val(),
+        address: {
+          street: $("#address-input").val(),
+          postalCode: $("#zip-input").val(),
+          city: $("#city-input").val(),
+          state: $("#state-select").val(),
+          country: BFHCountriesList[$("#countries_input")]
+        },
+        dob: $("#dob-input").val(),
+        sex: $('input[name=sexRadio]:checked').val()
+      };
+      this.model.save(customerModel);
+      message = "Your changes, if any, have been saved!";
       alertWarning = new app.AlertView({
         alertType: 'success'
       });

@@ -159,8 +159,8 @@ jQuery ->
         initialize: ->
             @template = _.template ($ @options.template).html()
             @formRules = @options.formRules
-            @isUniqueItem = @options.isValidMongoEntryFunction
-            @createNewItem = @options.commitFormSubmitFunction
+            @isValidMongoEntryFunction = @options.isValidMongoEntryFunction
+            @commitFormSubmitFunction = @options.commitFormSubmitFunction
         render: ->
             if @model
                 console.log @model.attributes
@@ -191,8 +191,8 @@ jQuery ->
             passesJQueryValidation = @$("#create-item-form").valid()
 
             if passesJQueryValidation
-                if @isUniqueItem()
-                    return @createNewItem()
+                if @isValidMongoEntryFunction()
+                    return @commitFormSubmitFunction()
             return
 
 
