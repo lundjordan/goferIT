@@ -96,8 +96,10 @@ jQuery ->
         events:
             'click #single-item-prev-link': 'renderSingleItemPrevView'
             'click #single-item-next-link': 'renderSingleItemNextView'
+            'click #item-view-edit-link': 'renderSpecificEditView'
         initialize: (options) ->
             @el = @options.el
+            @itemControllerView = @options.itemControllerView
             # @storeSelectView = new SinglesListStoreSelectView()
             @singleView =  new ItemLayoutView
                 template: @options.singleLayoutTemplate
@@ -114,6 +116,8 @@ jQuery ->
         renderSingleItemNextView: (event) ->
             @currentModel = @collection.findNext @currentModel
             @singleView.render @currentModel
+        renderSpecificEditView: (model) ->
+            @itemControllerView.renderSpecificEditView @currentModel
     # Single Item View Section
     class ItemLayoutView extends Backbone.View
         initialize: ->
@@ -163,7 +167,6 @@ jQuery ->
             @commitFormSubmitFunction = @options.commitFormSubmitFunction
         render: ->
             if @model
-                console.log @model.attributes
                 @$el.html this.template(@model.attributes)
             else
                 @$el.html this.template({})

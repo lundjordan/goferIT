@@ -49,7 +49,8 @@
           collection: app.Customers,
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
-          singleContentTemplate: "#customer-view-content-template"
+          singleContentTemplate: "#customer-view-content-template",
+          itemControllerView: this
         });
         return this.currentView.render(app.Customers.models[0]);
       };
@@ -63,7 +64,8 @@
           collection: app.Customers,
           el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
-          singleContentTemplate: "#customer-view-content-template"
+          singleContentTemplate: "#customer-view-content-template",
+          itemControllerView: this
         });
         return this.currentView.render(model);
       };

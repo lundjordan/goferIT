@@ -30,6 +30,7 @@ jQuery ->
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
+                itemControllerView: @
             @currentView.render app.Customers.models[0]
         renderSpecificItemView: (model) ->
             if @currentView
@@ -40,6 +41,7 @@ jQuery ->
                 el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
+                itemControllerView: @
             @currentView.render model
         renderCustomerCreateView: ->
             if @currentView
