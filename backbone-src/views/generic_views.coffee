@@ -13,9 +13,9 @@ jQuery ->
             @
         confirmedDeletion: ->
             custName = "#{@model.get('name').first} #{@model.get('name').last}"
-            $("#delete-customer-modal").modal 'hide'
+            $("#delete-item-modal").modal 'hide'
             @model.destroy()
-            message = "You have successfully removed the Customer: #{custName}"
+            message = "You have successfully removed: #{custName}"
             alertInfo = new AlertView
                 alertType: 'info'
             $("#root-backbone-alert-view").
@@ -38,7 +38,6 @@ jQuery ->
         events:
             'change #store-name-select': 'renderItemsTable'
         initialize: ->
-            @el = @options.el
             if @options.storeSelectView
                 @storeSelectView = new @options.storeSelectView()
             @itemsTable = new ItemsTable
@@ -53,13 +52,13 @@ jQuery ->
             if @storeSelectView
                 $("#root-backbone-view-head").html @storeSelectView.render().el
             $("#root-backbone-view-body").html @itemsTable.render().el
+            @
         renderItemsTable: ->
             if @storeSelectView
                 @itemsTable.render()
     class ItemsTable extends Backbone.View
         initialize: ->
-            _.bindAll @, 'render'
-            @collection.on 'remove', @render
+            @listenTo @collection, 'remove', @rendor
             @template = _.template ($ @options.template).html()
             @tableListID = @options.tableListID
             @itemTrTemplate = @options.itemTrTemplate
@@ -120,7 +119,7 @@ jQuery ->
                 model: @model
                 template: @deleteModalTemplate
             $("#root-backbone-view-body").append @deleteView.render().el
-            $("#delete-customer-modal").modal 'show'
+            $("#delete-item-modal").modal 'show'
     # ###############
 
 
@@ -134,9 +133,7 @@ jQuery ->
             'click #item-view-edit-link': 'renderSpecificEditView'
             'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: (options) ->
-            _.bindAll @, 'renderNextAvailableModel'
-            @collection.on 'remove', @renderNextAvailableModel
-            @el = @options.el
+            # @listenTo @collection, 'remove', @renderNextAvailableModel
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
             # @storeSelectView = new SinglesListStoreSelectView()
@@ -151,6 +148,7 @@ jQuery ->
             # @$("#root-backbone-view-head").html @storeSelectView.render().el
             # @storeSelectView.render()
             $("#root-backbone-view-body").html @singleView.render(@currentModel).el
+            @
         renderSingleItemPrevView: (event) ->
             @currentModel = @collection.findPrev @currentModel
             @singleView.render @currentModel
@@ -194,7 +192,6 @@ jQuery ->
     class GenericCreateView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
         initialize: ->
-            @el = @options.el
             @itemCreateBodyView = new ItemCreateBodyView
                 model: @options.model
                 template: @options.createFormTemplate
@@ -204,6 +201,7 @@ jQuery ->
         render: ->
             @$el.html this.template()
             $("#root-backbone-view-body").html @itemCreateBodyView.render().el
+            @
     class ItemCreateBodyView extends Backbone.View
         events:
             "click #create-new-item-button": "checkValidityAndCreateNewItem"

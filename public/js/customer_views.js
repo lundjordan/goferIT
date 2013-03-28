@@ -32,61 +32,46 @@
       };
 
       CustomerControllerView.prototype.renderCustomersListView = function() {
-        $("#root-backbone-alert-view").remove();
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
+        this.removeExistingBackboneTags();
         this.currentView = new app.GenericListView({
           collection: app.Customers,
-          el: "#customers-list-view-content",
           tableTemplate: "#customers-table-template",
           tableListID: "#customers-table-list",
           itemTrTemplate: "#customer-tr-template",
           deleteModalTemplate: "#customer-view-delete-template",
           itemControllerView: this
         });
-        return this.currentView.render();
+        return $("#customers-list-view-content").html(this.currentView.render().el);
       };
 
       CustomerControllerView.prototype.renderCustomerDefaultItemView = function() {
-        $("#root-backbone-alert-view").remove();
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
+        this.removeExistingBackboneTags();
         this.currentView = new app.GenericSingleView({
           collection: app.Customers,
-          el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
           singleContentTemplate: "#customer-view-content-template",
           deleteModalTemplate: "#customer-view-delete-template",
           itemControllerView: this
         });
-        return this.currentView.render(app.Customers.models[0]);
+        return $("#customer-item-view-content").html((this.currentView.render(app.Customers.models[0])).el);
       };
 
       CustomerControllerView.prototype.renderSpecificItemView = function(model) {
-        $("#root-backbone-alert-view").remove();
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
+        this.removeExistingBackboneTags();
         $('#customer-item-tab a').tab('show');
         this.currentView = new app.GenericSingleView({
           collection: app.Customers,
-          el: "#customer-item-view-content",
           singleLayoutTemplate: "#single-item-view-template",
           singleContentTemplate: "#customer-view-content-template",
           deleteModalTemplate: "#customer-view-delete-template",
           itemControllerView: this
         });
-        return this.currentView.render(model);
+        return $("#customer-item-view-content").html((this.currentView.render(model)).el);
       };
 
       CustomerControllerView.prototype.renderCustomerCreateView = function() {
-        $("#root-backbone-alert-view").remove();
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
-        if (this.currentView) {
-          this.currentView.$el.html("");
-        }
+        this.removeExistingBackboneTags();
         this.currentView = new app.GenericCreateView({
-          el: "#customer-create-view-content",
           createFormTemplate: "#customer-create-template",
           formRules: {
             firstName: {
@@ -103,17 +88,14 @@
           isValidMongoEntryFunction: isUniqueCustomer,
           commitFormSubmitFunction: createNewCustomer
         });
-        return this.currentView.render();
+        return $("#customer-create-view-content").html(this.currentView.render().el);
       };
 
       CustomerControllerView.prototype.renderSpecificEditView = function(model) {
-        $("#root-backbone-alert-view").remove();
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
+        this.removeExistingBackboneTags();
         $('#customer-create-tab a').tab('show');
         this.currentView = new app.GenericCreateView({
           model: model,
-          el: "#customer-create-view-content",
           createFormTemplate: "#customer-edit-template",
           formRules: {
             firstName: {
@@ -132,7 +114,14 @@
           },
           commitFormSubmitFunction: updateExistingCustomer
         });
-        return this.currentView.render();
+        return $("#customer-create-view-content").html(this.currentView.render().el);
+      };
+
+      CustomerControllerView.prototype.removeExistingBackboneTags = function() {
+        if (this.currentView) {
+          console.log('made it here');
+          return this.currentView.remove();
+        }
       };
 
       return CustomerControllerView;

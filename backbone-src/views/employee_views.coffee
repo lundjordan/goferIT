@@ -15,9 +15,7 @@ jQuery ->
             $('#employees-list-tab a').tab('show')
             @renderEmployeesListView()
         renderEmployeesListView: ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             @currentView = new app.GenericListView
                 collection: app.Employees
@@ -29,9 +27,7 @@ jQuery ->
                 itemControllerView: @
             @currentView.render()
         renderEmployeeDefaultItemView: ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             @currentView = new app.GenericSingleView
                 collection: app.Employees
@@ -42,9 +38,7 @@ jQuery ->
                 itemControllerView: @
             @currentView.render app.Employees.models[0]
         renderSpecificItemView: (model) ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             $('#employee-item-tab a').tab('show')
             @currentView = new app.GenericSingleView
@@ -56,9 +50,7 @@ jQuery ->
                 itemControllerView: @
             @currentView.render model
         renderEmployeeCreateView: ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             @currentView = new app.GenericCreateView
                 el: "#employee-create-view-content"
@@ -82,9 +74,7 @@ jQuery ->
                 commitFormSubmitFunction: createNewEmployee
             @currentView.render()
         renderSpecificEditView: (model) ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             $('#employee-create-tab a').tab('show')
             @currentView = new app.GenericCreateView
@@ -111,12 +101,21 @@ jQuery ->
                 commitFormSubmitFunction: updateExistingEmployee
             @currentView.render()
 
+        removeExistingBackboneTags: ->
+            if @currentView
+                console.log 'made it here'
+                @currentView.remove()
+            # $("#root-backbone-alert-view").remove()
+            # $("#root-backbone-view-head").remove()
+            # $("#root-backbone-view-body").remove()
+
     # # ###############
     # Employees List View Section
     # -> comes from ItemListVIew in # generic_views.coffee
     # ###############
 
     # helper functions for creating a new Employees
+
     isUniqueEmployee = ->
         isUniqueItem = app.Employees.
             where(email: $('#email-input').val()).length < 1
@@ -158,6 +157,7 @@ jQuery ->
                 first: $("#first-name-input").val()
                 last: $("#last-name-input").val()
             phone: $("#phone-input").val()
+            password: $("#password-input").val()
             address:
                 street: $("#address-input").val()
                 postalCode: $("#zip-input").val()
@@ -165,13 +165,14 @@ jQuery ->
                 state: $("#state-select").val()
                 country: BFHCountriesList[$("#countries_input")]
             dob: $("#dob-input").val()
-            sex: $('input[name=sexRadio]:checked').val()
+            title: $('#title-input').val()
         @model.save employeeModel
         message = "Your changes, if any, have been saved!"
         alertWarning = new app.AlertView
             alertType: 'success'
         $("#root-backbone-alert-view").
             html(alertWarning.render( "alert-success", message).el)
+
 
     @app = window.app ? {}
     @app.EmployeeControllerView = EmployeeControllerView

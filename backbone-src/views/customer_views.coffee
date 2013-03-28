@@ -15,55 +15,44 @@ jQuery ->
             $('#customers-list-tab a').tab('show')
             @renderCustomersListView()
         renderCustomersListView: ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             @currentView = new app.GenericListView
                 collection: app.Customers
-                el: "#customers-list-view-content"
                 tableTemplate: "#customers-table-template"
                 tableListID: "#customers-table-list"
                 itemTrTemplate: "#customer-tr-template"
                 deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
-            @currentView.render()
+            $("#customers-list-view-content").html @currentView.render().el
+
         renderCustomerDefaultItemView: ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             @currentView = new app.GenericSingleView
                 collection: app.Customers
-                el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
                 deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
-            @currentView.render app.Customers.models[0]
+            $("#customer-item-view-content").html(
+                (@currentView.render app.Customers.models[0]).el)
         renderSpecificItemView: (model) ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             $('#customer-item-tab a').tab('show')
             @currentView = new app.GenericSingleView
                 collection: app.Customers
-                el: "#customer-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#customer-view-content-template"
                 deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
-            @currentView.render model
-        renderCustomerCreateView: ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
 
-            if @currentView
-                @currentView.$el.html("")
+            $("#customer-item-view-content").html (@currentView.render model).el
+        renderCustomerCreateView: ->
+            @removeExistingBackboneTags()
+
             @currentView = new app.GenericCreateView
-                el: "#customer-create-view-content"
                 createFormTemplate: "#customer-create-template"
                 formRules:
                     firstName:
@@ -75,16 +64,13 @@ jQuery ->
                         email: true
                 isValidMongoEntryFunction: isUniqueCustomer
                 commitFormSubmitFunction: createNewCustomer
-            @currentView.render()
+            $("#customer-create-view-content").html @currentView.render().el
         renderSpecificEditView: (model) ->
-            $("#root-backbone-alert-view").remove()
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
+            @removeExistingBackboneTags()
 
             $('#customer-create-tab a').tab('show')
             @currentView = new app.GenericCreateView
                 model: model
-                el: "#customer-create-view-content"
                 createFormTemplate: "#customer-edit-template"
                 formRules:
                     firstName:
@@ -97,14 +83,22 @@ jQuery ->
                 isValidMongoEntryFunction: ->
                     return true # if it passes form validation, that's fine
                 commitFormSubmitFunction: updateExistingCustomer
-            @currentView.render()
+            $("#customer-create-view-content").html @currentView.render().el
 
+        removeExistingBackboneTags: ->
+            if @currentView
+                console.log 'made it here'
+                @currentView.remove()
+            # $("#root-backbone-alert-view").remove()
+            # $("#root-backbone-view-head").remove()
+            # $("#root-backbone-view-body").remove()
     # # ###############
     # Customers List View Section
     # -> comes from ItemListVIew in # generic_views.coffee
     # ###############
 
     # helper functions for creating a new Customers
+
     isUniqueCustomer = ->
         isUniqueItem = app.Customers.
             where(email: $('#email-input').val()).length < 1
