@@ -81,26 +81,35 @@ jQuery ->
                 isValidMongoEntryFunction: isUniqueEmployee
                 commitFormSubmitFunction: createNewEmployee
             @currentView.render()
-        # renderSpecificEditView: (model) ->
-        #     if @currentView
-        #         @currentView.$el.html("")
-        #     $('#employee-create-tab a').tab('show')
-        #     @currentView = new app.GenericCreateView
-        #         model: model
-        #         el: "#employee-create-view-content"
-        #         createFormTemplate: "#employee-edit-template"
-        #         formRules:
-        #             firstName:
-        #                 required: true
-        #             lastName:
-        #                 required: true
-        #             email:
-        #                 required: true
-        #                 email: true
-        #         isValidMongoEntryFunction: ->
-        #             return true # if it passes form validation, that's fine
-        #         commitFormSubmitFunction: updateExistingEmployee
-        #     @currentView.render()
+        renderSpecificEditView: (model) ->
+            $("#root-backbone-alert-view").remove()
+            $("#root-backbone-view-head").remove()
+            $("#root-backbone-view-body").remove()
+
+            $('#employee-create-tab a').tab('show')
+            @currentView = new app.GenericCreateView
+                model: model
+                el: "#employee-create-view-content"
+                createFormTemplate: "#employee-edit-template"
+                formRules:
+                    firstName:
+                        required: true
+                    lastName:
+                        required: true
+                    email:
+                        required: true
+                        email: true
+                    password:
+                        minlength: 6
+                        required: true
+                    password2:
+                        minlength: 6
+                        required: true
+                        equalTo: "#password-input"
+                isValidMongoEntryFunction: ->
+                    return true # if it passes form validation, that's fine
+                commitFormSubmitFunction: updateExistingEmployee
+            @currentView.render()
 
     # # ###############
     # Employees List View Section
