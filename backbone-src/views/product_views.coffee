@@ -4,9 +4,9 @@ jQuery ->
     class ProductControllerView extends Backbone.View
         el: '#products-main-view'
         events:
-            'click #inventory-list-tab': 'renderProductsListView'
-            'click #inventory-item-tab': 'renderProductDefaultItemView'
-            'click #inventory-create-tab': 'renderProductCreateView'
+            'click #products-list-tab': 'renderProductsListView'
+            'click #product-item-tab': 'renderProductDefaultItemView'
+            'click #product-create-tab': 'renderProductCreateView'
         initialize: ->
             @currentView = null
         renderProductsListView: ->
@@ -31,7 +31,15 @@ jQuery ->
             $("#product-item-view-content").html (@currentView.render model).el
         renderProductCreateView: ->
             @removeCurrentContentView()
-            @currentView = new ProductCreateView()
+            @currentView = new ProductCreateView
+                template: '#product-create-template'
+            $("#product-create-view-content").html @currentView.render().el
+        renderSpecificEditView: (model) ->
+            @removeCurrentContentView()
+            $('#product-create-tab a').tab('show')
+            @currentView = new ProductCreateView
+                template: '#product-edit-template'
+                model: model
             $("#product-create-view-content").html @currentView.render().el
 
         removeCurrentContentView: ->
@@ -45,9 +53,30 @@ jQuery ->
             @$el.html this.template({})
             storeNames = app.Companies.models[0].get 'stores'
             @addToSelect(store.name) for store in storeNames
+            if @model
+                # incase we are in edit mode, set the select tag to 
+                # whatever the model's store name is
+                @$("select[id=store-name-select]").val(@model.attributes.storeName)
             @
         addToSelect: (storeName) ->
-            @$('#store-name-select').append "<option>#{storeName}</option>"
+            @$('#store-name-select').append(
+                "<option value='#{storeName}'>#{storeName}</option>")
+    class SupplierSelectView extends Backbone.View
+        template: _.template ($ '#product-create-supplier-names-template').html()
+        render: ->
+            @$el.html this.template({})
+            supplierNames = app.Suppliers.pluck "name"
+            @addToSelect(name) for name in supplierNames
+            if @model
+                supplierName = app.Suppliers.
+                    get(@model.attributes._order._supplier).get 'name'
+                # incase we are in edit mode, set the select tag to 
+                # whatever the model's supplier name is
+                @$("select[id=supplier-name-select]").val(supplierName)
+            @
+        addToSelect: (supplierName) ->
+            @$('#supplier-name-select').append(
+                "<option value='#{supplierName}'>#{supplierName}</option>")
     class ProductsListStoreSelectView extends StoreSelectView
         template: _.template ($ '#store-names-template').html()
     class ProductItemSubQuantityView extends Backbone.View
@@ -149,40 +178,41 @@ jQuery ->
     class ProductCreateView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
         initialize: ->
-            @productCreateBodyView =  new ProductCreateBodyView()
-            @storeSelectView = new StoreSelectView()
-            @supplierSelectView = new SupplierSelectView()
+            @productCreateBodyView =  new ProductCreateBodyView
+                model: @options.model
+                template: @options.template
+            @storeSelectView = new StoreSelectView
+                model: @options.model
+            @supplierSelectView = new SupplierSelectView
+                model: @options.model
             @storeSelectView.template = _.template ($ '#product-create-store-names-template').html()
         render: ->
             @$el.html this.template({})
-            @$("#root-backbone-view-head").html @productCreateBodyView.render().el
+            # @$("#root-backbone-view-head").html @productcreatebodyview.render().el
             @$("#root-backbone-view-body").html @productCreateBodyView.render().el
             @$("#product-create-store-names").html @storeSelectView.render().el
-            @$("#product-create-supplier-names").html @supplierSelectView.render().el
+            @$("#product-create-supplier-names").
+                html @supplierSelectView.render().el
             @
-            # $("#store-name-select").html @storeSelectView.render().el
     class ProductCreateBodyView extends Backbone.View
         events:
             "click input[type=radio]": "quantityOptionInput"
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
             "click #create-new-product-button": "checkValidityAndCreateNewProduct"
-        template: _.template ($ '#product-create-template').html()
+            "click #update-existing-product-button": ->
+                console.log "updating existing product..."
+        initialize: ->
+            @template = _.template ($ @options.template).html()
         render: ->
-            @$el.html this.template({})
-    class ProductCreateBodyView extends Backbone.View
-        events:
-            "click input[type=radio]": "quantityOptionInput"
-            "click #cancel-sub-total-options": "cancelSubTotalOptions"
-            "click #save-sub-total-options": "saveSubTotalOptions"
-            "click #create-new-product-button": "checkValidityAndCreateNewProduct"
-        template: _.template ($ '#product-create-template').html()
-        render: ->
-            @$el.html this.template({})
+            if @model
+                @$el.html @template(@model.attributes)
+            else
+                @$el.html @template({})
             @setJQueryValidityRules()
             @
         setJQueryValidityRules: ->
-            @validateForm @$("#create-product-form"),
+            @validateForm @$("#product-form"),
                 productName:
                     required: true
                 brand:
@@ -331,15 +361,6 @@ jQuery ->
                 .html (new ProductItemSubQuantityView()).render(productSubQuants).el
 
 
-    class SupplierSelectView extends Backbone.View
-        template: _.template ($ '#product-create-supplier-names-template').html()
-        render: ->
-            @$el.html this.template({})
-            supplierNames = app.Suppliers.pluck "name"
-            @addToSelect(name) for name in supplierNames
-            @
-        addToSelect: (supplierName) ->
-            @$('#supplier-name-select').append "<option>#{supplierName}</option>"
     # ###############
 
 
