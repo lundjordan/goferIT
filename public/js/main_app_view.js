@@ -58,12 +58,14 @@
 
       PeopleControllerView.prototype.events = {
         'click #customers-menu-pill': 'renderCustomersInitView',
-        'click #employees-menu-pill': 'renderEmployeesInitView'
+        'click #employees-menu-pill': 'renderEmployeesInitView',
+        'click #suppliers-menu-pill': 'renderSuppliersInitView'
       };
 
       PeopleControllerView.prototype.initialize = function() {
         this.customerControllerView = this.options.customerControllerView;
         this.employeeControllerView = this.options.employeeControllerView;
+        this.supplierControllerView = this.options.supplierControllerView;
         return this.currentPeopleView = this.customerControllerView;
       };
 
@@ -79,6 +81,13 @@
         this.currentPeopleView = this.employeeControllerView;
         $('#employees-list-tab a').tab('show');
         return this.currentPeopleView.renderEmployeesListView();
+      };
+
+      PeopleControllerView.prototype.renderSuppliersInitView = function() {
+        this.currentPeopleView.removeCurrentContentView();
+        this.currentPeopleView = this.supplierControllerView;
+        $('#suppliers-list-tab a').tab('show');
+        return this.currentPeopleView.renderSuppliersListView();
       };
 
       PeopleControllerView.prototype.removeCurrentContentView = function() {

@@ -34,9 +34,11 @@ jQuery ->
         events:
             'click #customers-menu-pill': 'renderCustomersInitView'
             'click #employees-menu-pill': 'renderEmployeesInitView'
+            'click #suppliers-menu-pill': 'renderSuppliersInitView'
         initialize: ->
             @customerControllerView = @options.customerControllerView
             @employeeControllerView = @options.employeeControllerView
+            @supplierControllerView = @options.supplierControllerView
             @currentPeopleView = @customerControllerView
         renderCustomersInitView: ->
             @currentPeopleView.removeCurrentContentView()
@@ -48,6 +50,11 @@ jQuery ->
             @currentPeopleView = @employeeControllerView
             $('#employees-list-tab a').tab('show')
             @currentPeopleView.renderEmployeesListView()
+        renderSuppliersInitView: ->
+            @currentPeopleView.removeCurrentContentView()
+            @currentPeopleView = @supplierControllerView
+            $('#suppliers-list-tab a').tab('show')
+            @currentPeopleView.renderSuppliersListView()
         removeCurrentContentView: ->
             @currentPeopleView.removeCurrentContentView()
 

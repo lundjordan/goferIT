@@ -1,49 +1,49 @@
-# Customer Views
+# Supplier Views
 
 jQuery ->
 
-    class CustomerControllerView extends Backbone.View
-        el: '#customers-main-view'
+    class SupplierControllerView extends Backbone.View
+        el: '#suppliers-main-view'
         events:
-            'click #customers-list-tab': 'renderCustomersListView'
-            'click #customer-item-tab': 'renderCustomerDefaultItemView'
-            'click #customer-create-tab': 'renderCustomerCreateView'
+            'click #suppliers-list-tab': 'renderSuppliersListView'
+            'click #supplier-item-tab': 'renderSupplierDefaultItemView'
+            'click #supplier-create-tab': 'renderSupplierCreateView'
         initialize: ->
             @currentView = null
-        renderCustomersListView: ->
+        renderSuppliersListView: ->
             @removeCurrentContentView()
             @currentView = new app.GenericListView
-                collection: app.Customers
-                tableTemplate: "#customers-table-template"
-                tableListID: "#customers-table-list"
-                itemTrTemplate: "#customer-tr-template"
-                deleteModalTemplate: "#customer-view-delete-template"
+                collection: app.Suppliers
+                tableTemplate: "#suppliers-table-template"
+                tableListID: "#suppliers-table-list"
+                itemTrTemplate: "#supplier-tr-template"
+                deleteModalTemplate: "#supplier-view-delete-template"
                 itemControllerView: @
-            $("#customers-list-view-content").html @currentView.render().el
-        renderCustomerDefaultItemView: ->
+            $("#suppliers-list-view-content").html @currentView.render().el
+        renderSupplierDefaultItemView: ->
             @removeCurrentContentView()
             @currentView = new app.GenericSingleView
-                collection: app.Customers
+                collection: app.Suppliers
                 singleLayoutTemplate: "#single-item-view-template"
-                singleContentTemplate: "#customer-view-content-template"
-                deleteModalTemplate: "#customer-view-delete-template"
+                singleContentTemplate: "#supplier-view-content-template"
+                deleteModalTemplate: "#supplier-view-delete-template"
                 itemControllerView: @
-            $("#customer-item-view-content").html(
-                (@currentView.render app.Customers.models[0]).el)
+            $("#supplier-item-view-content").html(
+                (@currentView.render app.Suppliers.models[0]).el)
         renderSpecificItemView: (model) ->
             @removeCurrentContentView()
-            $('#customer-item-tab a').tab('show')
+            $('#supplier-item-tab a').tab('show')
             @currentView = new app.GenericSingleView
-                collection: app.Customers
+                collection: app.Suppliers
                 singleLayoutTemplate: "#single-item-view-template"
-                singleContentTemplate: "#customer-view-content-template"
-                deleteModalTemplate: "#customer-view-delete-template"
+                singleContentTemplate: "#supplier-view-content-template"
+                deleteModalTemplate: "#supplier-view-delete-template"
                 itemControllerView: @
-            $("#customer-item-view-content").html (@currentView.render model).el
-        renderCustomerCreateView: ->
+            $("#supplier-item-view-content").html (@currentView.render model).el
+        renderSupplierCreateView: ->
             @removeCurrentContentView()
             @currentView = new app.GenericCreateView
-                createFormTemplate: "#customer-create-template"
+                createFormTemplate: "#supplier-create-template"
                 formRules:
                     firstName:
                         required: true
@@ -52,27 +52,25 @@ jQuery ->
                     email:
                         required: true
                         email: true
-                isValidMongoEntryFunction: isUniqueCustomer
-                commitFormSubmitFunction: createNewCustomer
-            $("#customer-create-view-content").html @currentView.render().el
+                isValidMongoEntryFunction: isUniqueSupplier
+                commitFormSubmitFunction: createNewSupplier
+            $("#supplier-create-view-content").html @currentView.render().el
         renderSpecificEditView: (model) ->
             @removeCurrentContentView()
-            $('#customer-create-tab a').tab('show')
+            $('#supplier-create-tab a').tab('show')
             @currentView = new app.GenericCreateView
                 model: model
-                createFormTemplate: "#customer-edit-template"
+                createFormTemplate: "#supplier-edit-template"
                 formRules:
-                    firstName:
-                        required: true
-                    lastName:
+                    name:
                         required: true
                     email:
                         required: true
                         email: true
                 isValidMongoEntryFunction: ->
                     return true # if it passes form validation, that's fine
-                commitFormSubmitFunction: updateExistingCustomer
-            $("#customer-create-view-content").html @currentView.render().el
+                commitFormSubmitFunction: updateExistingSupplier
+            $("#supplier-create-view-content").html @currentView.render().el
         # helpers
         removeCurrentContentView: ->
             if @currentView
@@ -81,29 +79,27 @@ jQuery ->
             # $("#root-backbone-view-head").remove()
             # $("#root-backbone-view-body").remove()
     # # ###############
-    # Customers List View Section
+    # Suppliers List View Section
     # -> comes from ItemListVIew in # generic_views.coffee
     # ###############
 
-    # helper functions for creating a new Customers
+    # helper functions for creating a new Suppliers
 
-    isUniqueCustomer = ->
-        isUniqueItem = app.Customers.
+    isUniqueSupplier = ->
+        isUniqueItem = app.Suppliers.
             where(email: $('#email-input').val()).length < 1
         if isUniqueItem
             return true # unique
         else
-            message = "You already have a customer by this email."
+            message = "You already have a supplier by this email."
             alertWarning = new app.AlertView
                 alertType: 'warning'
             $("#root-backbone-alert-view").
                 html(alertWarning.render( "alert-error", message).el)
             return false # not unique
-    createNewCustomer = ->
-        customerModel =
-            name:
-                first: $("#first-name-input").val()
-                last: $("#last-name-input").val()
+    createNewSupplier = ->
+        supplierModel =
+            name: $("#name-input").val()
             email: $("#email-input").val()
             phone: $("#phone-input").val()
             address:
@@ -112,20 +108,16 @@ jQuery ->
                 city: $("#city-input").val()
                 state: $("#state-select").val()
                 country: BFHCountriesList[$("#countries_input").val()]
-            dob: $("#dob-input").val()
-            sex: $('input[name=sexRadio]:checked').val()
-        app.Customers.create customerModel
-        message = "You have added a new customer!"
+        app.Suppliers.create supplierModel
+        message = "You have added a new supplier!"
         alertWarning = new app.AlertView
             alertType: 'success'
         $("#root-backbone-alert-view").
             html(alertWarning.render( "alert-success", message).el)
 
-    updateExistingCustomer = ->
-        customerModel =
-            name:
-                first: $("#first-name-input").val()
-                last: $("#last-name-input").val()
+    updateExistingSupplier = ->
+        supplierModel =
+            name: $("#name-input").val()
             phone: $("#phone-input").val()
             address:
                 street: $("#address-input").val()
@@ -133,9 +125,7 @@ jQuery ->
                 city: $("#city-input").val()
                 state: $("#state-select").val()
                 country: BFHCountriesList[$("#countries_input").val()]
-            dob: $("#dob-input").val()
-            sex: $('input[name=sexRadio]:checked').val()
-        @model.save customerModel
+        @model.save supplierModel
         message = "Your changes, if any, have been saved!"
         alertWarning = new app.AlertView
             alertType: 'success'
@@ -143,4 +133,4 @@ jQuery ->
             html(alertWarning.render( "alert-success", message).el)
 
     @app = window.app ? {}
-    @app.CustomerControllerView = CustomerControllerView
+    @app.SupplierControllerView = SupplierControllerView

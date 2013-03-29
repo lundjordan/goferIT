@@ -48,9 +48,10 @@ html
     if user != null
       // Gofer templates
       // script(type='text/html', src='tml/inventory_templates.html')
-      include ../public/tml/inventory_templates.html
+      include ../public/tml/product_templates.html
       include ../public/tml/customer_templates.html
       include ../public/tml/employee_templates.html
+      include ../public/tml/supplier_templates.html
       include ../public/tml/helper_templates.html
 
       // gofer scripts
@@ -69,5 +70,6 @@ html
       script(src='js/product_views.js')
       script(src='js/customer_views.js')
       script(src='js/employee_views.js')
+      script(src='js/supplier_views.js')
       script(src='js/main_app_view.js')
       script(src='js/routers.js')

@@ -33,7 +33,8 @@
           }),
           peopleControllerView: new app.PeopleControllerView({
             customerControllerView: new app.CustomerControllerView,
-            employeeControllerView: new app.EmployeeControllerView
+            employeeControllerView: new app.EmployeeControllerView,
+            supplierControllerView: new app.SupplierControllerView
           })
         });
       };

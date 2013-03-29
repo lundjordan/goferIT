@@ -19,6 +19,7 @@ jQuery ->
                 peopleControllerView: new app.PeopleControllerView
                     customerControllerView: new app.CustomerControllerView
                     employeeControllerView: new app.EmployeeControllerView
+                    supplierControllerView: new app.SupplierControllerView
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->

@@ -127,7 +127,7 @@ jQuery ->
                 postalCode: $("#zip-input").val()
                 city: $("#city-input").val()
                 state: $("#state-select").val()
-                country: BFHCountriesList[$("#countries_input")]
+                country: BFHCountriesList[$("#countries_input").val()]
             dob: $("#dob-input").val()
             title: $('#title-input').val()
         app.Employees.create employeeModel
@@ -149,7 +149,7 @@ jQuery ->
                 postalCode: $("#zip-input").val()
                 city: $("#city-input").val()
                 state: $("#state-select").val()
-                country: BFHCountriesList[$("#countries_input")]
+                country: BFHCountriesList[$("#countries_input").val()]
             dob: $("#dob-input").val()
             title: $('#title-input').val()
         @model.save employeeModel

@@ -16,6 +16,24 @@
 
     Suppliers.prototype.url = '/suppliers';
 
+    Suppliers.prototype.findPrev = function(currentModel) {
+      var indexCurrentModel;
+      indexCurrentModel = this.indexOf(currentModel);
+      if (indexCurrentModel === 0) {
+        return this.at(this.length - 1);
+      }
+      return this.at(indexCurrentModel - 1);
+    };
+
+    Suppliers.prototype.findNext = function(currentModel) {
+      var indexCurrentModel;
+      indexCurrentModel = this.indexOf(currentModel);
+      if (this.length === indexCurrentModel + 1) {
+        return this.at(0);
+      }
+      return this.at(indexCurrentModel + 1);
+    };
+
     return Suppliers;
 
   })(Backbone.Collection);
