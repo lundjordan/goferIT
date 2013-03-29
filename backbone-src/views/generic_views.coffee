@@ -50,27 +50,33 @@ jQuery ->
         render: ->
             @$el.html this.template({})
             if @storeSelectView
-                $("#root-backbone-view-head").html @storeSelectView.render().el
-            $("#root-backbone-view-body").html @itemsTable.render().el
+                @$("#root-backbone-view-head").html @storeSelectView.render().el
+                @itemsTable.setItemsToBeStoreSpecificBy(
+                    @$('#store-name-select option:selected').val())
+            @$("#root-backbone-view-body").html @itemsTable.render().el
             @
         renderItemsTable: ->
-            if @storeSelectView
-                @itemsTable.render()
+            @itemsTable.setItemsToBeStoreSpecificBy(
+                @$('#store-name-select option:selected').val())
+            @itemsTable.render()
     class ItemsTable extends Backbone.View
         initialize: ->
-            @listenTo @collection, 'remove', @rendor
+            @listenTo @collection, 'remove', @render
             @template = _.template ($ @options.template).html()
             @tableListID = @options.tableListID
             @itemTrTemplate = @options.itemTrTemplate
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
+            @storeName = null
         render: ->
             @$el.html this.template({})
             @addAll()
             @
+        setItemsToBeStoreSpecificBy: (storeName) ->
+            @storeName = storeName
         addOne: (item) ->
-            if $('#store-name-select')
-                if $('#store-name-select').val() is item.get('storeName')
+            if @storeName
+                if @storeName is item.get('storeName')
                     view = new SingleListItemView
                         model: item
                         template: @itemTrTemplate
@@ -133,7 +139,7 @@ jQuery ->
             'click #item-view-edit-link': 'renderSpecificEditView'
             'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: (options) ->
-            # @listenTo @collection, 'remove', @renderNextAvailableModel
+            @listenTo @collection, 'remove', @renderNextAvailableModel
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
             # @storeSelectView = new SinglesListStoreSelectView()
@@ -147,7 +153,7 @@ jQuery ->
             @$el.html this.template({})
             # @$("#root-backbone-view-head").html @storeSelectView.render().el
             # @storeSelectView.render()
-            $("#root-backbone-view-body").html @singleView.render(@currentModel).el
+            @$("#root-backbone-view-body").html @singleView.render(@currentModel).el
             @
         renderSingleItemPrevView: (event) ->
             @currentModel = @collection.findPrev @currentModel
@@ -162,7 +168,7 @@ jQuery ->
                 model: @currentModel
                 template: @deleteModalTemplate
             $("#root-backbone-view-body").append @deleteView.render().el
-            $("#delete-customer-modal").modal 'show'
+            $("#delete-item-modal").modal 'show'
     # Single Item View Section
     class ItemLayoutView extends Backbone.View
         initialize: ->
@@ -200,7 +206,7 @@ jQuery ->
                 commitFormSubmitFunction: @options.commitFormSubmitFunction
         render: ->
             @$el.html this.template()
-            $("#root-backbone-view-body").html @itemCreateBodyView.render().el
+            @$("#root-backbone-view-body").html @itemCreateBodyView.render().el
             @
     class ItemCreateBodyView extends Backbone.View
         events:

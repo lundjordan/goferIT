@@ -3,20 +3,15 @@
 jQuery ->
 
     class CustomerControllerView extends Backbone.View
-        el: '#people-main-content'
+        el: '#customers-main-view'
         events:
-            'click #customers-menu-pill': 'renderCustomersFirstView'
             'click #customers-list-tab': 'renderCustomersListView'
             'click #customer-item-tab': 'renderCustomerDefaultItemView'
             'click #customer-create-tab': 'renderCustomerCreateView'
         initialize: ->
             @currentView = null
-        renderCustomersFirstView: ->
-            $('#customers-list-tab a').tab('show')
-            @renderCustomersListView()
         renderCustomersListView: ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             @currentView = new app.GenericListView
                 collection: app.Customers
                 tableTemplate: "#customers-table-template"
@@ -25,10 +20,8 @@ jQuery ->
                 deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
             $("#customers-list-view-content").html @currentView.render().el
-
         renderCustomerDefaultItemView: ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             @currentView = new app.GenericSingleView
                 collection: app.Customers
                 singleLayoutTemplate: "#single-item-view-template"
@@ -38,8 +31,7 @@ jQuery ->
             $("#customer-item-view-content").html(
                 (@currentView.render app.Customers.models[0]).el)
         renderSpecificItemView: (model) ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             $('#customer-item-tab a').tab('show')
             @currentView = new app.GenericSingleView
                 collection: app.Customers
@@ -47,11 +39,9 @@ jQuery ->
                 singleContentTemplate: "#customer-view-content-template"
                 deleteModalTemplate: "#customer-view-delete-template"
                 itemControllerView: @
-
             $("#customer-item-view-content").html (@currentView.render model).el
         renderCustomerCreateView: ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             @currentView = new app.GenericCreateView
                 createFormTemplate: "#customer-create-template"
                 formRules:
@@ -66,8 +56,7 @@ jQuery ->
                 commitFormSubmitFunction: createNewCustomer
             $("#customer-create-view-content").html @currentView.render().el
         renderSpecificEditView: (model) ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             $('#customer-create-tab a').tab('show')
             @currentView = new app.GenericCreateView
                 model: model
@@ -84,10 +73,9 @@ jQuery ->
                     return true # if it passes form validation, that's fine
                 commitFormSubmitFunction: updateExistingCustomer
             $("#customer-create-view-content").html @currentView.render().el
-
-        removeExistingBackboneTags: ->
+        # helpers
+        removeCurrentContentView: ->
             if @currentView
-                console.log 'made it here'
                 @currentView.remove()
             # $("#root-backbone-alert-view").remove()
             # $("#root-backbone-view-head").remove()

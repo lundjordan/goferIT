@@ -28,9 +28,13 @@
         app.Suppliers.fetch();
         app.Products.fetch();
         return app.appControllerView = new app.AppControllerView({
-          inventoryControllerView: new app.InventoryControllerView,
-          customerControllerView: new app.CustomerControllerView,
-          employeeControllerView: new app.EmployeeControllerView
+          inventoryControllerView: new app.InventoryControllerView({
+            productControllerView: new app.ProductControllerView
+          }),
+          peopleControllerView: new app.PeopleControllerView({
+            customerControllerView: new app.CustomerControllerView,
+            employeeControllerView: new app.EmployeeControllerView
+          })
         });
       };
 

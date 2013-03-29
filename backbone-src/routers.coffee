@@ -15,8 +15,10 @@ jQuery ->
             app.Products.fetch()
             app.appControllerView = new app.AppControllerView
                 inventoryControllerView: new app.InventoryControllerView
-                customerControllerView: new app.CustomerControllerView
-                employeeControllerView: new app.EmployeeControllerView
+                    productControllerView: new app.ProductControllerView
+                peopleControllerView: new app.PeopleControllerView
+                    customerControllerView: new app.CustomerControllerView
+                    employeeControllerView: new app.EmployeeControllerView
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->

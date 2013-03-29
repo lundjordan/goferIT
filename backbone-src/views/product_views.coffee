@@ -1,49 +1,42 @@
 # Inventory Views
 
 jQuery ->
-    class InventoryControllerView extends Backbone.View
-        el: '#inventory-main-content'
+    class ProductControllerView extends Backbone.View
+        el: '#products-main-view'
         events:
-            'click #product-menu-pill': 'renderProductsListView'
             'click #inventory-list-tab': 'renderProductsListView'
             'click #inventory-item-tab': 'renderProductDefaultItemView'
             'click #inventory-create-tab': 'renderProductCreateView'
-            'click #order-menu-pill': 'renderOrderListView'
         initialize: ->
             @currentView = null
         renderProductsListView: ->
-            if @currentView
-                @currentView.$el.html("")
+            @removeCurrentContentView()
             @currentView = new app.GenericListView
                 collection: app.Products
-                el: "#products-list-view-content"
                 storeSelectView: ProductsListStoreSelectView
                 tableTemplate: '#products-table-template'
                 tableListID: '#products-table-list'
                 itemTrTemplate: '#product-tr-template'
                 itemControllerView: @
-            @currentView.render()
+            $("#products-list-view-content").html @currentView.render().el
         renderProductDefaultItemView: ->
-            if @currentView
-                @currentView.$el.html("")
+            @removeCurrentContentView()
             @currentView = new ProductItemView()
-            @currentView.render app.Products.models[0]
+            $("#product-item-view-content").html(
+                (@currentView.render app.Products.models[0]).el)
         renderSpecificItemView: (model) ->
-            if @currentView
-                @currentView.$el.html("")
+            @removeCurrentContentView()
             $('#inventory-item-tab a').tab('show')
             @currentView = new ProductItemView()
-            @currentView.render model
+            $("#product-item-view-content").html (@currentView.render model).el
         renderProductCreateView: ->
-            if @currentView
-                @currentView.$el.html("")
+            @removeCurrentContentView()
             @currentView = new ProductCreateView()
-            @currentView.render()
-        renderOrderListView: ->
+            $("#product-create-view-content").html @currentView.render().el
+
+        removeCurrentContentView: ->
             if @currentView
-                @currentView.$el.html("")
-            @currentView = new OrderListView()
-            @currentView.render()
+                @currentView.remove()
 
     # ###############
     # HELPER CLASS -> SHARED
@@ -87,11 +80,10 @@ jQuery ->
     # ###############
     # Product Item View Section
     class ProductItemView extends Backbone.View
-        el: '#product-item-view-content'
+        template: _.template ($ '#root-backbone-content-template').html()
         events:
             'click #product-item-prev-link': 'renderProductItemPrevView'
             'click #product-item-next-link': 'renderProductItemNextView'
-        template: _.template ($ '#root-backbone-content-template').html()
         initialize: (options) ->
             # @storeSelectView = new ProductsListStoreSelectView()
             @productView =  new ProductItemBodyView()
@@ -100,7 +92,8 @@ jQuery ->
             @$el.html this.template({})
             # @$("#root-backbone-view-head").html @storeSelectView.render().el
             # @storeSelectView.render()
-            $("#root-backbone-view-body").html @productView.render(@model).el
+            @$("#root-backbone-view-body").html @productView.render(@model).el
+            @
         renderProductItemPrevView: (event) ->
             @model = app.Products.findPrev @model
             @productView.render @model
@@ -154,7 +147,6 @@ jQuery ->
     # ###############
     # Product Create Section
     class ProductCreateView extends Backbone.View
-        el: '#product-create-view-content'
         template: _.template ($ '#root-backbone-content-template').html()
         initialize: ->
             @productCreateBodyView =  new ProductCreateBodyView()
@@ -163,10 +155,11 @@ jQuery ->
             @storeSelectView.template = _.template ($ '#product-create-store-names-template').html()
         render: ->
             @$el.html this.template({})
-            $("#root-backbone-view-head").html @productCreateBodyView.render().el
-            $("#root-backbone-view-body").html @productCreateBodyView.render().el
-            $("#product-create-store-names").html @storeSelectView.render().el
-            $("#product-create-supplier-names").html @supplierSelectView.render().el
+            @$("#root-backbone-view-head").html @productCreateBodyView.render().el
+            @$("#root-backbone-view-body").html @productCreateBodyView.render().el
+            @$("#product-create-store-names").html @storeSelectView.render().el
+            @$("#product-create-supplier-names").html @supplierSelectView.render().el
+            @
             # $("#store-name-select").html @storeSelectView.render().el
     class ProductCreateBodyView extends Backbone.View
         events:
@@ -237,17 +230,14 @@ jQuery ->
                             subQuantValues.push $(this).find("input").val()
 
                     if not @subQuantTotalValid(subQuantTypes, subQuantValues)
-                        # console.log "didn't pass subquants val"
                         return # not valid
                     return @createNewProduct
                         subQuantTypes: subQuantTypes
                         subQuantValues: subQuantValues
 
                 # made it here means the form is completely valid!
-                # console.log "valid"
                 @createNewProduct()
             else
-                # console.log "didn't pass $ val"
                 return # not valid
         createNewProduct: (subQuants) ->
             name = $("#name-input").val()
@@ -281,10 +271,9 @@ jQuery ->
                 cost: cost
                 totalQuantity: totalQuantity
                 subTotalQuantity: subTotalQuantity
-            console.log productModel
             app.Products.create productModel
 
-            message = "You have added a new customer!"
+            message = "You have added a new product!"
             alertWarning = new app.AlertView
                 alertType: 'success'
             $("#root-backbone-alert-view").
@@ -357,4 +346,4 @@ jQuery ->
     class OrderListView extends Backbone.View
 
     @app = window.app ? {}
-    @app.InventoryControllerView = InventoryControllerView
+    @app.ProductControllerView = ProductControllerView

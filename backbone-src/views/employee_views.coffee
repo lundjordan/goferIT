@@ -3,57 +3,46 @@
 jQuery ->
 
     class EmployeeControllerView extends Backbone.View
-        el: '#people-main-content'
+        el: '#employees-main-view'
         events:
-            'click #employees-menu-pill': 'renderEmployeesFirstView'
             'click #employees-list-tab': 'renderEmployeesListView'
             'click #employee-item-tab': 'renderEmployeeDefaultItemView'
             'click #employee-create-tab': 'renderEmployeeCreateView'
         initialize: ->
             @currentView = null
-        renderEmployeesFirstView: ->
-            $('#employees-list-tab a').tab('show')
-            @renderEmployeesListView()
         renderEmployeesListView: ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             @currentView = new app.GenericListView
                 collection: app.Employees
-                el: "#employees-list-view-content"
                 tableTemplate: '#employees-table-template'
                 tableListID: '#employees-table-list'
                 itemTrTemplate: '#employee-tr-template'
                 deleteModalTemplate: "#employee-view-delete-template"
                 itemControllerView: @
-            @currentView.render()
+            $("#employees-list-view-content").html @currentView.render().el
         renderEmployeeDefaultItemView: ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             @currentView = new app.GenericSingleView
                 collection: app.Employees
-                el: "#employee-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#employee-view-content-template"
                 deleteModalTemplate: "#employee-view-delete-template"
                 itemControllerView: @
-            @currentView.render app.Employees.models[0]
+            $("#employee-item-view-content").html(
+                (@currentView.render app.Employees.models[0]).el)
         renderSpecificItemView: (model) ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             $('#employee-item-tab a').tab('show')
             @currentView = new app.GenericSingleView
                 collection: app.Employees
-                el: "#employee-item-view-content"
                 singleLayoutTemplate: "#single-item-view-template"
                 singleContentTemplate: "#employee-view-content-template"
                 deleteModalTemplate: "#employee-view-delete-template"
                 itemControllerView: @
-            @currentView.render model
+            $("#employee-item-view-content").html (@currentView.render model).el
         renderEmployeeCreateView: ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             @currentView = new app.GenericCreateView
-                el: "#employee-create-view-content"
                 createFormTemplate: "#employee-create-template"
                 formRules:
                     firstName:
@@ -72,14 +61,12 @@ jQuery ->
                         equalTo: "#password-input"
                 isValidMongoEntryFunction: isUniqueEmployee
                 commitFormSubmitFunction: createNewEmployee
-            @currentView.render()
+            $("#employee-create-view-content").html @currentView.render().el
         renderSpecificEditView: (model) ->
-            @removeExistingBackboneTags()
-
+            @removeCurrentContentView()
             $('#employee-create-tab a').tab('show')
             @currentView = new app.GenericCreateView
                 model: model
-                el: "#employee-create-view-content"
                 createFormTemplate: "#employee-edit-template"
                 formRules:
                     firstName:
@@ -99,11 +86,10 @@ jQuery ->
                 isValidMongoEntryFunction: ->
                     return true # if it passes form validation, that's fine
                 commitFormSubmitFunction: updateExistingEmployee
-            @currentView.render()
+            $("#employee-create-view-content").html @currentView.render().el
 
-        removeExistingBackboneTags: ->
+        removeCurrentContentView: ->
             if @currentView
-                console.log 'made it here'
                 @currentView.remove()
             # $("#root-backbone-alert-view").remove()
             # $("#root-backbone-view-head").remove()

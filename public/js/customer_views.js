@@ -13,10 +13,9 @@
         return CustomerControllerView.__super__.constructor.apply(this, arguments);
       }
 
-      CustomerControllerView.prototype.el = '#people-main-content';
+      CustomerControllerView.prototype.el = '#customers-main-view';
 
       CustomerControllerView.prototype.events = {
-        'click #customers-menu-pill': 'renderCustomersFirstView',
         'click #customers-list-tab': 'renderCustomersListView',
         'click #customer-item-tab': 'renderCustomerDefaultItemView',
         'click #customer-create-tab': 'renderCustomerCreateView'
@@ -26,13 +25,8 @@
         return this.currentView = null;
       };
 
-      CustomerControllerView.prototype.renderCustomersFirstView = function() {
-        $('#customers-list-tab a').tab('show');
-        return this.renderCustomersListView();
-      };
-
       CustomerControllerView.prototype.renderCustomersListView = function() {
-        this.removeExistingBackboneTags();
+        this.removeCurrentContentView();
         this.currentView = new app.GenericListView({
           collection: app.Customers,
           tableTemplate: "#customers-table-template",
@@ -45,7 +39,7 @@
       };
 
       CustomerControllerView.prototype.renderCustomerDefaultItemView = function() {
-        this.removeExistingBackboneTags();
+        this.removeCurrentContentView();
         this.currentView = new app.GenericSingleView({
           collection: app.Customers,
           singleLayoutTemplate: "#single-item-view-template",
@@ -57,7 +51,7 @@
       };
 
       CustomerControllerView.prototype.renderSpecificItemView = function(model) {
-        this.removeExistingBackboneTags();
+        this.removeCurrentContentView();
         $('#customer-item-tab a').tab('show');
         this.currentView = new app.GenericSingleView({
           collection: app.Customers,
@@ -70,7 +64,7 @@
       };
 
       CustomerControllerView.prototype.renderCustomerCreateView = function() {
-        this.removeExistingBackboneTags();
+        this.removeCurrentContentView();
         this.currentView = new app.GenericCreateView({
           createFormTemplate: "#customer-create-template",
           formRules: {
@@ -92,7 +86,7 @@
       };
 
       CustomerControllerView.prototype.renderSpecificEditView = function(model) {
-        this.removeExistingBackboneTags();
+        this.removeCurrentContentView();
         $('#customer-create-tab a').tab('show');
         this.currentView = new app.GenericCreateView({
           model: model,
@@ -117,9 +111,8 @@
         return $("#customer-create-view-content").html(this.currentView.render().el);
       };
 
-      CustomerControllerView.prototype.removeExistingBackboneTags = function() {
+      CustomerControllerView.prototype.removeCurrentContentView = function() {
         if (this.currentView) {
-          console.log('made it here');
           return this.currentView.remove();
         }
       };

@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var AppControllerView, _ref;
+    var AppControllerView, InventoryControllerView, PeopleControllerView, _ref;
     AppControllerView = (function(_super) {
 
       __extends(AppControllerView, _super);
@@ -23,22 +23,22 @@
 
       AppControllerView.prototype.initialize = function() {
         this.inventoryControllerView = this.options.inventoryControllerView;
-        this.customerControllerView = this.options.customerControllerView;
-        return this.employeeControllerView = this.options.employeeControllerView;
+        this.peopleControllerView = this.options.peopleControllerView;
+        return this.currentMenuView = this.inventoryControllerView;
       };
 
       AppControllerView.prototype.inventoryRender = function() {
+        this.currentMenuView.removeCurrentContentView();
         $('#inventory-list-tab a').tab('show');
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
-        return this.inventoryControllerView.renderProductsListView();
+        this.currentMenuView = this.inventoryControllerView;
+        return this.currentMenuView.renderProductsInitView();
       };
 
       AppControllerView.prototype.peopleRender = function() {
+        this.currentMenuView.removeCurrentContentView();
         $('#customers-list-tab a').tab('show');
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
-        return this.customerControllerView.renderCustomersListView();
+        this.currentMenuView = this.peopleControllerView;
+        return this.currentMenuView.renderCustomersInitView();
       };
 
       AppControllerView.prototype.dashboardRender = function() {};
@@ -46,8 +46,91 @@
       return AppControllerView;
 
     })(Backbone.View);
+    PeopleControllerView = (function(_super) {
+
+      __extends(PeopleControllerView, _super);
+
+      function PeopleControllerView() {
+        return PeopleControllerView.__super__.constructor.apply(this, arguments);
+      }
+
+      PeopleControllerView.prototype.el = '#people-main-content';
+
+      PeopleControllerView.prototype.events = {
+        'click #customers-menu-pill': 'renderCustomersInitView',
+        'click #employees-menu-pill': 'renderEmployeesInitView'
+      };
+
+      PeopleControllerView.prototype.initialize = function() {
+        this.customerControllerView = this.options.customerControllerView;
+        this.employeeControllerView = this.options.employeeControllerView;
+        return this.currentPeopleView = this.customerControllerView;
+      };
+
+      PeopleControllerView.prototype.renderCustomersInitView = function() {
+        this.currentPeopleView.removeCurrentContentView();
+        this.currentPeopleView = this.customerControllerView;
+        $('#customers-list-tab a').tab('show');
+        return this.currentPeopleView.renderCustomersListView();
+      };
+
+      PeopleControllerView.prototype.renderEmployeesInitView = function() {
+        this.currentPeopleView.removeCurrentContentView();
+        this.currentPeopleView = this.employeeControllerView;
+        $('#employees-list-tab a').tab('show');
+        return this.currentPeopleView.renderEmployeesListView();
+      };
+
+      PeopleControllerView.prototype.removeCurrentContentView = function() {
+        return this.currentPeopleView.removeCurrentContentView();
+      };
+
+      return PeopleControllerView;
+
+    })(Backbone.View);
+    InventoryControllerView = (function(_super) {
+
+      __extends(InventoryControllerView, _super);
+
+      function InventoryControllerView() {
+        return InventoryControllerView.__super__.constructor.apply(this, arguments);
+      }
+
+      InventoryControllerView.prototype.el = '#inventory-main-content';
+
+      InventoryControllerView.prototype.events = {
+        'click #product-menu-pill': 'renderProductsInitView',
+        'click #order-menu-pill': 'renderOrderInitView'
+      };
+
+      InventoryControllerView.prototype.initialize = function() {
+        this.productControllerView = this.options.productControllerView;
+        return this.currentPeopleView = this.productControllerView;
+      };
+
+      InventoryControllerView.prototype.renderProductsInitView = function() {
+        this.currentPeopleView.removeCurrentContentView();
+        this.currentPeopleView = this.productControllerView;
+        $('#products-list-tab a').tab('show');
+        return this.currentPeopleView.renderProductsListView();
+      };
+
+      InventoryControllerView.prototype.renderOrderInitView = function() {
+        this.currentPeopleView.removeCurrentContentView();
+        return $('#orders-list-tab a').tab('show');
+      };
+
+      InventoryControllerView.prototype.removeCurrentContentView = function() {
+        return this.currentPeopleView.removeCurrentContentView();
+      };
+
+      return InventoryControllerView;
+
+    })(Backbone.View);
     this.app = (_ref = window.app) != null ? _ref : {};
-    return this.app.AppControllerView = AppControllerView;
+    this.app.AppControllerView = AppControllerView;
+    this.app.InventoryControllerView = InventoryControllerView;
+    return this.app.PeopleControllerView = PeopleControllerView;
   });
 
 }).call(this);
