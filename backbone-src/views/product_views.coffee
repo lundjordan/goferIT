@@ -26,7 +26,7 @@ jQuery ->
                 (@currentView.render app.Products.models[0]).el)
         renderSpecificItemView: (model) ->
             @removeCurrentContentView()
-            $('#inventory-item-tab a').tab('show')
+            $('#product-item-tab a').tab('show')
             @currentView = new ProductItemView()
             $("#product-item-view-content").html (@currentView.render model).el
         renderProductCreateView: ->
@@ -67,12 +67,12 @@ jQuery ->
             @$el.html this.template({})
             supplierNames = app.Suppliers.pluck "name"
             @addToSelect(name) for name in supplierNames
-            if @model
-                supplierName = app.Suppliers.
-                    get(@model.attributes._order._supplier).get 'name'
-                # incase we are in edit mode, set the select tag to 
-                # whatever the model's supplier name is
-                @$("select[id=supplier-name-select]").val(supplierName)
+            if @model # we are in edit mode
+                if @model.attributes._order
+                    # set the select tag to the model's supplier name is
+                    supplierName = app.Suppliers.
+                        get(@model.attributes._order._supplier).get 'name'
+                    @$("select[id=supplier-name-select]").val(supplierName)
             @
         addToSelect: (supplierName) ->
             @$('#supplier-name-select').append(
@@ -193,6 +193,18 @@ jQuery ->
             @$("#product-create-store-names").html @storeSelectView.render().el
             @$("#product-create-supplier-names").
                 html @supplierSelectView.render().el
+            if @model # we are in edit mode
+                if @model.attributes.subTotalQuantity.length > 0
+                    # add the subquants of the model to the subquants div
+                    productSubQuants = []
+                    for subTotal in @model.attributes.subTotalQuantity
+                        productSubQuants.push
+                            measurementName: subTotal.measurementName
+                            measurementValue: subTotal.measurementValue
+                            quantity: "<input class='input-mini' type='text' value='#{subTotal.quantity}'>"
+                    subQuantView = new ProductItemSubQuantityView()
+                    subQuantHTML = subQuantView.render(productSubQuants).el
+                    @$('#sub-total-quantity-content').html subQuantHTML
             @
     class ProductCreateBodyView extends Backbone.View
         events:
@@ -200,8 +212,7 @@ jQuery ->
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
             "click #create-new-product-button": "checkValidityAndCreateNewProduct"
-            "click #update-existing-product-button": ->
-                console.log "updating existing product..."
+            "click #update-existing-product-button": "checkValidityAndUpdateNewProduct"
         initialize: ->
             @template = _.template ($ @options.template).html()
         render: ->
@@ -230,10 +241,17 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
+        checkValidityAndUpdateNewProduct: (e) ->
+            e.preventDefault()
+            $("#main-alert-div").html("")
+            passesJQueryValidation = @$("#product-form").valid()
+            if passesJQueryValidation
+                if $("#grand-total-quantity-content")
+                    console.log 'made it here'
         checkValidityAndCreateNewProduct: (e) ->
             e.preventDefault()
             $("#main-alert-div").html("")
-            passesJQueryValidation = @$("#create-product-form").valid()
+            passesJQueryValidation = @$("#product-form").valid()
 
             if passesJQueryValidation
                 isExistingProduct = app.Products.ifModelExists(
