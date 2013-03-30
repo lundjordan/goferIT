@@ -22,17 +22,20 @@ jQuery ->
                 tableTemplate: '#products-table-template'
                 tableListID: '#products-table-list'
                 itemTrTemplate: '#product-tr-template'
+                deleteModalTemplate: '#product-view-delete-template'
                 itemControllerView: @
             $("#products-list-view-content").html @currentView.render().el
         renderProductDefaultItemView: ->
             @removeCurrentContentView()
-            @currentView = new ProductItemView()
+            @currentView = new ProductItemView
+                itemControllerView: @
             $("#product-item-view-content").html(
                 (@currentView.render app.Products.models[0]).el)
         renderSpecificItemView: (model) ->
             @removeCurrentContentView()
             $('#product-item-tab a').tab('show')
-            @currentView = new ProductItemView()
+            @currentView = new ProductItemView
+                itemControllerView: @
             $("#product-item-view-content").html (@currentView.render model).el
         renderProductCreateView: ->
             @removeCurrentContentView()
@@ -112,15 +115,19 @@ jQuery ->
     # ###############
 
     # ###############
-    # Product Item View Section
+    # Product Single View Section
     class ProductItemView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
         events:
             'click #product-item-prev-link': 'renderProductItemPrevView'
             'click #product-item-next-link': 'renderProductItemNextView'
+            'click #item-view-edit-link': 'renderSpecificEditView'
+            'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: (options) ->
             # @storeSelectView = new ProductsListStoreSelectView()
+            @listenTo app.Products, 'remove', @renderProductItemNextView
             @productView =  new ProductItemBodyView()
+            @itemControllerView = @options.itemControllerView
         render: (productModel) ->
             @model = productModel
             @$el.html this.template({})
@@ -134,6 +141,14 @@ jQuery ->
         renderProductItemNextView: (event) ->
             @model = app.Products.findNext @model
             @productView.render @model
+        renderSpecificEditView: (model) ->
+            @itemControllerView.renderSpecificEditView @model
+        renderSpecificDeleteView: ->
+            @deleteView =  new app.ConfirmDeleteModal
+                model: @model
+                template: '#product-view-delete-template'
+            $("#root-backbone-view-body").append @deleteView.render().el
+            $("#delete-item-modal").modal 'show'
     # Product Item View Section
     class ProductItemBodyView extends Backbone.View
         # el: '#product-item-view-body'
