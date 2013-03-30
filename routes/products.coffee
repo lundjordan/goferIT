@@ -49,7 +49,21 @@ restifyProducts = (app, restify, model) ->
                         else
                             console.log(errMsg err)
                             res.send (errMsg err)
-    app.del pathWithId, (restify.getDeleteController model)
+
+    app.del pathWithId, (req, res) ->
+        (model.findOne {_company: req.user._company})
+            .populate('products._order')
+            .exec (err, stock) ->
+                if not err
+                    product = stock.products.id(req.params.id).remove()
+                    console.log 'item to be deleted: product'
+                    stock.save (err) ->
+                        if not err
+                            console.log stock
+                            res.send stock
+                        else
+                            console.log(errMsg err)
+                            res.send (errMsg err)
 
 
 module.exports = restifyProducts

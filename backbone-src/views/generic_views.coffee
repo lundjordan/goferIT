@@ -12,10 +12,9 @@ jQuery ->
             @$el.html this.template @model.attributes
             @
         confirmedDeletion: ->
-            custName = "#{@model.get('name').first} #{@model.get('name').last}"
             $("#delete-item-modal").modal 'hide'
             @model.destroy()
-            message = "You have successfully removed: #{custName}"
+            message = "removed..."
             alertInfo = new AlertView
                 alertType: 'info'
             $("#root-backbone-alert-view").
@@ -258,3 +257,4 @@ jQuery ->
     @app.GenericListView = GenericListView
     @app.GenericSingleView = GenericSingleView
     @app.GenericCreateView = GenericCreateView
+    @app.ConfirmDeleteModal = ConfirmDeleteModal

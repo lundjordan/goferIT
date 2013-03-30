@@ -1,9 +1,25 @@
-<script type="text/template" id="inventory-content-template">
-  <div id='inventory-view-head'> </div>
-  <div id='inventory-view-body'> </div>
-</script>
-
 <!--helpers-->
+<script type="text/template" id="product-view-delete-template">
+  <div id="delete-item-modal" class="modal hide fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"
+        aria-hidden="true">×</button>
+      <h3 id="myModalLabel">
+        Delete Product: <%= description.name %> <%= description.brand  %>
+      </h3>
+    </div>
+    <div class="modal-body">
+      <p>Warning! This cannot be undone...</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal"
+        aria-hidden="true">Cancel</button>
+       <a href="#" id='delete-confirmed-button' class="btn btn-primary">Confirm Deletion</a>
+    </div>
+  </div>
+</script>
 <script type="text/template" id="store-names-template">
   <div class="row">
     <label class='inline pull-right'>
@@ -21,26 +37,6 @@
 </script>
 <!--helpers-->
 
-<script type="text/template" id="product-view-delete-template">
-  <div id="delete-item-modal" class="modal hide fade"
-    tabindex="-1" role="dialog" aria-labelledby="modal-delete-h3"
-    aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal"
-        aria-hidden="true">×</button>
-      <h3 id="modal-delete-h3">Delete product: <%= name %> </h3>
-    </div>
-    <div class="modal-body">
-      <p>Warning! This cannot be undone...</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal"
-        aria-hidden="true">Cancel</button>
-       <a href="#" id='delete-confirmed-button' class="btn btn-primary">Confirm Deletion</a>
-    </div>
-  </div>
-</script>
-<!--supplier helper templates-->
 
 <!--product list view templates-->
 <script type="text/template" id="products-table-template">
@@ -88,8 +84,16 @@
       <div class="span2">
         <ul class="nav nav-list well">
           <li class="nav-header">Tools</li>
-          <li><a href="#"><i class='icon-pencil'></i> Edit</a></li>
-          <li><a href="#"><i class='icon-trash'></i> Delete</a></li>
+          <li>
+            <a href="#" id='item-view-edit-link'>
+              <i class='icon-pencil'></i> Edit
+            </a>
+          </li>
+          <li>
+            <a href="#" id='item-view-delete-link'>
+              <i class='icon-trash'></i> Delete
+            </a>
+          </li>
         </ul>
         <ul class="pager">
           <li id='product-item-prev-link'><a
