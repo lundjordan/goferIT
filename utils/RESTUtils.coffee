@@ -42,16 +42,16 @@ exports.getReadController = (model) ->
         #console.log('read', req.body);
         model.findById req.params.id, (err, result) ->
             if not err
-                return result
+                res.send result
             else
-                return (errMsg err)
+                res.send (errMsg err)
 
 #------------------------------
 # Update
 #
 exports.getUpdateController = (model) ->
     return (req, res) ->
-        console.log('update', req.body)
+        console.log('updating with', req.body)
         model.findById req.params.id, (err, result) ->
             for key, value of req.body
                 # console.log("req.body key: " + key)
@@ -60,10 +60,10 @@ exports.getUpdateController = (model) ->
             result.save (err) ->
                 if not err
                     console.log result
-                    return result
+                    res.send result
                 else
                     console.log(errMsg err)
-                    return (errMsg err)
+                    res.send (errMsg err)
 
 #------------------------------
 # Delete
@@ -73,13 +73,13 @@ exports.getDeleteController = (model) ->
         #console.log('delete', req.body);
         model.findById req.params.id, (err, result) ->
             if err
-                return (errMsg err)
+                res.send (errMsg err)
             else
                 result.remove()
                 result.save (err) ->
                     if not err
                         console.log result
-                        return {}
+                        res.send {}
                     else
                         console.log(errMsg err)
-                        return (errMsg err)
+                        res.send (errMsg err)

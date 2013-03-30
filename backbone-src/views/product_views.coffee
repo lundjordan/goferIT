@@ -1,5 +1,10 @@
 # Inventory Views
 
+# TODO Refactor. This code is all original bbone views. Many instances of
+# repetitive code and is also not very readable
+# The people views (supplier, customer, and employee) all share code and are
+# clean versions for list, view, create, update and destroy
+
 jQuery ->
     class ProductControllerView extends Backbone.View
         el: '#products-main-view'
@@ -212,7 +217,7 @@ jQuery ->
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
             "click #create-new-product-button": "checkValidityAndCreateNewProduct"
-            "click #update-existing-product-button": "checkValidityAndUpdateNewProduct"
+            "click #update-existing-product-button": "checkValidityAndUpdateProduct"
         initialize: ->
             @template = _.template ($ @options.template).html()
         render: ->
@@ -241,13 +246,30 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
-        checkValidityAndUpdateNewProduct: (e) ->
+        checkValidityAndUpdateProduct: (e) ->
+            # TODO clean up this method and remove DRY code from this and
+            # checkValidityAndCreateNewProduct()
             e.preventDefault()
             $("#main-alert-div").html("")
             passesJQueryValidation = @$("#product-form").valid()
             if passesJQueryValidation
-                if $("#grand-total-quantity-content")
-                    console.log 'made it here'
+                if $("#grand-total-input").val() # only has grand total
+                    @createOrUpdateProduct("Updated an existing product!") # valid
+                else
+                    # get the values for all the subquant table cells
+                    subQuantTypes = []
+                    subQuantValues = []
+                    $("th").each ->
+                        subQuantTypes.push $(this).html()
+                    $("td").each ->
+                        if $(this).html() isnt "Totals"
+                            subQuantValues.push $(this).find("input").val()
+
+                    if not @subQuantTotalValid(subQuantTypes, subQuantValues)
+                        return # not valid
+                    return @createOrUpdateProduct "Updated an existing product!",
+                        subQuantTypes: subQuantTypes
+                        subQuantValues: subQuantValues
         checkValidityAndCreateNewProduct: (e) ->
             e.preventDefault()
             $("#main-alert-div").html("")
@@ -259,7 +281,7 @@ jQuery ->
                 hasSubQuants = $("#grand-total-quantity-content").is(":hidden")
 
                 if isExistingProduct
-                    message = "You already have a product by this name. " +
+                    message = "There is already have a product by this name. " +
                         "Please Change the product name and/or brand"
                     alertWarningView = new app.AlertView
                         alertType: 'warning'
@@ -279,15 +301,15 @@ jQuery ->
 
                     if not @subQuantTotalValid(subQuantTypes, subQuantValues)
                         return # not valid
-                    return @createNewProduct
+                    return @createOrUpdateProduct "Added a new product!",
                         subQuantTypes: subQuantTypes
                         subQuantValues: subQuantValues
 
                 # made it here means the form is completely valid!
-                @createNewProduct()
+                @createOrUpdateProduct "Added a new product!"
             else
                 return # not valid
-        createNewProduct: (subQuants) ->
+        createOrUpdateProduct: (successMessage, subQuants) ->
             name = $("#name-input").val()
             brand = $("#brand-input").val()
             category = $("#category-input").val()
@@ -319,9 +341,12 @@ jQuery ->
                 cost: cost
                 totalQuantity: totalQuantity
                 subTotalQuantity: subTotalQuantity
-            app.Products.create productModel
+            if @model # we are in edit mode
+                @model.save productModel
+            else
+                app.Products.create productModel
 
-            message = "You have added a new product!"
+            message = successMessage
             alertWarning = new app.AlertView
                 alertType: 'success'
             $("#root-backbone-alert-view").
@@ -337,7 +362,7 @@ jQuery ->
                 if parseInt(value, 10) < 0
                     anyValuesLessThan0 = true
             if not oneValueMoreThan0 or anyValuesLessThan0
-                message = "For sub quantity totals, you must have at" +
+                message = "For sub quantity totals, there must be at" +
                     " least one value higher than: 0. Only positive numbers are" +
                     " accepted."
                 alertWarning = new app.AlertView 'error'
