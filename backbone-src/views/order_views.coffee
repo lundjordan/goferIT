@@ -19,6 +19,26 @@ jQuery ->
                 deleteModalTemplate: '#order-view-delete-template'
                 itemControllerView: @
             $("#orders-list-view-content").html @currentView.render().el
+        renderOrderDefaultItemView: ->
+            @removeCurrentContentView()
+            @currentView = new app.GenericSingleView
+                collection: app.Orders
+                singleLayoutTemplate: "#order-view-template"
+                singleContentTemplate: "#order-view-content-template"
+                deleteModalTemplate: "#order-view-delete-template"
+                itemControllerView: @
+            $("#order-item-view-content").html(
+                (@currentView.render app.Orders.models[0]).el)
+        renderSpecificItemView: (model) ->
+            @removeCurrentContentView()
+            $('#order-item-tab a').tab('show')
+            @currentView = new app.GenericSingleView
+                collection: app.Orders
+                singleLayoutTemplate: "#order-view-template"
+                singleContentTemplate: "#order-view-content-template"
+                deleteModalTemplate: "#order-view-delete-template"
+                itemControllerView: @
+            $("#order-item-view-content").html (@currentView.render model).el
         removeCurrentContentView: ->
             if @currentView
                 @currentView.remove()
