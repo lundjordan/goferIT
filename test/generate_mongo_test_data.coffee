@@ -260,7 +260,6 @@ async.series [
     ,(callback) -> # order - generate test data
         order1 = new Order
             _company: companyArray[0].id
-            storeName: companyArray[0].stores[0].name
             _supplier: supplierArray[0].id
             referenceNum: 'aaa111bbb222'
             products: [
@@ -270,79 +269,73 @@ async.series [
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 40000
-                size: 9
+                totalQuantity: 9
+                subTotalQuantity: [
+                    measurementName: 'size'
+                    measurementValue: 8
+                    quantity: 3
+                ,
+                    measurementName: 'size'
+                    measurementValue: 9
+                    quantity: 3
+                ,
+                    measurementName: 'size'
+                    measurementValue: 10
+                    quantity: 2
+                ,
+                    measurementName: 'size'
+                    measurementValue: 11
+                    quantity: 1
+                ]
             ,
                 description:
                     brand: 'Bauer'
-                    name: 'Vapor X4.0'
+                    name: 'Vapor APX2'
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 40000
-                size: 9
+                totalQuantity: 8
+                subTotalQuantity: [
+                    measurementName: 'size'
+                    measurementValue: 9
+                    quantity: 1
+                ,
+                    measurementName: 'size'
+                    measurementValue: 10
+                    quantity: 3
+                ,
+                    measurementName: 'size'
+                    measurementValue: 11
+                    quantity: 4
+                ,
+                    measurementName: 'size'
+                    measurementValue: 12
+                    quantity: 0
+                ]
             ,
                 description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
+                    brand: 'Reebok'
+                    name: '20K Pump'
                 category: 'Hockey Skates'
                 cost: 30000
-                price: 40000
-                size: 9
-            ,
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 8
-            ,
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 8
-            ,
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
-            ,
-                description:
-                    brand: 'Bauer'
-                    name: 'Vapor X4.0'
-                category: 'Hockey Skates'
-                cost: 30000
-                price: 40000
-                size: 7
+                totalQuantity: 7
+                subTotalQuantity: [
+                    measurementName: 'size'
+                    measurementValue: 10
+                    quantity: 3
+                ,
+                    measurementName: 'size'
+                    measurementValue: 9
+                    quantity: 2
+                ,
+                    measurementName: 'size'
+                    measurementValue: 8
+                    quantity: 1
+                ,
+                    measurementName: 'size'
+                    measurementValue: 12
+                    quantity: 1
+                ]
             ]
             shippingInfo:
                 company: 'UPS'
@@ -350,10 +343,92 @@ async.series [
                 cost: 10000
             estimatedArrivalDate: '04/28/13'
 
+        order2 = new Order
+            _company: companyArray[0].id
+            _supplier: supplierArray[1].id
+            referenceNum: 'bbb111kkk222'
+            products: [
+                description:
+                    brand: 'Easton'
+                    name: 'Mako'
+                category: 'Hockey Skates'
+                cost: 30000
+                totalQuantity: 7
+                subTotalQuantity: [
+                    measurementName: 'size'
+                    measurementValue: 10
+                    quantity: 3
+                ,
+                    measurementName: 'size'
+                    measurementValue: 9
+                    quantity: 2
+                ,
+                    measurementName: 'size'
+                    measurementValue: 8
+                    quantity: 1
+                ,
+                    measurementName: 'size'
+                    measurementValue: 12
+                    quantity: 1
+                ]
+            ]
+            shippingInfo:
+                company: 'DHL'
+                travelType: 'road'
+                cost: 4500
+            estimatedArrivalDate: '04/20/13'
+
+        order3 = new Order
+            _company: companyArray[0].id
+            _supplier: supplierArray[1].id
+            referenceNum: 'ccc111ccc222'
+            products: [
+                description:
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                totalQuantity: 7
+                subTotalQuantity: [
+                    measurementName: 'size'
+                    measurementValue: 10
+                    quantity: 3
+                ,
+                    measurementName: 'size'
+                    measurementValue: 9
+                    quantity: 2
+                ,
+                    measurementName: 'size'
+                    measurementValue: 8
+                    quantity: 1
+                ,
+                    measurementName: 'size'
+                    measurementValue: 12
+                    quantity: 1
+                ]
+            ]
+            shippingInfo:
+                company: 'UPS'
+                travelType: 'road'
+                cost: 5000
+            estimatedArrivalDate: '04/30/13'
+
+
+        storeName = companyArray[0].stores[1].name
+        product.storeName =  storeName for product in order1.products
+        product.storeName =  storeName for product in order2.products
+        product.storeName =  storeName for product in order3.products
+
         order1.save (err) ->
             if err
                 throw err
-            callback null, 'order generated'
+            order2.save (err) ->
+                if err
+                    throw err
+                order3.save (err) ->
+                    if err
+                        throw err
+                    callback null, 'created stock docs'
 
     ,(callback) -> # order newly created order docs
         # findAllDocsInModelHelper orderArray, Order, callback
