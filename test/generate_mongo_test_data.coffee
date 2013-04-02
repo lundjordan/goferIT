@@ -414,7 +414,7 @@ async.series [
             estimatedArrivalDate: '04/30/13'
 
 
-        storeName = companyArray[0].stores[1].name
+        storeName = companyArray[0].stores[0].name
         product.storeName =  storeName for product in order1.products
         product.storeName =  storeName for product in order2.products
         product.storeName =  storeName for product in order3.products

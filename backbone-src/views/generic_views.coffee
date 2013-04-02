@@ -1,34 +1,6 @@
 # Alert View
 
 jQuery ->
-    # ###############
-    # Helper Generic Views
-    class ConfirmDeleteModal extends Backbone.View
-        events:
-            'click #delete-confirmed-button': 'confirmedDeletion'
-        initialize: ->
-            @template = _.template ($ @options.template).html()
-        render: ->
-            @$el.html this.template @model.attributes
-            @
-        confirmedDeletion: ->
-            $("#delete-item-modal").modal 'hide'
-            @model.destroy()
-            message = "removed..."
-            alertInfo = new AlertView
-                alertType: 'info'
-            $("#root-backbone-alert-view").
-                html(alertInfo.render( "alert-info", message).el)
-
-    class AlertView extends Backbone.View
-        initialize: ->
-            @template = _.template ($ "#alert-message-#{@options.alertType}").html()
-        render: (alertType, message) ->
-            @$el.html this.template
-                alertType: alertType
-                message: message
-            @
-    # ###############
 
     # ###############
     # Items List View Section
@@ -249,6 +221,46 @@ jQuery ->
             return
 
 
+    # ###############
+    # Helper Generic Views
+    class ConfirmDeleteModal extends Backbone.View
+        events:
+            'click #delete-confirmed-button': 'confirmedDeletion'
+        initialize: ->
+            @template = _.template ($ @options.template).html()
+        render: ->
+            @$el.html this.template @model.attributes
+            @
+        confirmedDeletion: ->
+            $("#delete-item-modal").modal 'hide'
+            @model.destroy()
+            message = "removed..."
+            alertInfo = new AlertView
+                alertType: 'info'
+            $("#root-backbone-alert-view").
+                html(alertInfo.render( "alert-info", message).el)
+    class AlertView extends Backbone.View
+        initialize: ->
+            @template = _.template ($ "#alert-message-#{@options.alertType}").html()
+        render: (alertType, message) ->
+            @$el.html this.template
+                alertType: alertType
+                message: message
+            @
+    class StoreSelectView extends Backbone.View
+        render: ->
+            @$el.html this.template({})
+            storeNames = app.Companies.models[0].get 'stores'
+            @addToSelect(store.name) for store in storeNames
+            if @model
+                # incase we are in edit mode, set the select tag to 
+                # whatever the model's store name is
+                @$("select[id=store-name-select]").val(@model.attributes.storeName)
+            @
+        addToSelect: (storeName) ->
+            @$('#store-name-select').append(
+                "<option value='#{storeName}'>#{storeName}</option>")
+    # ###############
 
 
     # ###############
@@ -258,3 +270,4 @@ jQuery ->
     @app.GenericSingleView = GenericSingleView
     @app.GenericCreateView = GenericCreateView
     @app.ConfirmDeleteModal = ConfirmDeleteModal
+    @app.StoreSelectView = StoreSelectView

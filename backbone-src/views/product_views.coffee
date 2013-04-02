@@ -55,20 +55,7 @@ jQuery ->
                 @currentView.remove()
 
     # ###############
-    # HELPER CLASS -> SHARED
-    class StoreSelectView extends Backbone.View
-        render: ->
-            @$el.html this.template({})
-            storeNames = app.Companies.models[0].get 'stores'
-            @addToSelect(store.name) for store in storeNames
-            if @model
-                # incase we are in edit mode, set the select tag to 
-                # whatever the model's store name is
-                @$("select[id=store-name-select]").val(@model.attributes.storeName)
-            @
-        addToSelect: (storeName) ->
-            @$('#store-name-select').append(
-                "<option value='#{storeName}'>#{storeName}</option>")
+    # HELPER CLASSES -> SHARED
     class SupplierSelectView extends Backbone.View
         template: _.template ($ '#product-create-supplier-names-template').html()
         render: ->
@@ -85,7 +72,7 @@ jQuery ->
         addToSelect: (supplierName) ->
             @$('#supplier-name-select').append(
                 "<option value='#{supplierName}'>#{supplierName}</option>")
-    class ProductsListStoreSelectView extends StoreSelectView
+    class ProductsListStoreSelectView extends app.StoreSelectView
         template: _.template ($ '#store-names-template').html()
     class ProductItemSubQuantityView extends Backbone.View
         className: 'container-fluid'

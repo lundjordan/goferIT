@@ -14,10 +14,6 @@ class Orders extends Backbone.Collection
             return this.at 0
         @at indexCurrentModel+1
     ifModelExists: (orderName, orderBrand) ->
-        @where(
-            'description.name': orderName
-            'description.brand': orderBrand
-        ).length > 0
 
 @app = window.app ? {}
 @app.Orders = new Orders

@@ -73,7 +73,7 @@ block content
               ul.nav.nav-pills
                 li#product-menu-pill.active
                   a(href='#products-main-view', data-toggle='tab') Stock
-                li(id-='id-', order-menu-pill='order-menu-pill')
+                li#order-menu-pill
                   a(href='#orders-main-view', data-toggle='tab') Orders
               .tab-content
                 #products-main-view.tab-pane.active
@@ -92,16 +92,16 @@ block content
                 #orders-main-view.tab-pane
                   .tabbable
                     ul.nav.nav-tabs
-                      li.active
-                        a(href='#order-list', data-toggle='tab') List
-                      li
-                        a(href='#order-view', data-toggle='tab') View
-                      li
-                        a(href='#order-create', data-toggle='tab') Create/Edit
+                      li#orders-list-tab.active
+                        a(href='#orders-list-view-content', data-toggle='tab') List
+                      li#order-item-tab
+                        a(href='#order-item-view-content', data-toggle='tab') View
+                      li#order-create-tab
+                        a(href='#order-create-view-content', data-toggle='tab') Create/Edit
                     .tab-content
-                      #order-list.tab-pane.active
-                      #order-view.tab-pane
-                      #order-create.tab-pane
+                      #orders-list-view-content.tab-pane.active
+                      #order-item-view-content.tab-pane
+                      #order-create-view-content.tab-pane
 
           div#people-main-content.tab-pane
             div.page-header
