@@ -114,23 +114,26 @@
 
       InventoryControllerView.prototype.initialize = function() {
         this.productControllerView = this.options.productControllerView;
-        return this.currentPeopleView = this.productControllerView;
+        this.orderControllerView = this.options.orderControllerView;
+        return this.currentInventoryView = this.productControllerView;
       };
 
       InventoryControllerView.prototype.renderProductsInitView = function() {
-        this.currentPeopleView.removeCurrentContentView();
-        this.currentPeopleView = this.productControllerView;
+        this.currentInventoryView.removeCurrentContentView();
+        this.currentInventoryView = this.productControllerView;
         $('#products-list-tab a').tab('show');
-        return this.currentPeopleView.renderProductsListView();
+        return this.currentInventoryView.renderProductsListView();
       };
 
       InventoryControllerView.prototype.renderOrderInitView = function() {
-        this.currentPeopleView.removeCurrentContentView();
-        return $('#orders-list-tab a').tab('show');
+        this.currentInventoryView.removeCurrentContentView();
+        this.currentInventoryView = this.orderControllerView;
+        $('#orders-list-tab a').tab('show');
+        return this.currentInventoryView.renderOrdersListView();
       };
 
       InventoryControllerView.prototype.removeCurrentContentView = function() {
-        return this.currentPeopleView.removeCurrentContentView();
+        return this.currentInventoryView.removeCurrentContentView();
       };
 
       return InventoryControllerView;

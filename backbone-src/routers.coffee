@@ -12,10 +12,12 @@ jQuery ->
             app.Customers.fetch()
             app.Employees.fetch()
             app.Suppliers.fetch()
+            app.Orders.fetch()
             app.Products.fetch()
             app.appControllerView = new app.AppControllerView
                 inventoryControllerView: new app.InventoryControllerView
                     productControllerView: new app.ProductControllerView
+                    orderControllerView: new app.OrderControllerView
                 peopleControllerView: new app.PeopleControllerView
                     customerControllerView: new app.CustomerControllerView
                     employeeControllerView: new app.EmployeeControllerView

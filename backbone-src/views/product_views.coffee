@@ -422,7 +422,6 @@ jQuery ->
     # ###############
 
 
-    class OrderListView extends Backbone.View
 
     @app = window.app ? {}
     @app.ProductControllerView = ProductControllerView

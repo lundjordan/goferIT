@@ -65,20 +65,20 @@ jQuery ->
             'click #order-menu-pill': 'renderOrderInitView'
         initialize: ->
             @productControllerView = @options.productControllerView
-            # @orderControllerView = @options.orderControllerView
-            @currentPeopleView = @productControllerView
+            @orderControllerView = @options.orderControllerView
+            @currentInventoryView = @productControllerView
         renderProductsInitView: ->
-            @currentPeopleView.removeCurrentContentView()
-            @currentPeopleView = @productControllerView
+            @currentInventoryView.removeCurrentContentView()
+            @currentInventoryView = @productControllerView
             $('#products-list-tab a').tab('show')
-            @currentPeopleView.renderProductsListView()
+            @currentInventoryView.renderProductsListView()
         renderOrderInitView: ->
-            @currentPeopleView.removeCurrentContentView()
-            # @currentPeopleView = @orderControllerView
+            @currentInventoryView.removeCurrentContentView()
+            @currentInventoryView = @orderControllerView
             $('#orders-list-tab a').tab('show')
-            # @currentPeopleView.renderOrdersListView()
+            @currentInventoryView.renderOrdersListView()
         removeCurrentContentView: ->
-            @currentPeopleView.removeCurrentContentView()
+            @currentInventoryView.removeCurrentContentView()
 
     @app = window.app ? {}
     @app.AppControllerView = AppControllerView
