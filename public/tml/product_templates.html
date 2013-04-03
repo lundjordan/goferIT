@@ -109,44 +109,43 @@
 <script type="text/template" id="product-view-content-template">
   <div class="row-fluid">
     <h3><%= description.name %></h3>
+    <p class="lead"><%= description.brand %></p>
   </div>
   <div class="row-fluid">
     <div class="span4">
-      <p class="lead"><%= description.brand %></p>
-      <address>
-        <strong>Order</strong><br>
-        <% if (obj._order) { %>
-          <%= _order.referenceNum %>
-        <% } else { %>
-          N/A
-        <% } %>
-      </address>
+      <p> <strong> Category</strong><br />
+      <%= category %><br /> </p>
+      <p> <strong>Order</strong><br />
+      <% if (obj._order) { %>
+        <%= _order.referenceNum %> </p>
+      <% } else { %>
+        N/A </p>
+      <% } %>
       <div id="product-view-supplier-name"> </div>
     </div>
     <div class="span8">
-      <p> <strong> Category</strong><br>
-      <%= category %>
-      <p> <strong> Price</strong><br>
-      <%= price * 0.01 %>
-      <p> <strong> Date Added </strong><br>
-      <%= new Date(dateCreated).toDateString() %>
-      <p> <strong> Total In Stock </strong><br>
-      <%= totalQuantity %>
-      <div id="sub-quantity-totals"> </div>
+      <% if (subTotalQuantity.length === 0) { %>
+        <p> <strong> Total In Stock </strong><br />
+        <%= totalQuantity %></p>
+      <% } else { %>
+        <p id="sub-quantity-totals"> </p>
+      <% } %>
+      <p> <strong> Price</strong><br />
+      <%= price * 0.01 %> </p>
     </div>
   </div>
 </script>
 <script type="text/template" id='product-view-sub-quantity-template'>
-  <p> <strong> Sub Totals </strong><br>
-  <table class="table table-bordered table-hover">
-    <thead>
-        <tr id='product-sub-quantity-thead-tr'>
-        </tr>
-    </thead>
-    <tbody id="inventory-table-list">
-      <tr id="product-sub-quantity-tbody-td"></tr>
-    </tbody>
-  </table>
+    <strong> Sub Totals </strong><br>
+    <table class="table table-bordered table-hover">
+      <thead>
+          <tr id='product-sub-quantity-thead-tr'>
+          </tr>
+      </thead>
+      <tbody id="inventory-table-list">
+        <tr id="product-sub-quantity-tbody-td"></tr>
+      </tbody>
+    </table>
 </script>
 <!--product single view templates-->
 

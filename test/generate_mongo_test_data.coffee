@@ -318,6 +318,7 @@ async.series [
                     name: '20K Pump'
                 category: 'Hockey Skates'
                 cost: 30000
+                price: 14000
                 totalQuantity: 7
                 subTotalQuantity: [
                     measurementName: 'size'
@@ -353,6 +354,7 @@ async.series [
                     name: 'Mako'
                 category: 'Hockey Skates'
                 cost: 30000
+                price: 18000
                 totalQuantity: 7
                 subTotalQuantity: [
                     measurementName: 'size'
@@ -388,6 +390,7 @@ async.series [
                     name: 'Vapor X4.0'
                 category: 'Hockey Skates'
                 cost: 30000
+                price: 11000
                 totalQuantity: 7
                 subTotalQuantity: [
                     measurementName: 'size'

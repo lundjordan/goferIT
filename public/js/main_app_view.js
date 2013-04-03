@@ -29,13 +29,15 @@
 
       AppControllerView.prototype.inventoryRender = function() {
         this.currentMenuView.removeCurrentContentView();
-        $('#inventory-list-tab a').tab('show');
+        $('#product-menu-pill a').tab('show');
+        $('#products-list-tab a').tab('show');
         this.currentMenuView = this.inventoryControllerView;
         return this.currentMenuView.renderProductsInitView();
       };
 
       AppControllerView.prototype.peopleRender = function() {
         this.currentMenuView.removeCurrentContentView();
+        $('#customers-menu-pill a').tab('show');
         $('#customers-list-tab a').tab('show');
         this.currentMenuView = this.peopleControllerView;
         return this.currentMenuView.renderCustomersInitView();

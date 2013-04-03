@@ -74,7 +74,6 @@ jQuery ->
             'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: ->
             @template = _.template ($ @options.template).html()
-            @itemView = @options.itemView 
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
         render: ->

@@ -15,7 +15,8 @@ jQuery ->
             # first remove the previous view's subview (the content)
             @currentMenuView.removeCurrentContentView()
             # then we have to physically tell bootstrap to show the subtab
-            $('#inventory-list-tab a').tab('show')
+            $('#product-menu-pill a').tab('show')
+            $('#products-list-tab a').tab('show')
             # now reasign the currentMenuView
             @currentMenuView = @inventoryControllerView
             @currentMenuView.renderProductsInitView()
@@ -23,6 +24,7 @@ jQuery ->
             # first remove the previous view's subview (the content)
             @currentMenuView.removeCurrentContentView()
             # then wehave to physically tell bootstrap to show the subtab
+            $('#customers-menu-pill a').tab('show')
             $('#customers-list-tab a').tab('show')
             # now reasign the currentMenuView
             @currentMenuView = @peopleControllerView

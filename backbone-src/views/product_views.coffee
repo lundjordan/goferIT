@@ -75,7 +75,6 @@ jQuery ->
     class ProductsListStoreSelectView extends app.StoreSelectView
         template: _.template ($ '#store-names-template').html()
     class ProductItemSubQuantityView extends Backbone.View
-        className: 'container-fluid'
         template: _.template ($ '#product-view-sub-quantity-template').html()
         render: (productSubQuants) ->
             @$el.html this.template({})
@@ -188,7 +187,7 @@ jQuery ->
             @productCreateBodyView =  new ProductCreateBodyView
                 model: @options.model
                 template: @options.template
-            @storeSelectView = new StoreSelectView
+            @storeSelectView = new app.StoreSelectView
                 model: @options.model
             @supplierSelectView = new SupplierSelectView
                 model: @options.model
