@@ -116,6 +116,15 @@
         <div id="order-create-supplier-names"></div>
         <div id="order-create-store-names"></div>
         <div class="control-group">
+          <label class="control-label">Shipping Company/Cost</label>
+          <form class="form-inline">
+            <input type="text" class="input-small" id='ship-company-input'
+            placeholder="UPS">
+            <input type="text" class="input-small" id='ship-cost-input'
+            placeholder="49.99">
+          </form>
+        </div>
+        <div class="control-group">
           <label class="control-label">Estimated Arrival</label>
           <div class="controls">
             <div class="bfh-datepicker" data-format="y-m-d"
@@ -153,14 +162,34 @@
           </div>
         </div>
       </div>
-      <div class="span3">
-      </div>
-      <div class="span6">
+      <div class="span9">
+        <div class="row-fluid">
+          <ul class="inline">
+            <li>
+              <label class="control-label">Product Selector</label>
+            </li>
+            <li>
+              <select id='product-list-select' class="input-mini">
+                <option>1</option>
+              </select>
+            </li>
+          </ul>
+        </div>
+        <hr />
+        <div class="row-fluid">
+          <div class="span3">
+          </div>
+          <div class="span6">
+          </div>
+        </div>
       </div>
     </div>
     <hr />
     <div class="row-fluid">
       <div class="span3 offset9 ">
+        <button class="btn btn-info" type="button">
+          Add A Product
+        </button>
         <input type="submit" id='create-new-product-button'
         class="btn btn-primary" value='Create'>
         <input type="button" id='clear-new-product-button'
