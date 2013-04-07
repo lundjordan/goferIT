@@ -63,34 +63,48 @@ jQuery ->
         render: ->
             @$el.html this.template({})
             @
+        setJQueryOrderproductsValidityRules: ->
+    class OrderProductDetailsView extends Backbone.View
+        template: _.template ($ '#order-product-details-template').html()
+        render: ->
+            @$el.html this.template(@model.attributes)
+            @
     class OrderCreateView extends Backbone.View
+        events:
+            "click #create-new-order-product": "createNewOrderProductForm"
         template: _.template ($ '#root-backbone-content-template').html()
         initialize: ->
+            @model = new app.Order({})
             @orderCreateBodyView =  new OrderCreateBodyView
-                model: @options.model
+                model: @model
                 template: @options.template
             @storeSelectView = new app.StoreSelectView
-                model: @options.model
+            @storeSelectView.template = _.template(
+                ($ '#order-create-store-names-template').html())
             @supplierSelectView = new SupplierSelectView
-                model: @options.model
             @singleOrderProductView = new SingleOrderProductView
-            @storeSelectView.template = _.template ($ '#order-create-store-names-template').html()
+            @orderProductDetailsView = new OrderProductDetailsView
+                model: @model
         render: ->
             @$el.html this.template({})
             @$("#root-backbone-view-body").html @orderCreateBodyView.render().el
             @$("#order-create-store-names").html @storeSelectView.render().el
             @$("#order-create-supplier-names").
                 html @supplierSelectView.render().el
-            @$("#single-order-product-div").
-                html @singleOrderProductView.render().el
+            @$("#order-products-div").
+                html @orderProductDetailsView.render().el
             @
+        createNewOrderProductForm: ->
+            @$("#order-products-div").
+                html @singleOrderProductView.render().el
+
     class OrderCreateBodyView extends Backbone.View
         events:
             "click input[type=radio]": "quantityOptionInput"
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
+            "click #add-new-order-product": "appendNewOrderProduct"
             "click #create-new-order-button": "checkValidityAndCreateNewOrder"
-            "click #update-existing-order-button": "checkValidityAndUpdateOrder"
         initialize: ->
             @template = _.template ($ @options.template).html()
         render: ->
@@ -99,14 +113,19 @@ jQuery ->
             else
                 @$el.html @template({})
             @setBootstrapFormHelperInputs()
-            @setJQueryValidityRules()
+            @setJQueryOrderValidityRules()
             @
         setBootstrapFormHelperInputs: ->
             @$('div.bfh-datepicker').each ->
                 inputField = $(this)
                 inputField.bfhdatepicker inputField.data()
-        setJQueryValidityRules: ->
+        setJQueryOrderValidityRules: ->
+            # TODO START HERE AS WE WANT TO VALIDATE PRODUCTS FORM SEPARATELY
             @validateForm @$("#order-form"),
+                refNum:
+                    required: true
+                supplierSelect:
+                    required: true
                 productName:
                     required: true
                 brand:
@@ -124,46 +143,64 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
+        orderExistsAlert: ->
+            message = "There is already have a order by this reference " +
+                "Number. Please Change the order name and/or brand"
+            alertWarningView = new app.AlertView
+                alertType: 'warning'
+            alertHTML = alertWarningView.render("alert-error", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
+        appendNewOrderProduct: (e) ->
+            passesJQueryValidation = @$("#order-form").valid()
+            if passesJQueryValidation
+                isUniqueOrder = app.Orders.where(
+                    referenceNum: $("#refNum-input").val()).length < 1
+                if not isUniqueOrder
+                    # not valid
+                    return orderExistsAlert()
+                else
+                    console.log 'SFSG'
+            else
+                console.log 'failed $ validation'
         checkValidityAndCreateNewOrder: (e) ->
             e.preventDefault()
             $("#main-alert-div").html("")
-            passesJQueryValidation = @$("#order-form").valid()
-
-            if passesJQueryValidation
-                isExistingProduct = app.Products.ifModelExists(
-                    $('#name-input').val(), $('#brand-input').val())
-                hasSubQuants = $("#grand-total-quantity-content").is(":hidden")
-
-                if isExistingProduct
-                    message = "There is already have a order by this reference " +
-                        "Number. Please Change the order name and/or brand"
-                    alertWarningView = new app.AlertView
-                        alertType: 'warning'
-                    alertHTML = alertWarningView.render("alert-error", message).el
-                    $("#root-backbone-alert-view").html(alertHTML)
-                    return # not valid
-
-                if hasSubQuants
-                    # first get the values for all the subquant table cells
-                    subQuantTypes = []
-                    subQuantValues = []
-                    $("th").each ->
-                        subQuantTypes.push $(this).html()
-                    $("td").each ->
-                        if $(this).html() isnt "Totals"
-                            subQuantValues.push $(this).find("input").val()
-
-                    if not @subQuantTotalValid(subQuantTypes, subQuantValues)
-                        return # not valid
-                    return @createOrUpdateProduct "Added a new order!",
-                        subQuantTypes: subQuantTypes
-                        subQuantValues: subQuantValues
-
-                # made it here means the form is completely valid!
-                @createOrUpdateProduct "Added a new order!"
+            if $("#add-new-order-product").html()
+                console.log 'add new product first'
             else
-                return # not valid
-        createOrUpdateProduct: (successMessage, subQuants) ->
+                console.log 'sfsg'
+            # passesJQueryValidation = @$("#order-form").valid()
+
+            # if passesJQueryValidation
+            #     isUniqueOrder = app.Orders.where(
+            #         referenceNum: $("#refNum-input").val()).length < 1
+            #     hasSubQuants = $("#grand-total-quantity-content").is(":hidden")
+
+            #     if not isUniqueOrder
+            #         # not valid
+            #         return orderExistsAlert()
+
+            #     if hasSubQuants
+            #         # first get the values for all the subquant table cells
+            #         subQuantTypes = []
+            #         subQuantValues = []
+            #         $("th").each ->
+            #             subQuantTypes.push $(this).html()
+            #         $("td").each ->
+            #             if $(this).html() isnt "Totals"
+            #                 subQuantValues.push $(this).find("input").val()
+
+            #         if not @subQuantTotalValid(subQuantTypes, subQuantValues)
+            #             return # not valid
+            #         return @createOrUpdateOrder "Added a new order!",
+            #             subQuantTypes: subQuantTypes
+            #             subQuantValues: subQuantValues
+
+            #     # made it here means the form is completely valid!
+            #     @createOrUpdateOrder "Added a new order!"
+            # else
+            #     return # not valid
+        createOrUpdateOrder: (successMessage, subQuants) ->
             name = $("#name-input").val()
             brand = $("#brand-input").val()
             category = $("#category-input").val()
@@ -198,7 +235,7 @@ jQuery ->
             if @model # we are in edit mode
                 @model.save productModel
             else
-                app.Products.create productModel
+                app.Orders.create productModel
 
             message = successMessage
             alertWarning = new app.AlertView
@@ -273,7 +310,6 @@ jQuery ->
                 model: @currentModel
             $("#order-products-list").html (orderProductsTable.render()).el
             orderProductsTable.addAll()
-
     class OrderProductsTable extends Backbone.View
         template: _.template ($ '#order-products-table-template').html()
         render: ->
