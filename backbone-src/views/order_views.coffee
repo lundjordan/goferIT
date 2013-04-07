@@ -58,6 +58,11 @@ jQuery ->
 
     # ###############
     # Order Create Section
+    class SingleOrderProductView extends Backbone.View
+        template: _.template ($ '#single-order-product-template').html()
+        render: ->
+            @$el.html this.template({})
+            @
     class OrderCreateView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
         initialize: ->
@@ -68,6 +73,7 @@ jQuery ->
                 model: @options.model
             @supplierSelectView = new SupplierSelectView
                 model: @options.model
+            @singleOrderProductView = new SingleOrderProductView
             @storeSelectView.template = _.template ($ '#order-create-store-names-template').html()
         render: ->
             @$el.html this.template({})
@@ -75,6 +81,8 @@ jQuery ->
             @$("#order-create-store-names").html @storeSelectView.render().el
             @$("#order-create-supplier-names").
                 html @supplierSelectView.render().el
+            @$("#single-order-product-div").
+                html @singleOrderProductView.render().el
             @
     class OrderCreateBodyView extends Backbone.View
         events:

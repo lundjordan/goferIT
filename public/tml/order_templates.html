@@ -105,7 +105,7 @@
 <script type="text/template" id="order-create-template">
   <form id='order-form'>
     <div class="row-fluid">
-      <div class="span3 ">
+      <div class="span3">
         <div class="control-group">
           <label class="control-label">RefNum</label>
           <div class="controls">
@@ -166,6 +166,15 @@
         <div class="row-fluid">
           <ul class="inline">
             <li>
+              <h4>Products</h4>
+            </li>
+            <li>
+              <label class="control-label">Total Products:</label>
+            </li>
+            <li>
+              <p><strong>0</strong></p>
+            </li>
+            <li>
               <label class="control-label">Product Selector</label>
             </li>
             <li>
@@ -175,12 +184,7 @@
             </li>
           </ul>
         </div>
-        <hr />
-        <div class="row-fluid">
-          <div class="span3">
-          </div>
-          <div class="span6">
-          </div>
+        <div class="row-fluid well" id="single-order-product-div">
         </div>
       </div>
     </div>
@@ -241,6 +245,68 @@
   </label>
   <select id='supplier-name-select'><option></option> </select>
 </script>
+<script type="text/template" id="single-order-product-template">
+  <div class="span3">
+    <div class="control-group">
+      <label class="control-label" for="name-input">Name</label>
+      <div class="controls">
+        <input type="text" name="productName" id="name-input" placeholder="Nexus 4">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Brand</label>
+      <div class="controls">
+        <input type="text" id="brand-input" name='brand' placeholder="Google">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Category</label>
+      <div class="controls">
+        <input type="text" id="category-input" name='category' 
+          placeholder="Smart Phones">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Price & Cost</label>
+      <div class="controls">
+        <ul class="inline">
+          <li>
+            <input type="text" id='price-input' class='input-mini'
+              name='price' placeholder="299.99">
+          </li>
+          <li>
+            <input type="text" id='cost-input' class='input-mini'
+              name="cost" placeholder="199.99">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="span5">
+    <div id="grand-total-quantity-content">
+      <div class="control-group">
+        <label class="control-label">Grand Total Quantity</label>
+        <div class="controls">
+          <input type="text" id='grand-total-input' name="grandTotal"
+            placeholder="9">
+        </div>
+      </div>
+    </div>
+    <div id="sub-total-quantity-content"> </div>
+    <hr />
+    <label class="radio">
+      <input type="radio" name="totalOptionsRadio" id="total-quantity-radio"
+      value="grand-total-selected" checked>
+      by grand total
+    </label>
+    <label class="radio">
+      <input type="radio" name="totalOptionsRadio" id="sub-quantity-radio"
+      value="sub-total-selected">
+      by sub totals
+    </label>
+    <span class="help-block">Store quantity based on total amount
+      <strong>or</strong> by size, length, color, etc</span>
+  </div>
 </script>
 <!--order create view templates-->
 
