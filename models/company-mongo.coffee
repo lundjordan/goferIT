@@ -3,10 +3,6 @@ mongoose = require 'mongoose'
 CompanySchema = new mongoose.Schema
     name:
         type: String, required: true
-    _adminEmployee:
-        type: mongoose.Schema.Types.ObjectId
-        ref: 'Employee'
-        required: false
     stores: [
         name:
             type: String
