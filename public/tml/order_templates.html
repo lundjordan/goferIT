@@ -21,7 +21,11 @@
     <a href='#' id='item-view-delete-link'><i class='icon-trash'></i><a>
     <%= referenceNum %>
   </td>
-  <td><%= _supplier.name %> </td>
+  <% if (_supplier) { %>
+    <td><%= _supplier.name %> </td>
+  <% } else { %>
+    <td>n/a</td>
+  <% } %>
   <td><%= shippingInfo.company %> </td>
   <td><%= products.length %> </td>
   <td> <%= new Date(estimatedArrivalDate).toDateString() %> </td>
