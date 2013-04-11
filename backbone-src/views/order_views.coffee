@@ -55,248 +55,12 @@ jQuery ->
         removeCurrentContentView: ->
             if @currentView
                 @currentView.remove()
-
     # ###############
-    # Order Create Section
-    class SingleOrderProductView extends Backbone.View
-        template: _.template ($ '#single-order-product-template').html()
-        render: ->
-            @$el.html this.template({})
-            @
-        setJQueryOrderproductsValidityRules: ->
-    class OrderProductDetailsView extends Backbone.View
-        template: _.template ($ '#order-product-details-template').html()
-        render: ->
-            @$el.html this.template(@model.attributes)
-            @
-    class OrderCreateView extends Backbone.View
-        events:
-            "click #create-new-order-product": "createNewOrderProductForm"
-        template: _.template ($ '#root-backbone-content-template').html()
-        initialize: ->
-            @model = new app.Order({})
-            @orderCreateBodyView =  new OrderCreateBodyView
-                model: @model
-                template: @options.template
-            @storeSelectView = new app.StoreSelectView
-            @storeSelectView.template = _.template(
-                ($ '#order-create-store-names-template').html())
-            @supplierSelectView = new SupplierSelectView
-            @singleOrderProductView = new SingleOrderProductView
-            @orderProductDetailsView = new OrderProductDetailsView
-                model: @model
-        render: ->
-            @$el.html this.template({})
-            @$("#root-backbone-view-body").html @orderCreateBodyView.render().el
-            @$("#order-create-store-names").html @storeSelectView.render().el
-            @$("#order-create-supplier-names").
-                html @supplierSelectView.render().el
-            @$("#order-products-div").
-                html @orderProductDetailsView.render().el
-            @
-        createNewOrderProductForm: ->
-            @$("#order-products-div").
-                html @singleOrderProductView.render().el
 
-    class OrderCreateBodyView extends Backbone.View
-        events:
-            "click input[type=radio]": "quantityOptionInput"
-            "click #cancel-sub-total-options": "cancelSubTotalOptions"
-            "click #save-sub-total-options": "saveSubTotalOptions"
-            "click #add-new-order-product": "appendNewOrderProduct"
-            "click #create-new-order-button": "checkValidityAndCreateNewOrder"
-        initialize: ->
-            @template = _.template ($ @options.template).html()
-        render: ->
-            if @model
-                @$el.html @template(@model.attributes)
-            else
-                @$el.html @template({})
-            @setBootstrapFormHelperInputs()
-            @setJQueryOrderValidityRules()
-            @
-        setBootstrapFormHelperInputs: ->
-            @$('div.bfh-datepicker').each ->
-                inputField = $(this)
-                inputField.bfhdatepicker inputField.data()
-        setJQueryOrderValidityRules: ->
-            # TODO START HERE AS WE WANT TO VALIDATE PRODUCTS FORM SEPARATELY
-            @validateForm @$("#order-form"),
-                refNum:
-                    required: true
-                supplierSelect:
-                    required: true
-                productName:
-                    required: true
-                brand:
-                    required: true
-                category:
-                    required: true
-                price:
-                    required: true
-                    decimalTwo: true
-                    min: 0.01
-                cost:
-                    required: true
-                    decimalTwo: true
-                    min: 0.01
-                grandTotal:
-                    required: true
-                    min: 1
-        orderExistsAlert: ->
-            message = "There is already have a order by this reference " +
-                "Number. Please Change the order name and/or brand"
-            alertWarningView = new app.AlertView
-                alertType: 'warning'
-            alertHTML = alertWarningView.render("alert-error", message).el
-            $("#root-backbone-alert-view").html(alertHTML)
-        appendNewOrderProduct: (e) ->
-            passesJQueryValidation = @$("#order-form").valid()
-            if passesJQueryValidation
-                isUniqueOrder = app.Orders.where(
-                    referenceNum: $("#refNum-input").val()).length < 1
-                if not isUniqueOrder
-                    # not valid
-                    return orderExistsAlert()
-                else
-                    console.log 'SFSG'
-            else
-                console.log 'failed $ validation'
-        checkValidityAndCreateNewOrder: (e) ->
-            e.preventDefault()
-            $("#main-alert-div").html("")
-            if $("#add-new-order-product").html()
-                console.log 'add new product first'
-            else
-                console.log 'sfsg'
-            # passesJQueryValidation = @$("#order-form").valid()
-
-            # if passesJQueryValidation
-            #     isUniqueOrder = app.Orders.where(
-            #         referenceNum: $("#refNum-input").val()).length < 1
-            #     hasSubQuants = $("#grand-total-quantity-content").is(":hidden")
-
-            #     if not isUniqueOrder
-            #         # not valid
-            #         return orderExistsAlert()
-
-            #     if hasSubQuants
-            #         # first get the values for all the subquant table cells
-            #         subQuantTypes = []
-            #         subQuantValues = []
-            #         $("th").each ->
-            #             subQuantTypes.push $(this).html()
-            #         $("td").each ->
-            #             if $(this).html() isnt "Totals"
-            #                 subQuantValues.push $(this).find("input").val()
-
-            #         if not @subQuantTotalValid(subQuantTypes, subQuantValues)
-            #             return # not valid
-            #         return @createOrUpdateOrder "Added a new order!",
-            #             subQuantTypes: subQuantTypes
-            #             subQuantValues: subQuantValues
-
-            #     # made it here means the form is completely valid!
-            #     @createOrUpdateOrder "Added a new order!"
-            # else
-            #     return # not valid
-        createOrUpdateOrder: (successMessage, subQuants) ->
-            name = $("#name-input").val()
-            brand = $("#brand-input").val()
-            category = $("#category-input").val()
-            price = parseFloat($("#price-input").val(), 10) * 100
-            cost = parseFloat($("#cost-input").val(), 10) * 100
-            storeName = $("#store-name-select").val()
-            totalQuantity = 0
-            subTotalQuantity = []
-
-            if subQuants
-                # this order has a subTotalQuantity
-                totalQuantity += parseInt(quant, 10) for quant in subQuants.subQuantValues
-                for quantity, i in subQuants.subQuantValues
-                    subTotalQuantity.push
-                        measurementName: subQuants.subQuantTypes[0]
-                        measurementValue: subQuants.subQuantTypes[i+1]
-                        quantity: quantity
-            else
-                # this order has a GrandTotalQuantity
-                totalQuantity = parseInt $("#grand-total-input").val(), 10
-
-            orderModel =
-                description:
-                    name: name
-                    brand: brand
-                storeName: storeName
-                category: category
-                price: price
-                cost: cost
-                totalQuantity: totalQuantity
-                subTotalQuantity: subTotalQuantity
-            if @model # we are in edit mode
-                @model.save productModel
-            else
-                app.Orders.create productModel
-
-            message = successMessage
-            alertWarning = new app.AlertView
-                alertType: 'success'
-            $("#root-backbone-alert-view").
-                html(alertWarning.render( "alert-success", message).el)
-
-        subQuantTotalValid: (types, values) ->
-            # check to see if table sub quants are valid
-            oneValueMoreThan0 = false
-            anyValuesLessThan0 = false
-            for value in values
-                if parseInt(value, 10) > 0
-                    oneValueMoreThan0 = true
-                if parseInt(value, 10) < 0
-                    anyValuesLessThan0 = true
-            if not oneValueMoreThan0 or anyValuesLessThan0
-                message = "For sub quantity totals, there must be at" +
-                    " least one value higher than: 0. Only positive numbers are" +
-                    " accepted."
-                alertWarning = new app.AlertView 'error'
-                $("#main-alert-div").html(alertWarning.render(
-                    "alert-error alert-block", message).el)
-                return false
-            return true
-
-        quantityOptionInput: (e) ->
-            if $(e.currentTarget).val() == "sub-total-selected"
-                $("#sub-total-quantity-modal").modal("toggle")
-            $('#grand-total-quantity-content').toggle()
-            $('#sub-total-quantity-content').toggle()
-        cancelSubTotalOptions: (e) ->
-            $("#sub-total-quantity-modal").modal("toggle")
-            $('input[name=totalOptionsRadio][value="grand-total-selected"]')
-                .prop 'checked', true
-            $('#grand-total-quantity-content').show()
-            $('#sub-total-quantity-content').hide()
-        saveSubTotalOptions: (e) ->
-            $("#sub-total-quantity-modal").modal("toggle")
-            $('#sub-total-quantity-content').show()
-            $('#grand-total-quantity-content').hide()
-            measurementType = $("#measurement-type-input").val()
-            columnNamesString = $("#measurement-values-input").val()
-
-            # split and trim columnNamesString by ','
-            columnNamesArray = columnNamesString.split ','
-            for name, i in columnNamesArray
-                columnNamesArray[i] = name.replace(/(^\s+|\s+$)/g, '')
-
-            productSubQuants = []
-            for columnName in columnNamesArray
-                productSubQuants.push
-                    measurementName: measurementType
-                    measurementValue: columnName
-                    quantity: '<input class="input-mini" type="text" value="0">'
-            $('#sub-total-quantity-content')
-                .html (new ProductItemSubQuantityView()).render(productSubQuants).el
 
 
     # ###############
-
+    # Order Single View Section
     class OrderSingleView extends app.GenericSingleView
         renderSingleItemPrevView: (event) ->
             super()
@@ -329,6 +93,255 @@ jQuery ->
         render: ->
             @$el.html this.template @orderProduct
             @
+    # ###############
+
+
+
+    # ###############
+    # Order Create Section
+    class OrderCreateView extends Backbone.View
+        events:
+            "click #add-new-order-product": "renderAddNewOrderProductForm"
+            "click #create-new-order-product":
+                "checkValidityAndAddNewOrderProduct"
+            "click #cancel-new-order-product":
+                "renderOrderProductSummaryView"
+            "click #create-new-order-button":
+                "checkValidityAndCreateNewOrder"
+        template: _.template ($ '#root-backbone-content-template').html()
+        initialize: ->
+            @orderCreateBodyView =  new OrderCreateBodyView
+                template: @options.template
+            @storeSelectView = new app.StoreSelectView
+            @storeSelectView.template = _.template(
+                ($ '#order-create-store-names-template').html())
+            @supplierSelectView = new SupplierSelectView
+            @singleOrderProductView = new SingleOrderProductView
+            @orderProductSummaryView = new OrderProductSummaryView
+        render: ->
+            @$el.html this.template({})
+            @$("#root-backbone-view-body").html(
+                @orderCreateBodyView.render().el)
+            @$("#order-create-store-names").html(
+                @storeSelectView.render().el)
+            @$("#order-create-supplier-names").
+                html @supplierSelectView.render().el
+            @renderOrderProductSummaryView()
+            @
+        renderOrderProductSummaryView: ->
+            @$("#order-products-div").html(
+                @orderProductSummaryView.render(
+                    @orderCreateBodyView.currentOrderProducts.length).el)
+        renderAddNewOrderProductForm: ->
+            @$("#order-products-div").
+                html @singleOrderProductView.render().el
+        checkValidityAndAddNewOrderProduct: (e) ->
+            e.preventDefault()
+            productAdded = @singleOrderProductView.
+                checkValidityAndAddNewOrderProduct()
+            if productAdded
+                renderOrderProductSummaryView()
+            else
+                $("#root-backbone-alert-view").html("")
+        checkValidityAndCreateNewOrder: (e) ->
+            e.preventDefault()
+            # TODO START HERE WHEN SINGLE ORDER ADD IS WORKING
+    class OrderCreateBodyView extends Backbone.View
+        # TODO combine this code from the following class
+        # implementation to improve DRY: ProductCreateView
+        events:
+            "click input[type=radio]": "quantityOptionInput"
+            "click #cancel-sub-total-options": "cancelSubTotalOptions"
+            "click #save-sub-total-options": "saveSubTotalOptions"
+        initialize: ->
+            @template = _.template ($ @options.template).html()
+            @currentOrderProducts = []
+        render: ->
+            @$el.html @template({})
+            @setBootstrapFormHelperInputs()
+            @setJQueryOrderValidityRules()
+            @
+        setBootstrapFormHelperInputs: ->
+            @$('div.bfh-datepicker').each ->
+                inputField = $(this)
+                inputField.bfhdatepicker inputField.data()
+        setJQueryOrderValidityRules: ->
+            @validateForm @$("#order-form"),
+                refNum:
+                    required: true
+                supplierSelect:
+                    required: true
+        checkValidityAndCreateNewOrder: (e) ->
+            $("#main-alert-div").html("")
+            if $("#add-new-order-product").html()
+                # new product form still incomplete
+                return @finishProductCreationAlert()
+            else
+                passesJQueryValidation = @$("#order-form").valid()
+                if passesJQueryValidation
+                    # now check if
+                    isUniqueOrder = app.Orders.where(
+                        referenceNum: $("#refNum-input").val()).length < 1
+                    if not isUniqueOrder
+                        # not valid
+                        return @orderExistsAlert()
+                    else
+                        console.log 'SFSG'
+                else
+                    console.log 'failed $ validation'
+        orderExistsAlert: -> # alerts!!! TODO all these cleaner
+            message = "There is already have a order by this reference " +
+                "Number. Please Change the order name and/or brand"
+            alertWarningView = new app.AlertView
+                alertType: 'warning'
+            alertHTML = alertWarningView.render("alert-error", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
+        finishProductCreationAlert: ->
+            message = "You must finish creating the new product in your " +
+                "order. If you do not wish to do so, click cancel"
+            alertWarningView = new app.AlertView
+                alertType: 'warning'
+            alertHTML = alertWarningView.render("alert-error", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
+    class SingleOrderProductView extends Backbone.View
+        template: _.template ($ '#single-order-product-template').html()
+        render: ->
+            @$el.html this.template({})
+            @
+        setJQueryProductOrderValidityRules: ->
+            @validateForm @$("#order-product-form"),
+                productName:
+                    required: true
+                brand:
+                    required: true
+                category:
+                    required: true
+                price:
+                    required: true
+                    decimalTwo: true
+                    min: 0.01
+                cost:
+                    required: true
+                    decimalTwo: true
+                    min: 0.01
+                grandTotal:
+                    required: true
+                    min: 1
+        checkValidityAndAddNewOrderProduct: (e) ->
+            passesJQueryValidation = @$("#order-product-form").valid()
+            if passesJQueryValidation
+                # TODO add check to see if we have already added
+                # this product to the order
+                if hasSubQuants
+                    # first get the values for all the subquant table cells
+                    subQuantTypes = []
+                    subQuantValues = []
+                    $("th").each ->
+                        subQuantTypes.push $(this).html()
+                    $("td").each ->
+                        if $(this).html() isnt "Totals"
+                            subQuantValues.push $(this).find("input").val()
+                    if not @subQuantTotalValid(
+                        subQuantTypes, subQuantValues)
+                        return false # not valid
+                    return @appendProductToOrder
+                        subQuantTypes: subQuantTypes
+                        subQuantValues: subQuantValues
+                @appendProductToOrder()
+                return true # added product to order
+            else
+                return false # failed $ validation
+        appendProductToOrder: (subQuants) ->
+            name = $("#name-input").val()
+            brand = $("#brand-input").val()
+            category = $("#category-input").val()
+            price = parseFloat($("#price-input").val(), 10) * 100
+            cost = parseFloat($("#cost-input").val(), 10) * 100
+            totalQuantity = 0
+            subTotalQuantity = []
+            if subQuants
+                # this product has a subTotalQuantity
+                totalQuantity += parseInt(quant, 10) for quant in subQuants.subQuantValues
+                for quantity, i in subQuants.subQuantValues
+                    subTotalQuantity.push
+                        measurementName: subQuants.subQuantTypes[0]
+                        measurementValue: subQuants.subQuantTypes[i+1]
+                        quantity: quantity
+            else
+                # this product has a GrandTotalQuantity
+                totalQuantity = parseInt $("#grand-total-input").val(), 10
+            orderProduct =
+                description:
+                    name: name
+                    brand: brand
+                category: category
+                price: price
+                cost: cost
+                totalQuantity: totalQuantity
+                subTotalQuantity: subTotalQuantity
+            @currentOrderProducts.push productModel
+        subQuantTotalValid: (types, values) ->
+            # check to see if table sub quants are valid
+            oneValueMoreThan0 = false
+            anyValuesLessThan0 = false
+            for value in values
+                if parseInt(value, 10) > 0
+                    oneValueMoreThan0 = true
+                if parseInt(value, 10) < 0
+                    anyValuesLessThan0 = true
+            if not oneValueMoreThan0 or anyValuesLessThan0
+                @orderProductSubQuantsInvalidAlert()
+                return false
+            return true
+        quantityOptionInput: (e) ->
+            if $(e.currentTarget).val() == "sub-total-selected"
+                $("#sub-total-quantity-modal").modal("toggle")
+            $('#grand-total-quantity-content').toggle()
+            $('#sub-total-quantity-content').toggle()
+        cancelSubTotalOptions: (e) ->
+            $("#sub-total-quantity-modal").modal("toggle")
+            $('input[name=totalOptionsRadio][value="grand-total-selected"]')
+                .prop 'checked', true
+            $('#grand-total-quantity-content').show()
+            $('#sub-total-quantity-content').hide()
+        saveSubTotalOptions: (e) ->
+            $("#sub-total-quantity-modal").modal("toggle")
+            $('#sub-total-quantity-content').show()
+            $('#grand-total-quantity-content').hide()
+            measurementType = $("#measurement-type-input").val()
+            columnNamesString = $("#measurement-values-input").val()
+
+            # split and trim columnNamesString by ','
+            columnNamesArray = columnNamesString.split ','
+            for name, i in columnNamesArray
+                columnNamesArray[i] = name.replace(/(^\s+|\s+$)/g, '')
+
+            productSubQuants = []
+            for columnName in columnNamesArray
+                productSubQuants.push
+                    measurementName: measurementType
+                    measurementValue: columnName
+                    quantity: '<input class="input-mini" ' +
+                        'type="text" value="0">'
+            $('#sub-total-quantity-content')
+                .html (new ProductItemSubQuantityView()).render(productSubQuants).el
+        orderProductSubQuantsInvalidAlert: ->
+            message = "For sub quantity totals, there must be at" +
+                " least one value higher than: 0. Only positive" +
+                " numbers are accepted."
+            alertWarningView = new app.AlertView
+                alertType: 'warning'
+            alertHTML = alertWarningView.render("alert-error", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
+    class OrderProductSummaryView extends Backbone.View
+        template: _.template ($ '#order-product-summary-template').html()
+        render: (productsLength) ->
+            @$el.html this.template({productsTotal: productsLength})
+            @
+    # ###############
+
+
+
 
     # ###############
     # HELPER CLASSES -> SHARED <- TODO THESE CLASSES ARE DUPS FROM
