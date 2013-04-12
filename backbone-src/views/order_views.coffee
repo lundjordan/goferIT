@@ -116,8 +116,10 @@ jQuery ->
             @storeSelectView.template = _.template(
                 ($ '#order-create-store-names-template').html())
             @supplierSelectView = new SupplierSelectView
-            @singleOrderProductView = new SingleOrderProductView
-            @orderProductSummaryView = new OrderProductSummaryView
+            @orderProductsView = new OrderProductSummaryView
+            # @singleOrderProductView = new SingleOrderProductView
+            # @orderProductSummaryView = new OrderProductSummaryView
+            @currentOrderProducts = []
         render: ->
             @$el.html this.template({})
             @$("#root-backbone-view-body").html(
@@ -129,33 +131,27 @@ jQuery ->
             @renderOrderProductSummaryView()
             @
         renderOrderProductSummaryView: ->
+            @orderProductsView = new OrderProductSummaryView
             @$("#order-products-div").html(
-                @orderProductSummaryView.render(
-                    @orderCreateBodyView.currentOrderProducts.length).el)
+                @orderProductsView.render(
+                    @currentOrderProducts.length).el)
         renderAddNewOrderProductForm: ->
+            @orderProductsView = new SingleOrderProductView
             @$("#order-products-div").
-                html @singleOrderProductView.render().el
+                html @orderProductsView.render().el
         checkValidityAndAddNewOrderProduct: (e) ->
             e.preventDefault()
-            productAdded = @singleOrderProductView.
+            productAdded = @orderProductsView.
                 checkValidityAndAddNewOrderProduct()
             if productAdded
-                renderOrderProductSummaryView()
-            else
-                $("#root-backbone-alert-view").html("")
+                @currentOrderProducts.push productAdded
+                @renderOrderProductSummaryView()
         checkValidityAndCreateNewOrder: (e) ->
             e.preventDefault()
             # TODO START HERE WHEN SINGLE ORDER ADD IS WORKING
     class OrderCreateBodyView extends Backbone.View
-        # TODO combine this code from the following class
-        # implementation to improve DRY: ProductCreateView
-        events:
-            "click input[type=radio]": "quantityOptionInput"
-            "click #cancel-sub-total-options": "cancelSubTotalOptions"
-            "click #save-sub-total-options": "saveSubTotalOptions"
         initialize: ->
             @template = _.template ($ @options.template).html()
-            @currentOrderProducts = []
         render: ->
             @$el.html @template({})
             @setBootstrapFormHelperInputs()
@@ -204,9 +200,16 @@ jQuery ->
             alertHTML = alertWarningView.render("alert-error", message).el
             $("#root-backbone-alert-view").html(alertHTML)
     class SingleOrderProductView extends Backbone.View
+        # TODO combine this code from the following class
+        # implementation to improve DRY: ProductCreateView
+        events:
+            "click input[type=radio]": "quantityOptionInput"
+            "click #cancel-sub-total-options": "cancelSubTotalOptions"
+            "click #save-sub-total-options": "saveSubTotalOptions"
         template: _.template ($ '#single-order-product-template').html()
         render: ->
             @$el.html this.template({})
+            @setJQueryProductOrderValidityRules()
             @
         setJQueryProductOrderValidityRules: ->
             @validateForm @$("#order-product-form"),
@@ -227,18 +230,20 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
-        checkValidityAndAddNewOrderProduct: (e) ->
+        checkValidityAndAddNewOrderProduct: ->
             passesJQueryValidation = @$("#order-product-form").valid()
             if passesJQueryValidation
                 # TODO add check to see if we have already added
                 # this product to the order
+                hasSubQuants = $("#grand-total-quantity-content").
+                    is(":hidden")
                 if hasSubQuants
                     # first get the values for all the subquant table cells
                     subQuantTypes = []
                     subQuantValues = []
-                    $("th").each ->
+                    $("th.order-prod-sub-quant").each ->
                         subQuantTypes.push $(this).html()
-                    $("td").each ->
+                    $("td.order-prod-sub-quant").each ->
                         if $(this).html() isnt "Totals"
                             subQuantValues.push $(this).find("input").val()
                     if not @subQuantTotalValid(
@@ -247,8 +252,8 @@ jQuery ->
                     return @appendProductToOrder
                         subQuantTypes: subQuantTypes
                         subQuantValues: subQuantValues
-                @appendProductToOrder()
-                return true # added product to order
+                return @appendProductToOrder()
+                # added product to order
             else
                 return false # failed $ validation
         appendProductToOrder: (subQuants) ->
@@ -279,7 +284,7 @@ jQuery ->
                 cost: cost
                 totalQuantity: totalQuantity
                 subTotalQuantity: subTotalQuantity
-            @currentOrderProducts.push productModel
+            return orderProduct
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid
             oneValueMoreThan0 = false
@@ -363,18 +368,19 @@ jQuery ->
             @$('#supplier-name-select').append(
                 "<option value='#{supplierName}'>#{supplierName}</option>")
     class ProductItemSubQuantityView extends Backbone.View
+        # TODO this is a copy from class in product_views.coffee
         template: _.template ($ '#product-view-sub-quantity-template').html()
         render: (productSubQuants) ->
             @$el.html this.template({})
 
             # now let's add column 1 name and row 1 titles
-            tableHeaderValues = "<th>#{productSubQuants[0].measurementName}</th>"
-            tableRow1Values = "<td>Totals</td>"
+            tableHeaderValues = "<th class='order-prod-sub-quant'>#{productSubQuants[0].measurementName}</th>"
+            tableRow1Values = "<td class='order-prod-sub-quant'>Totals</td>"
 
             # fill in the remaining rows/columns with the subquants
             _.each productSubQuants, (elem) ->
-                tableHeaderValues += "<th>#{elem.measurementValue}</th>"
-                tableRow1Values += "<td>#{elem.quantity}</td>"
+                tableHeaderValues += "<th class='order-prod-sub-quant'>#{elem.measurementValue}</th>"
+                tableRow1Values += "<td class='order-prod-sub-quant'>#{elem.quantity}</td>"
 
             # finally append this to their respective th and td tags
             @$('#product-sub-quantity-thead-tr').append tableHeaderValues
