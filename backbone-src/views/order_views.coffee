@@ -148,7 +148,8 @@ jQuery ->
                 @renderOrderProductSummaryView()
         checkValidityAndCreateNewOrder: (e) ->
             e.preventDefault()
-            # TODO START HERE WHEN SINGLE ORDER ADD IS WORKING
+            @orderCreateBodyView.checkValidityAndCreateNewOrder(
+                @currentOrderProducts)
     class OrderCreateBodyView extends Backbone.View
         initialize: ->
             @template = _.template ($ @options.template).html()
@@ -167,9 +168,9 @@ jQuery ->
                     required: true
                 supplierSelect:
                     required: true
-        checkValidityAndCreateNewOrder: (e) ->
+        checkValidityAndCreateNewOrder: (currentProducts) ->
             $("#main-alert-div").html("")
-            if $("#add-new-order-product").html()
+            if $("#order-product-form").html()
                 # new product form still incomplete
                 return @finishProductCreationAlert()
             else
@@ -182,15 +183,53 @@ jQuery ->
                         # not valid
                         return @orderExistsAlert()
                     else
-                        console.log 'SFSG'
+                        if currentProducts.length is 0
+                            return @orderHasNoProductsAlert()
+                        else
+                            # time to create an order!
+                            @createNewOrder(currentProducts)
                 else
                     console.log 'failed $ validation'
+        createNewOrder: (currentProducts) ->
+            referenceNum = $("#refNum-input").val()
+            supplier = app.Suppliers.where
+                name: $("#supplier-name-select").val()
+            storeName = $("#store-name-select").val()
+            shipCompany = $("#ship-company-input").val()
+            cost = parseFloat($("#ship-cost-input").val(), 10) * 100
+            estArrival = $("#est-arrival-input").val()
+
+            prod.storeName = storeName for prod in currentProducts
+
+            order =
+                referenceNum: referenceNum
+                _supplier: supplier[0].get '_id'
+                products: currentProducts
+                shippingInfo:
+                    company: shipCompany
+                    cost: cost
+                estimatedArrivalDate: estArrival
+            app.Orders.create order
+            @orderCreatedAlert()
         orderExistsAlert: -> # alerts!!! TODO all these cleaner
             message = "There is already have a order by this reference " +
                 "Number. Please Change the order name and/or brand"
             alertWarningView = new app.AlertView
                 alertType: 'warning'
             alertHTML = alertWarningView.render("alert-error", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
+        orderHasNoProductsAlert: ->
+            message = "You must have at least one product in your order"
+            alertWarningView = new app.AlertView
+                alertType: 'warning'
+            alertHTML = alertWarningView.render("alert-error", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
+        orderCreatedAlert: ->
+            message = "Order Created!"
+            alertWarningView = new app.AlertView
+                alertType: 'success'
+            alertHTML = alertWarningView.
+                render("alert-success", message).el
             $("#root-backbone-alert-view").html(alertHTML)
         finishProductCreationAlert: ->
             message = "You must finish creating the new product in your " +
