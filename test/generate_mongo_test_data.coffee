@@ -445,7 +445,15 @@ async.series [
         stock1 = new Stock
             _company: companyArray[0].id
             products: [
-                _order: orderArray[0].id
+                description:
+                    brand: 'Nike'
+                    name: 'Featherlite'
+                category: 'Basketball'
+                cost: 2000
+                price: 3599
+                totalQuantity: 3
+                subTotalQuantity: []
+            ,
                 description:
                     brand: 'Bauer'
                     name: 'Vapor X4.0'
@@ -454,24 +462,30 @@ async.series [
                 price: 40099
                 totalQuantity: 9
                 subTotalQuantity: [
+                    _order: orderArray[0].id
+                    _supplier: orderArray[0]._supplier
                     measurementName: 'size'
                     measurementValue: 8
                     quantity: 3
                 ,
+                    _order: orderArray[0].id
+                    _supplier: orderArray[0]._supplier
                     measurementName: 'size'
                     measurementValue: 9
                     quantity: 3
                 ,
+                    _order: orderArray[0].id
+                    _supplier: orderArray[0]._supplier
                     measurementName: 'size'
                     measurementValue: 10
                     quantity: 2
                 ,
+                    _supplier: supplierArray[2].id
                     measurementName: 'size'
                     measurementValue: 11
                     quantity: 1
                 ]
             ,
-                _order: orderArray[0].id
                 description:
                     brand: 'CCM'
                     name: 'Crazy Light'
@@ -480,14 +494,17 @@ async.series [
                 price: 65099
                 totalQuantity: 8
                 subTotalQuantity: [
+                    _order: orderArray[0].id
                     measurementName: 'size'
                     measurementValue: 9
                     quantity: 1
                 ,
+                    _order: orderArray[0].id
                     measurementName: 'size'
                     measurementValue: 10
                     quantity: 3
                 ,
+                    _order: orderArray[0].id
                     measurementName: 'size'
                     measurementValue: 11
                     quantity: 4
@@ -570,9 +587,11 @@ async.series [
             ]
 
         storeName = companyArray[0].stores[0].name
-        product.storeName =  storeName for product in stock1.products
-        product.storeName =  storeName for product in stock2.products
-        stock1.products[3].storeName = companyArray[0].stores[1].name
+        for product in stock1.products
+            product.storeName = storeName for subQuant in product.subTotalQuantity
+        for product in stock2.products
+            product.storeName = storeName for subQuant in product.subTotalQuantity
+        stock1.products[3].subTotalQuantity[0].storeName = companyArray[0].stores[1].name
 
         stock1.save (err) ->
             if err

@@ -11,7 +11,15 @@ jQuery ->
         initialize: ->
             if @options.storeSelectView
                 @storeSelectView = new @options.storeSelectView()
-            @itemsTable = new ItemsTable
+            # below is not the cleanest but it allows GenericItemsTable
+            # to be overridden by a subclass. For example products does this
+            # so that it can manage how products based on storename and
+            # subquants are viewed
+            if @options.ItemsTableClass
+                @ItemsTableClass = @options.ItemsTableClass
+            else
+                @ItemsTableClass = GenericItemsTable
+            @itemsTable = new @ItemsTableClass
                 collection: @options.collection
                 template: @options.tableTemplate
                 tableListID: @options.tableListID
@@ -30,7 +38,7 @@ jQuery ->
             @itemsTable.setItemsToBeStoreSpecificBy(
                 @$('#store-name-select option:selected').val())
             @itemsTable.render()
-    class ItemsTable extends Backbone.View
+    class GenericItemsTable extends Backbone.View
         initialize: ->
             @listenTo @collection, 'remove', @render
             @template = _.template ($ @options.template).html()
@@ -47,13 +55,7 @@ jQuery ->
             @storeName = storeName
         addOne: (item) ->
             if @storeName
-                if @storeName is item.get('storeName')
-                    view = new SingleListItemView
-                        model: item
-                        template: @itemTrTemplate
-                        itemControllerView: @itemControllerView
-                        deleteModalTemplate: @deleteModalTemplate
-                    (@$ @tableListID).append view.render().el
+                @addBasedByStoreName(item) # this should be overrided
             else
                 view = new SingleListItemView
                     model: item
@@ -267,6 +269,8 @@ jQuery ->
     @app = window.app ? {}
     @app.AlertView = AlertView
     @app.GenericListView = GenericListView
+    @app.GenericItemsTable = GenericItemsTable
+    @app.GenericSingleListItemView = SingleListItemView
     @app.GenericSingleView = GenericSingleView
     @app.GenericCreateView = GenericCreateView
     @app.ConfirmDeleteModal = ConfirmDeleteModal

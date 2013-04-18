@@ -23,6 +23,7 @@ jQuery ->
                 tableListID: '#products-table-list'
                 itemTrTemplate: '#product-tr-template'
                 deleteModalTemplate: '#product-view-delete-template'
+                ItemsTableClass: ProductsListTable # this overrides GenericItemsTable
                 itemControllerView: @
             $("#products-list-view-content").html @currentView.render().el
         renderProductDefaultItemView: ->
@@ -99,6 +100,16 @@ jQuery ->
     # Product List View Section
     # -> comes from ItemListVIew in # helper_views.coffee
     # ###############
+    class ProductsListTable extends app.GenericItemsTable
+        addBasedByStoreName: (item) ->
+            console.log 'TODO START HERE. ALSO, WE STILL NEED TO PUT ORDER AND SUPPLIER IN EACH INDIVIDUAL PRODUCT'
+            if @storeName is item.get('storeName')
+                view = new app.GenericSingleListItemView
+                    model: item
+                    template: @itemTrTemplate
+                    itemControllerView: @itemControllerView
+                    deleteModalTemplate: @deleteModalTemplate
+                (@$ @tableListID).append view.render().el
 
     # ###############
     # Product Single View Section
@@ -147,12 +158,9 @@ jQuery ->
             @
         renderProductContent: (productModel) ->
             @currentProduct = new ProductItemContentView()
-            @currentProductSupplier = new ProductItemSupplierNameView()
             @currentProductItemSubQuantity = new ProductItemSubQuantityView()
             @$('#product-view-content')
                 .html @currentProduct.render(productModel).el
-            @$('#product-view-supplier-name')
-                .html @currentProductSupplier.render(productModel).el
             if productModel.attributes.subTotalQuantity.length
                 # first let's sort the subquantities for readibility in table
                 productSubQuants = productModel.attributes.subTotalQuantity

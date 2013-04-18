@@ -48,7 +48,6 @@
         <th>Category</th>
         <th>Price</th>
         <th>Quantity</th>
-        <th>Order Refnum</th>
       </tr>
     </thead>
     <tbody id="products-table-list">
@@ -66,15 +65,8 @@
   <td><%= category %> </td>
   <td><%= price * 0.01 %> </td>
   <td><%= totalQuantity %> </td>
-  <% if (obj._order) { %>
-    <td><%= _order.referenceNum %> </td>
-  <% } %>
 </script>
 <!--product list view templates-->
-
-
-
-
 
 
 <!--product single view templates-->
@@ -115,24 +107,29 @@
     <div class="span4">
       <p> <strong> Category</strong><br />
       <%= category %><br /> </p>
-      <p> <strong>Order</strong><br />
-      <% if (obj._order) { %>
-        <%= _order.referenceNum %> </p>
-      <% } else { %>
-        N/A </p>
-      <% } %>
-      <div id="product-view-supplier-name"> </div>
-    </div>
-    <div class="span8">
-      <% if (subTotalQuantity.length === 0) { %>
-        <p> <strong> Total In Stock </strong><br />
-        <%= totalQuantity %></p>
-      <% } else { %>
-        <p id="sub-quantity-totals"> </p>
-      <% } %>
       <p> <strong> Price</strong><br />
       <%= price * 0.01 %> </p>
     </div>
+    <% if (subTotalQuantity.length === 0) { %>
+      <div class="span2">
+        <p> <strong> Total In Stock </strong><br />
+        <table class="table table-bordered">
+          <tbody>
+            <th>
+              Total
+            </th>
+            <th>
+              <%= totalQuantity %></p>
+            </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="span8">
+        <p id="sub-quantity-totals"> </p>
+      </div>
+    <% } %>
   </div>
 </script>
 <script type="text/template" id='product-view-sub-quantity-template'>
