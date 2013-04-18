@@ -7,7 +7,7 @@
         <th>Supplier</th>
         <th>Shipping Company</th>
         <th>Quantity</th>
-        <th>Estimated Arrival</th>
+        <th>Arrival</th>
       </tr>
     </thead>
     <tbody id="orders-table-list">
@@ -17,7 +17,6 @@
 <script type="text/template" id="order-tr-template">
   <td>
     <a href='#' id='item-view-eye-link'><i class='icon-eye-open'></i><a>
-    <a href='#' id='item-view-edit-link'><i class='icon-pencil'></i><a>
     <a href='#' id='item-view-delete-link'><i class='icon-trash'></i><a>
     <%= referenceNum %>
   </td>
@@ -28,7 +27,15 @@
   <% } %>
   <td><%= shippingInfo.company %> </td>
   <td><%= products.length %> </td>
-  <td> <%= new Date(estimatedArrivalDate).toDateString() %> </td>
+  <% if (dateArrived) { %>
+    <td>
+      Arrived: <%= new Date(dateArrived).toDateString() %>
+    </td>
+  <% } else { %>
+    <td>
+      Estimated: <%= new Date(estimatedArrivalDate).toDateString() %>
+    </td>
+  <% } %>
 </script>
 <!--order list view templates-->
 
@@ -39,11 +46,19 @@
       <div class="span2">
         <ul class="nav nav-list well">
           <li class="nav-header">Tools</li>
-          <li>
-            <a href="#" id='item-view-edit-link'>
-              <i class='icon-thumbs-up'></i> Mark Arrived
-            </a>
-          </li>
+          <% if (dateArrived) { %>
+            <li class='disabled'>
+              <a href="#" id='mark-order-arrived-link'>
+                <i class='icon-thumbs-up'></i> Mark Arrived
+              </a>
+            </li>
+          <% } else { %>
+            <li>
+              <a href="#" id='mark-order-arrived-link'>
+                <i class='icon-thumbs-up'></i> Mark Arrived
+              </a>
+            </li>
+          <% } %>
           <li>
             <a href="#" id='item-view-delete-link'>
               <i class='icon-trash'></i> Delete
@@ -63,18 +78,32 @@
 <script type="text/template" id="order-view-content-template">
   <div class="row-fluid">
     <h3> RefNum: <%= referenceNum %> </h3>
-    <p class="lead"><a href="mailto:#">Supplier: <%= _supplier.email %></a></p>
+    <% if (_supplier) { %>
+      <p class="lead"><a href="mailto:#">Supplier: <%= _supplier.email %></a></p>
+    <% } else { %>
+      <p class="lead">Supplier: "n/a" </p>
+    <% } %>
   </div>
   <div class="row-fluid">
     <div class="span4">
       <p> <strong> Date Added</strong><br />
-      <%= new Date(dateCreated).toDateString() %> </p>
-      <p>
-        <strong>Travel Status</strong><br />
-        <i class='icon-road'></i> In Transit<br />
+        <%= new Date(dateCreated).toDateString() %>
       </p>
-      <p> <strong>Estimated Arrival</strong><br />
-      <%= new Date(estimatedArrivalDate).toDateString() %>
+      <p>
+        <strong>Estimated Arrival</strong><br />
+        <%= new Date(estimatedArrivalDate).toDateString() %>
+      </p>
+      <% if (dateArrived) { %>
+        <p>
+          <strong>Arrived On</strong><br />
+          <%= new Date(dateArrived).toDateString() %>
+        </p>
+      <% } else { %>
+        <p>
+          <strong>Arrived On</strong><br />
+          <i class='icon-road'></i> In Transit<br />
+        </p>
+      <% } %>
     </div>
     <div class="span8" id="order-products-list"> </div>
   </div>
@@ -321,6 +350,25 @@
 </script>
 <!--order create view templates-->
 
+<script type="text/template" id="order-view-delete-template">
+  <div id="delete-item-modal" class="modal hide fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"
+        aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Delete Order: <%= referenceNum %></h3>
+    </div>
+    <div class="modal-body">
+      <p>Warning! This cannot be undone...</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal"
+        aria-hidden="true">Cancel</button>
+       <a href="#" id='delete-confirmed-button' class="btn btn-primary">Confirm Deletion</a>
+    </div>
+  </div>
+</script>
 <!--order edit view templates-->
 <script type="text/template" id="order-edit-template">
 </script>

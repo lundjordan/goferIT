@@ -62,6 +62,12 @@ jQuery ->
     # ###############
     # Order Single View Section
     class OrderSingleView extends app.GenericSingleView
+        events:
+            'click #mark-order-arrived-link': 'markOrderArrived'
+            'click #single-item-prev-link': 'renderSingleItemPrevView'
+            'click #single-item-next-link': 'renderSingleItemNextView'
+            'click #item-view-edit-link': 'renderSpecificEditView'
+            'click #item-view-delete-link': 'renderSpecificDeleteView'
         renderSingleItemPrevView: (event) ->
             super()
             orderProductsTable = new OrderProductsTable
@@ -74,6 +80,75 @@ jQuery ->
                 model: @currentModel
             $("#order-products-list").html (orderProductsTable.render()).el
             orderProductsTable.addAll()
+        markOrderArrived: (e) ->
+            # first we need to set the order as arrived with a date
+            # doing so fires an event to re render the single view template
+            @currentModel.save
+                dateArrived: (new Date()).toISOString()
+                _supplier: @currentModel.get("_supplier")._id
+            # XXX supplier part above is needed as we populate it in mongoget
+            # http request but we only want to save the id when we update the
+            # mongo document. need to look into never using populate() in
+            # mongoose
+
+            # now we need to add the products in that order to our existing
+            # stock
+            for orderProduct in @currentModel.get("products")
+                orderProduct._order = @currentModel.get "_id"
+                isExistingProduct = app.Products.ifModelExists(
+                    orderProduct.description.name,
+                    orderProduct.description.brand
+                )
+                if isExistingProduct
+                    # grab that existing product in our stock
+                    existingProduct = app.Products.where(
+                        'description.name': orderProduct.description.name
+                        'description.brand': orderProduct.description.brand
+                    )[0]
+                    # update the grand total of the product
+                    existingGrandTotal = existingProduct.get "totalQuantity"
+                    existingProduct.save
+                        totalQuantity:
+                            existingGrandTotal + orderProduct.totalQuantity
+                    if existingProduct.get("subTotalQuantity").length
+                        # existing product has sub quants and will need
+                        # to merge them with the order product's subquants
+                        @mergeOrderProductsSubQuants(
+                            orderProduct, existingProduct
+                        )
+                else
+                    console.log orderProduct
+                    app.Products.create orderProduct
+            @orderMarkedAsArrivedAlert()
+        mergeOrderProductsSubQuants: (orderProduct, existingProduct) ->
+            existingSubQuants = existingProduct.get "subTotalQuantity"
+            for orderProductSubQuant in orderProduct.subTotalQuantity
+                existingProductHasSubQuantValue = false
+                for existingSubQuant, index in existingSubQuants
+                    exSubVal = existingSubQuant.measurementValue
+                    ordSubVal = orderProductSubQuant.measurementValue
+                    if exSubVal is ordSubVal
+                        # we have an existing sub quant with the
+                        # same order product's subQuant. so let's merge
+                        existingProductHasSubQuantValue = true
+                        exSubQuant = existingSubQuant.quantity
+                        ordSubQuant = orderProductSubQuant.quantity
+                        existingSubQuants[index].
+                            quantity = exSubQuant + ordSubQuant
+                        existingProduct.save
+                            subTotalQuantity: existingSubQuants
+                if not existingProductHasSubQuantValue
+                    # add a new type, value, and quantity subTotal
+                    existingSubQuants.push orderProductSubQuant
+                    existingProduct.save
+                        subTotalQuantity: existingSubQuants
+        orderMarkedAsArrivedAlert: ->
+            message = "Order Arrived! Products have been added to your stock."
+            alertWarningView = new app.AlertView
+                alertType: 'info'
+            alertHTML = alertWarningView.
+                render("alert-info", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
     class OrderProductsTable extends Backbone.View
         template: _.template ($ '#order-products-table-template').html()
         render: ->

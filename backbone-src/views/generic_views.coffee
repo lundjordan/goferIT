@@ -110,6 +110,7 @@ jQuery ->
             'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: (options) ->
             @listenTo @collection, 'remove', @renderNextAvailableModel
+            @listenTo @collection, 'change', @render
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
             # @storeSelectView = new SinglesListStoreSelectView()
@@ -146,7 +147,7 @@ jQuery ->
             @singleContentTemplate = @options.singleContentTemplate
             @currentModelView = null
         render: (currentModel) ->
-            @$el.html this.template({})
+            @$el.html this.template(currentModel.attributes)
             @renderSingleContent(currentModel)
             @
         renderSingleContent: (currentModel) ->

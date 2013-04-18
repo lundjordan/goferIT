@@ -1,3 +1,7 @@
+errMsg = (msg) ->
+    return error:
+        message: msg.toString()
+
 restifyProducts = (app, restify, model) ->
     path = "/products"
     pathWithId = "/products/:id"

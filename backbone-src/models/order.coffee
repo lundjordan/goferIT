@@ -8,6 +8,8 @@ class Order extends Backbone.DeepModel
     initialize: (attributes, options) ->
         if !attributes.createdAt
             @attributes.dateCreated = (new Date).toISOString()
+        if !attributes.dateArrived
+            @attributes.dateArrived = null
 
 @app = window.app ? {}
 @app.Order = Order
