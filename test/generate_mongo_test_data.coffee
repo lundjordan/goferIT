@@ -262,55 +262,98 @@ async.series [
             _company: companyArray[0].id
             _supplier: supplierArray[0].id
             referenceNum: 'aaa111bbb222'
+            storeName: "Main Store"
             products: [
                 description:
                     brand: 'Bauer'
-                    name: 'Vapor X4.0'
+                    name: 'Vapor X5.0'
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 40000
-                totalQuantity: 9
-                subTotalQuantity: [
-                    measurementName: 'size'
-                    measurementValue: 8
-                    quantity: 3
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["8", "9", "10"]
+                individualProperties: [
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 3
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 2
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 11
-                    quantity: 1
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ,
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ,
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ,
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ,
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
+                ,
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                ,
                 ]
             ,
                 description:
-                    brand: 'Bauer'
-                    name: 'Vapor APX2'
+                    brand: 'CCM'
+                    name: 'X1 Carbon'
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 40000
-                totalQuantity: 8
-                subTotalQuantity: [
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 1
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ['8', '9', '10']
+                individualProperties: [
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 3
+                    measurements: [
+                        factor: 'size'
+                        value: '8'
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 11
-                    quantity: 4
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 12
-                    quantity: 0
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ,
+                    measurements: [
+                        factor: 'size'
+                        value: '8'
+                    ]
+                ,
                 ]
             ,
                 description:
@@ -319,23 +362,28 @@ async.series [
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 14000
-                totalQuantity: 7
-                subTotalQuantity: [
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 3
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["8", "9"]
+                individualProperties: [
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 2
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 8
-                    quantity: 1
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 12
-                    quantity: 1
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
                 ]
             ]
             shippingInfo:
@@ -348,6 +396,7 @@ async.series [
             _company: companyArray[0].id
             _supplier: supplierArray[1].id
             referenceNum: 'bbb111kkk222'
+            storeName: "Main Store"
             products: [
                 description:
                     brand: 'Easton'
@@ -355,23 +404,28 @@ async.series [
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 18000
-                totalQuantity: 7
-                subTotalQuantity: [
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 3
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["8", "10"]
+                individualProperties: [
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 2
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 8
-                    quantity: 1
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 12
-                    quantity: 1
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
                 ]
             ]
             shippingInfo:
@@ -384,30 +438,42 @@ async.series [
             _company: companyArray[0].id
             _supplier: supplierArray[1].id
             referenceNum: 'ccc111ccc222'
+            storeName: "Main Store"
             products: [
                 description:
                     brand: 'Bauer'
-                    name: 'Vapor X4.0'
+                    name: 'Hydro X7.0'
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 11000
-                totalQuantity: 7
-                subTotalQuantity: [
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 3
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["7", "10"]
+                individualProperties: [
+                    measurements: [
+                        factor: 'size'
+                        value: "7"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 2
+                    measurements: [
+                        factor: 'size'
+                        value: "7"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 8
-                    quantity: 1
+                    measurements: [
+                        factor: 'size'
+                        value: "7"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 12
-                    quantity: 1
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                ,
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                ,
                 ]
             ]
             shippingInfo:
@@ -451,8 +517,14 @@ async.series [
                 category: 'Basketball'
                 cost: 2000
                 price: 3599
-                totalQuantity: 3
-                subTotalQuantity: []
+                primaryMeasurementFactor: null
+                measurementPossibleFactors: []
+                individualProperties: [
+                    sourceHistory:
+                        _order: orderArray[2].id
+                        _supplier: supplierArray[0].id
+                    measurements: []
+                ]
             ,
                 description:
                     brand: 'Bauer'
@@ -460,30 +532,94 @@ async.series [
                 category: 'Hockey Skates'
                 cost: 30000
                 price: 40099
-                totalQuantity: 9
-                subTotalQuantity: [
-                    _order: orderArray[0].id
-                    _supplier: orderArray[0]._supplier
-                    measurementName: 'size'
-                    measurementValue: 8
-                    quantity: 3
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["8", "9", "10", "11", "12"]
+                individualProperties: [
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    _order: orderArray[0].id
-                    _supplier: orderArray[0]._supplier
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 3
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    _order: orderArray[0].id
-                    _supplier: orderArray[0]._supplier
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 2
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    _supplier: supplierArray[2].id
-                    measurementName: 'size'
-                    measurementValue: 11
-                    quantity: 1
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "11"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "11"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
+                ,
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "12"
+                    ]
                 ]
             ,
                 description:
@@ -492,26 +628,62 @@ async.series [
                 category: 'Hockey Skates'
                 cost: 45000
                 price: 65099
-                totalQuantity: 8
-                subTotalQuantity: [
-                    _order: orderArray[0].id
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 1
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["8", "9", "11", "12"]
+                individualProperties: [
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ,
-                    _order: orderArray[0].id
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 3
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
                 ,
-                    _order: orderArray[0].id
-                    measurementName: 'size'
-                    measurementValue: 11
-                    quantity: 4
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
                 ,
-                    measurementName: 'size'
-                    measurementValue: 12
-                    quantity: 0
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "11"
+                    ]
+                ,
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "12"
+                    ]
+                ,
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "12"
+                    ]
                 ]
             ,
                 description:
@@ -520,11 +692,29 @@ async.series [
                 category: 'Men\'s Soccer Cleats'
                 cost: 9000
                 price: 14099
-                totalQuantity: 2
-                subTotalQuantity: [
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 2
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["8", "9"]
+                individualProperties: [
+                    sourceHistory:
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ,
+                    sourceHistory:
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ,
+                    sourceHistory:
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
                 ]
             ,
                 description:
@@ -533,23 +723,59 @@ async.series [
                 category: 'Men\'s Football Cleats'
                 cost: 11000
                 price: 19099
-                totalQuantity: 7
-                subTotalQuantity: [
-                    measurementName: 'size'
-                    measurementValue: 10
-                    quantity: 3
-                ,
-                    measurementName: 'size'
-                    measurementValue: 9
-                    quantity: 2
-                ,
-                    measurementName: 'size'
-                    measurementValue: 8
-                    quantity: 1
-                ,
-                    measurementName: 'size'
-                    measurementValue: 12
-                    quantity: 1
+                primaryMeasurementFactor: 'size'
+                measurementPossibleValues: ["7", "8", "10"]
+                individualProperties: [
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "7"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "7"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "7"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "7"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
                 ]
             ]
         stock2 = new Stock
@@ -561,11 +787,24 @@ async.series [
                 category: 'Snowboard'
                 cost: 35000
                 price: 50999
-                totalQuantity: 3
-                subTotalQuantity: [
-                    measurementName: 'length'
-                    measurementValue: 145
-                    quantity: 3
+                primaryMeasurementFactor: 'length'
+                measurementPossibleValues: ["145", "155"]
+                individualProperties: [
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'length'
+                        value: "145"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'length'
+                        value: "155"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'length'
+                        value: "155"
+                    ]
                 ]
             ,
                 description:
@@ -574,24 +813,33 @@ async.series [
                 category: 'Wakeboard'
                 cost: 50000
                 price: 76999
-                totalQuantity: 4
-                subTotalQuantity: [
-                    measurementName: 'length'
-                    measurementValue: 145
-                    quantity: 3
-                ,
-                    measurementName: 'length'
-                    measurementValue: 130
-                    quantity: 1
+                primaryMeasurementFactor: 'length'
+                measurementPossibleValues: ["135"]
+                individualProperties: [
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'length'
+                        value: "135"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'length'
+                        value: "135"
+                    ]
+                    sourceHistory: {}
+                    measurements: [
+                        factor: 'length'
+                        value: "135"
+                    ]
                 ]
             ]
 
         storeName = companyArray[0].stores[0].name
         for product in stock1.products
-            product.storeName = storeName for subQuant in product.subTotalQuantity
+            product.storeName = storeName for subQuant in product.individualProperties
         for product in stock2.products
-            product.storeName = storeName for subQuant in product.subTotalQuantity
-        stock1.products[3].subTotalQuantity[0].storeName = companyArray[0].stores[1].name
+            product.storeName = storeName for subQuant in product.individualProperties
+        stock1.products[3].individualProperties[0].storeName = companyArray[0].stores[1].name
 
         stock1.save (err) ->
             if err

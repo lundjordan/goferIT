@@ -13,11 +13,25 @@ StockSchema = new mongoose.Schema
         category: String
         cost: Number
         price: Number
-        totalQuantity: Number
-        subTotalQuantity: []
+        primaryMeasurementFactor: String
+        measurementPossibleValues: []
+        individualProperties: [{
+            sourceHistory:
+                _order:
+                    type: mongoose.Schema.Types.ObjectId
+                    ref: 'Company'
+                _supplier:
+                    type: mongoose.Schema.Types.ObjectId
+                    ref: 'Supplier'
+            measurements: [{
+                factor: String
+                value: String
+            }]
+        }]
         dateCreated:
             type: Date
             default: new Date().toISOString()
     }]
+
 
 module.exports = mongoose.model 'Stock', StockSchema

@@ -8,26 +8,12 @@ OrderSchema = new mongoose.Schema
         type: mongoose.Schema.Types.ObjectId
         ref: 'Supplier'
         required: true
-    products: [{
-        serialID:
-            type: String
-        description:
-            brand: String
-            name: String
-        category: String
-        cost: Number
-        price: Number
-        storeName:
-            type: String
-            required: true
-        totalQuantity: Number
-        subTotalQuantity: []
-        dateCreated:
-            type: Date
-            default: new Date().toISOString()
-    }]
     referenceNum:
         type: String, required: true
+    storeName:
+        type: String
+        required: true
+    products: []
     shippingInfo:
         company:
             type: String, required: true
