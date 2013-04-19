@@ -13,7 +13,22 @@ OrderSchema = new mongoose.Schema
     storeName:
         type: String
         required: true
-    products: []
+    products: [
+        description:
+            brand: String
+            name: String
+        category: String
+        cost: Number
+        price: Number
+        primaryMeasurementFactor: String
+        measurementPossibleValues: []
+        individualProperties: [
+            measurements: [{
+                factor: String
+                value: String
+            }]
+        ]
+    ]
     shippingInfo:
         company:
             type: String, required: true

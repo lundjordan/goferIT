@@ -836,9 +836,9 @@ async.series [
 
         storeName = companyArray[0].stores[0].name
         for product in stock1.products
-            product.storeName = storeName for subQuant in product.individualProperties
+            indieProp.storeName = storeName for indieProp in product.individualProperties
         for product in stock2.products
-            product.storeName = storeName for subQuant in product.individualProperties
+            indieProp.storeName = storeName for indieProp in product.individualProperties
         stock1.products[3].individualProperties[0].storeName = companyArray[0].stores[1].name
 
         stock1.save (err) ->

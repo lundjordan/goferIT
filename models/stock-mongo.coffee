@@ -16,6 +16,7 @@ StockSchema = new mongoose.Schema
         primaryMeasurementFactor: String
         measurementPossibleValues: []
         individualProperties: [{
+            storeName: String
             sourceHistory:
                 _order:
                     type: mongoose.Schema.Types.ObjectId

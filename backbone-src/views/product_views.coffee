@@ -101,17 +101,33 @@ jQuery ->
     # -> comes from ItemListVIew in # helper_views.coffee
     # ###############
     class ProductsListTable extends app.GenericItemsTable
-        addBasedByStoreName: (item) ->
-            console.log 'TODO START HERE. ALSO, WE STILL NEED TO PUT ORDER AND SUPPLIER IN EACH INDIVIDUAL PRODUCT'
-            if @storeName is item.get('storeName')
-                view = new app.GenericSingleListItemView
-                    model: item
-                    template: @itemTrTemplate
-                    itemControllerView: @itemControllerView
-                    deleteModalTemplate: @deleteModalTemplate
-                (@$ @tableListID).append view.render().el
+        addBasedByStoreName: (product) ->
+            storeQuantityCount = 0
+            for individualProperty in product.get('individualProperties')
+                if individualProperty.storeName is @storeName
+                    storeQuantityCount = storeQuantityCount + 1
 
-    # ###############
+            view = new ProductListItemView
+                model: product
+                template: @itemTrTemplate
+                itemControllerView: @itemControllerView
+                deleteModalTemplate: @deleteModalTemplate
+                storeQuantityCount: storeQuantityCount
+            (@$ @tableListID).append view.render().el
+    class ProductListItemView extends app.GenericSingleListItemView
+        initialize: ->
+            @template = _.template ($ @options.template).html()
+            @itemControllerView = @options.itemControllerView
+            @deleteModalTemplate = @options.deleteModalTemplate
+            @storeQuantityCount = @options.storeQuantityCount
+        render: ->
+            renderObject = @model.attributes
+            renderObject.storeQuantityCount = @storeQuantityCount
+            @$el.html this.template renderObject
+            $(@el).find('i').hide()
+            @
+
+# ###############
     # Product Single View Section
     class ProductItemView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
