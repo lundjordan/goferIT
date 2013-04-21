@@ -64,7 +64,7 @@ jQuery ->
             supplierNames = app.Suppliers.pluck "name"
             @addToSelect(name) for name in supplierNames
             if @model # we are in edit mode
-                if @model.attributes._order
+                if @model.get '_order'
                     # set the select tag to the model's supplier name is
                     supplierName = app.Suppliers.
                         get(@model.attributes._order._supplier).get 'name'
@@ -77,21 +77,17 @@ jQuery ->
         template: _.template ($ '#store-names-template').html()
     class ProductItemSubQuantityView extends Backbone.View
         template: _.template ($ '#product-view-sub-quantity-template').html()
-        render: (productSubQuants, possibleValues) ->
+        render: (individualProducts, measurementFactor) ->
             @$el.html this.template({})
 
-            subTotalTotals = _.countBy productSubQuants, (elem) ->
-                elem.measurements[0]['value']
-
             # now let's add column 1 name and row 1 titles
-            tableHeaderValues = "<th> " +
-                "#{productSubQuants[0].measurements[0]['factor']} </th>"
+            tableHeaderValues = "<th>#{measurementFactor}</th>"
             tableRow1Values = "<td>Totals</td>"
 
             # fill in the remaining rows/columns with the subquants
-            _.each possibleValues, (elem) ->
-                tableHeaderValues += "<th>#{elem}</th>"
-                tableRow1Values += "<td>#{subTotalTotals[elem] or 0}</td>"
+            _.each individualProducts, (elem) ->
+                tableHeaderValues += "<th>#{elem.measurementValue}</th>"
+                tableRow1Values += "<td>#{elem.quantity}</td>"
 
             # finally append this to their respective th and td tags
             @$('#product-sub-quantity-thead-tr').append tableHeaderValues
@@ -178,17 +174,24 @@ jQuery ->
             @
         renderProductContent: (productModel) ->
             @currentProduct = new ProductItemContentView()
-            @currentProductItemSubQuantity = new ProductItemSubQuantityView()
+            @currentProductSubQuantity = new ProductItemSubQuantityView()
             @$('#product-view-content')
                 .html @currentProduct.render(productModel).el
             if productModel.get('primaryMeasurementFactor') isnt null
                 # first let's sort the subquantities for readibility in table
-                productSubQuants = productModel.get 'individualProperties'
-                _.sortBy productSubQuants, (el) ->
-                    return el.measurements[0]['value']
+                individualProducts = []
+                individualProps = productModel.get('individualProperties')
+                subTotalTotals = _.countBy individualProps, (elem) ->
+                    elem.measurements[0]['value']
+                for subTotalValues in productModel.get 'measurementPossibleValues'
+                    individualProducts.push
+                        measurementValue: subTotalValues
+                        quantity: subTotalTotals[subTotalValues] or 0
+                individualProducts = _.sortBy individualProducts, (el) ->
+                    return el.measurementValue
                 @$('#sub-quantity-totals')
-                    .html @currentProductItemSubQuantity.render(productSubQuants,
-                        productModel.get('measurementPossibleValues')).el
+                    .html @currentProductSubQuantity.render(individualProducts,
+                        productModel.get('primaryMeasurementFactor')).el
     class ProductItemContentView extends Backbone.View
         className: 'container-fluid'
         template: _.template ($ '#product-view-content-template').html()
@@ -206,7 +209,6 @@ jQuery ->
                 @$el.html this.template({name: 'N/A'})
             @
     # ###############
-    #
 
     # ###############
     # Product Create Section
@@ -229,16 +231,22 @@ jQuery ->
             @$("#product-create-supplier-names").
                 html @supplierSelectView.render().el
             if @model # we are in edit mode
-                if @model.attributes.subTotalQuantity.length > 0
-                    # add the subquants of the model to the subquants div
-                    productSubQuants = []
-                    for subTotal in @model.attributes.subTotalQuantity
-                        productSubQuants.push
-                            measurementName: subTotal.measurementName
-                            measurementValue: subTotal.measurementValue
-                            quantity: "<input class='input-mini' type='text' value='#{subTotal.quantity}'>"
+                if @model.get('primaryMeasurementFactor') isnt null
+                    # first let's sort the subquantities for readibility in table
+                    individualProducts = []
+                    individualProps = @model.get('individualProperties')
+                    subTotalTotals = _.countBy individualProps, (elem) ->
+                        elem.measurements[0]['value']
+                    for subTotalValues in @model.get 'measurementPossibleValues'
+                        individualProducts.push
+                            measurementValue: subTotalValues
+                            quantity: "<input class='input-mini' type='text' " +
+                                "value='#{subTotalTotals[subTotalValues] or 0}'>"
+                    individualProducts = _.sortBy individualProducts, (el) ->
+                        return el.measurementValue
                     subQuantView = new ProductItemSubQuantityView()
-                    subQuantHTML = subQuantView.render(productSubQuants).el
+                    subQuantHTML = subQuantView.render(individualProducts,
+                        @model.get('primaryMeasurementFactor')).el
                     @$('#sub-total-quantity-content').html subQuantHTML
             @
     class ProductCreateBodyView extends Backbone.View
@@ -400,7 +408,6 @@ jQuery ->
                     "alert-error alert-block", message).el)
                 return false
             return true
-
         quantityOptionInput: (e) ->
             if $(e.currentTarget).val() == "sub-total-selected"
                 $("#sub-total-quantity-modal").modal("toggle")

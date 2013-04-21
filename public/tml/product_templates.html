@@ -268,7 +268,7 @@
 </script>
 <!--product create view templates-->
 
-<!--product create view templates-->
+<!--product edit view templates-->
 <script type="text/template" id="product-edit-template">
   <form id='product-form'>
     <div class="row-fluid">
@@ -314,13 +314,13 @@
         </div>
       </div>
       <div class="span6">
-        <% if (subTotalQuantity.length === 0) { %>
+        <% if (primaryMeasurementFactor === null) { %>
           <div id="grand-total-quantity-content">
             <div class="control-group">
               <label class="control-label">Grand Total Quantity</label>
               <div class="controls">
                 <input type="text" id='grand-total-input' name="grandTotal"
-                value="<%= totalQuantity %>">
+                value="<%= individualProperties.length %>">
               </div>
             </div>
           </div>
@@ -352,4 +352,4 @@
   </label>
   <select id='supplier-name-select'><option></option> </select>
 </script>
-<!--product create view templates-->
+<!--product edit view templates-->
