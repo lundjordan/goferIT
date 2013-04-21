@@ -110,7 +110,7 @@
       <p> <strong> Price</strong><br />
       <%= price * 0.01 %> </p>
     </div>
-    <% if (subTotalQuantity.length === 0) { %>
+    <% if (primaryMeasurementFactor === null) { %>
       <div class="span2">
         <p> <strong> Total In Stock </strong><br />
         <table class="table table-bordered">
@@ -119,7 +119,7 @@
               Total
             </th>
             <th>
-              <%= totalQuantity %></p>
+              <%= individualProperties.length %></p>
             </th>
             </tr>
           </tbody>

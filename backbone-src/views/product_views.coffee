@@ -77,17 +77,21 @@ jQuery ->
         template: _.template ($ '#store-names-template').html()
     class ProductItemSubQuantityView extends Backbone.View
         template: _.template ($ '#product-view-sub-quantity-template').html()
-        render: (productSubQuants) ->
+        render: (productSubQuants, possibleValues) ->
             @$el.html this.template({})
 
+            subTotalTotals = _.countBy productSubQuants, (elem) ->
+                elem.measurements[0]['value']
+
             # now let's add column 1 name and row 1 titles
-            tableHeaderValues = "<th>#{productSubQuants[0].measurementName}</th>"
+            tableHeaderValues = "<th> " +
+                "#{productSubQuants[0].measurements[0]['factor']} </th>"
             tableRow1Values = "<td>Totals</td>"
 
             # fill in the remaining rows/columns with the subquants
-            _.each productSubQuants, (elem) ->
-                tableHeaderValues += "<th>#{elem.measurementValue}</th>"
-                tableRow1Values += "<td>#{elem.quantity}</td>"
+            _.each possibleValues, (elem) ->
+                tableHeaderValues += "<th>#{elem}</th>"
+                tableRow1Values += "<td>#{subTotalTotals[elem] or 0}</td>"
 
             # finally append this to their respective th and td tags
             @$('#product-sub-quantity-thead-tr').append tableHeaderValues
@@ -177,13 +181,14 @@ jQuery ->
             @currentProductItemSubQuantity = new ProductItemSubQuantityView()
             @$('#product-view-content')
                 .html @currentProduct.render(productModel).el
-            if productModel.attributes.subTotalQuantity.length
+            if productModel.get('primaryMeasurementFactor') isnt null
                 # first let's sort the subquantities for readibility in table
-                productSubQuants = productModel.attributes.subTotalQuantity
+                productSubQuants = productModel.get 'individualProperties'
                 _.sortBy productSubQuants, (el) ->
-                    return el.measurementValue
+                    return el.measurements[0]['value']
                 @$('#sub-quantity-totals')
-                    .html @currentProductItemSubQuantity.render(productSubQuants).el
+                    .html @currentProductItemSubQuantity.render(productSubQuants,
+                        productModel.get('measurementPossibleValues')).el
     class ProductItemContentView extends Backbone.View
         className: 'container-fluid'
         template: _.template ($ '#product-view-content-template').html()
