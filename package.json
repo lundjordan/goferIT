@@ -18,7 +18,8 @@
     "bcrypt": "~0.7.5",
     "connect-mongodb": "~1.1.5",
     "async": "~0.2.5",
-    "mongodb": "~1.2.12"
+    "mongodb": "~1.2.12",
+    "passport": "~0.1.16"
   },
   "devDependencies": {
     "node-dev": "~0.2.9",

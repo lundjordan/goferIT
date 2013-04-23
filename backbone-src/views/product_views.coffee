@@ -353,42 +353,57 @@ jQuery ->
             category = $("#category-input").val()
             price = parseFloat($("#price-input").val(), 10) * 100
             cost = parseFloat($("#cost-input").val(), 10) * 100
+            supplierName = $("#supplier-name-select").val()
+            primaryMeasurementFactor = subQuants.subQuantTypes[0]
+            measurementPossibleValues = [value for value in subQuants.subQuantTypes]
             storeName = $("#store-name-select").val()
-            totalQuantity = 0
-            subTotalQuantity = []
+            individualProperties = []
 
             if subQuants
-                # this product has a subTotalQuantity
-                totalQuantity += parseInt(quant, 10) for quant in subQuants.subQuantValues
                 for quantity, i in subQuants.subQuantValues
-                    subTotalQuantity.push
-                        measurementName: subQuants.subQuantTypes[0]
-                        measurementValue: subQuants.subQuantTypes[i+1]
-                        quantity: quantity
-            else
-                # this product has a GrandTotalQuantity
-                totalQuantity = parseInt $("#grand-total-input").val(), 10
+                    for individualProperty in [1..quantity]
+                        # we want to represent each product as an identity
+                        individualProperties.push
+                            storeName: storeName
+                            sourceHistory:
+                                _supplier: app.Suppliers.where(
+                                    {name: supplierName})[0].id or null
+                            measurements: [
+                                factor: primaryMeasurementFactor
+                                value: subQuants.subQuantTypes[i+1]
+                            ]
+                console.log subQuants
+                console.log individualProperties
+            #     # this product has a subTotalQuantity
+            #     for quantity, i in subQuants.subQuantValues
+            #         subTotalQuantity.push
+            #             measurementName: subQuants.subQuantTypes[0]
+            #             measurementValue: subQuants.subQuantTypes[i+1]
+            #             quantity: quantity
+            # else
+            #     # this product has a GrandTotalQuantity
+            #     totalQuantity = parseInt $("#grand-total-input").val(), 10
 
-            productModel =
-                description:
-                    name: name
-                    brand: brand
-                storeName: storeName
-                category: category
-                price: price
-                cost: cost
-                totalQuantity: totalQuantity
-                subTotalQuantity: subTotalQuantity
-            if @model # we are in edit mode
-                @model.save productModel
-            else
-                app.Products.create productModel
-
-            message = successMessage
-            alertWarning = new app.AlertView
-                alertType: 'success'
-            $("#root-backbone-alert-view").
-                html(alertWarning.render( "alert-success", message).el)
+            # productModel =
+            #     description:
+            #         name: name
+            #         brand: brand
+            #     storeName: storeName
+            #     category: category
+            #     price: price
+            #     cost: cost
+            #     totalQuantity: totalQuantity
+            #     subTotalQuantity: subTotalQuantity
+            # if @model # we are in edit mode
+            #     @model.save productModel
+            # else
+            #     app.Products.create productModel
+# 
+#             message = successMessage
+#             alertWarning = new app.AlertView
+#                 alertType: 'success'
+#             $("#root-backbone-alert-view").
+#                 html(alertWarning.render( "alert-success", message).el)
 
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid
@@ -434,11 +449,10 @@ jQuery ->
             productSubQuants = []
             for columnName in columnNamesArray
                 productSubQuants.push
-                    measurementName: measurementType
                     measurementValue: columnName
                     quantity: '<input class="input-mini" type="text" value="0">'
             $('#sub-total-quantity-content')
-                .html (new ProductItemSubQuantityView()).render(productSubQuants).el
+                .html (new ProductItemSubQuantityView()).render(productSubQuants, measurementType).el
 
 
     # ###############
