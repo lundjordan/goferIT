@@ -9,7 +9,6 @@ restifyOrders = (app, restify, model) ->
 
     app.get path, (req, res) ->
         (model.find {_company: req.user._company})
-            .populate('_supplier')
             .exec (err, result) ->
                 if not err
                     res.send result

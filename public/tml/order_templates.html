@@ -21,7 +21,7 @@
     <%= referenceNum %>
   </td>
   <% if (_supplier) { %>
-    <td><%= _supplier.name %> </td>
+    <td><%= app.Suppliers.get(_supplier).get("name") %> </td>
   <% } else { %>
     <td>n/a</td>
   <% } %>
@@ -79,7 +79,7 @@
   <div class="row-fluid">
     <h3> RefNum: <%= referenceNum %> </h3>
     <% if (_supplier) { %>
-      <p class="lead"><a href="mailto:#">Supplier: <%= _supplier.email %></a></p>
+      <p class="lead"><a href="mailto:#">Supplier: <%= app.Suppliers.get(_supplier).get("name") %> </a></p>
     <% } else { %>
       <p class="lead">Supplier: "n/a" </p>
     <% } %>
@@ -129,7 +129,7 @@
   <td><%= description.brand %> </td>
   <td><%= category %> </td>
   <td><%= price * 0.01 %> </td>
-  <td><%= totalQuantity %> </td>
+  <td><%= individualProperties.length %></td>
 </script>
 <!--order single view templates-->
 

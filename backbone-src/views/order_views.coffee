@@ -68,6 +68,16 @@ jQuery ->
             'click #single-item-next-link': 'renderSingleItemNextView'
             'click #item-view-edit-link': 'renderSpecificEditView'
             'click #item-view-delete-link': 'renderSpecificDeleteView'
+        initialize: (options) ->
+            super()
+            @listenTo @collection, 'change', @renderOrderHasArrived
+        renderOrderHasArrived: (currentModel) ->
+            @render(currentModel)
+            orderProductsTable = new OrderProductsTable
+                model: @currentModel
+            $("#order-products-list").html (orderProductsTable.render()).el
+            orderProductsTable.addAll()
+            @orderMarkedAsArrivedAlert()
         renderSingleItemPrevView: (event) ->
             super()
             orderProductsTable = new OrderProductsTable
@@ -80,21 +90,33 @@ jQuery ->
                 model: @currentModel
             $("#order-products-list").html (orderProductsTable.render()).el
             orderProductsTable.addAll()
-        markOrderArrived: (e) ->
+        markOrderArrived: () ->
             # first we need to set the order as arrived with a date
             # doing so fires an event to re render the single view template
+            # and alert user that order's products have been put in stock
             @currentModel.save
                 dateArrived: (new Date()).toISOString()
-                _supplier: @currentModel.get("_supplier")._id
-            # XXX supplier part above is needed as we populate it in mongoget
-            # http request but we only want to save the id when we update the
-            # mongo document. need to look into never using populate() in
-            # mongoose
 
-            # now we need to add the products in that order to our existing
+            # now we need to add the products in the order to our existing
             # stock
             for orderProduct in @currentModel.get("products")
-                orderProduct._order = @currentModel.get "_id"
+                # first delete the _id property of this orderProduct
+                # as it will just confuse mongo on creation 
+                delete orderProduct._id
+
+                # then add the storeName from the order
+                # and the supplier / order reference to each product
+                for indiProduct in orderProduct.individualProperties
+                    # also delete all the generated _ids from subdocs
+                    if indiProduct.measurements
+                        for measurement in indiProduct.measurements
+                            delete measurement._id
+                    delete indiProduct._id
+                    indiProduct.storeName = @currentModel.get "storeName"
+                    indiProduct.sourceHistory =
+                        _order: @currentModel.get "_id"
+                        _supplier: @currentModel.get("_supplier")._id
+                # now check to see if this product in the order exists
                 isExistingProduct = app.Products.ifModelExists(
                     orderProduct.description.name,
                     orderProduct.description.brand
@@ -105,43 +127,28 @@ jQuery ->
                         'description.name': orderProduct.description.name
                         'description.brand': orderProduct.description.brand
                     )[0]
-                    # update the grand total of the product
-                    existingGrandTotal = existingProduct.get "totalQuantity"
+                    newIndividualProperties =
+                        existingProduct.get "individualProperties"
+                    newPossibleValues = null
+
+                    # now concat the existing and new product indi properties
+                    for orderProductProperty in orderProduct.individualProperties
+                        newIndividualProperties.push orderProductProperty
+
+                    # find the union of existing and new product possibleValues
+                    if existingProduct.get("primaryMeasurementFactor") isnt null
+                        existingPossibleValues =
+                            existingProduct.get("measurementPossibleValues")
+                        orderProductPossibleValues =
+                            orderProduct.measurementPossibleValues
+                        newPossibleValues = _.union(existingPossibleValues,
+                            orderProductPossibleValues)
                     existingProduct.save
-                        totalQuantity:
-                            existingGrandTotal + orderProduct.totalQuantity
-                    if existingProduct.get("subTotalQuantity").length
-                        # existing product has sub quants and will need
-                        # to merge them with the order product's subquants
-                        @mergeOrderProductsSubQuants(
-                            orderProduct, existingProduct
-                        )
+                        measurementPossibleValues: newPossibleValues
+                        individualProperties: newIndividualProperties
                 else
-                    console.log orderProduct
+                    # product does not exist so create a whole new one
                     app.Products.create orderProduct
-            @orderMarkedAsArrivedAlert()
-        mergeOrderProductsSubQuants: (orderProduct, existingProduct) ->
-            existingSubQuants = existingProduct.get "subTotalQuantity"
-            for orderProductSubQuant in orderProduct.subTotalQuantity
-                existingProductHasSubQuantValue = false
-                for existingSubQuant, index in existingSubQuants
-                    exSubVal = existingSubQuant.measurementValue
-                    ordSubVal = orderProductSubQuant.measurementValue
-                    if exSubVal is ordSubVal
-                        # we have an existing sub quant with the
-                        # same order product's subQuant. so let's merge
-                        existingProductHasSubQuantValue = true
-                        exSubQuant = existingSubQuant.quantity
-                        ordSubQuant = orderProductSubQuant.quantity
-                        existingSubQuants[index].
-                            quantity = exSubQuant + ordSubQuant
-                        existingProduct.save
-                            subTotalQuantity: existingSubQuants
-                if not existingProductHasSubQuantValue
-                    # add a new type, value, and quantity subTotal
-                    existingSubQuants.push orderProductSubQuant
-                    existingProduct.save
-                        subTotalQuantity: existingSubQuants
         orderMarkedAsArrivedAlert: ->
             message = "Order Arrived! Products have been added to your stock."
             alertWarningView = new app.AlertView
@@ -264,21 +271,20 @@ jQuery ->
                             # time to create an order!
                             @createNewOrder(currentProducts)
                 else
-                    console.log 'failed $ validation'
+                    return
         createNewOrder: (currentProducts) ->
             referenceNum = $("#refNum-input").val()
-            supplier = app.Suppliers.where
-                name: $("#supplier-name-select").val()
+            supplier = app.Suppliers.where(
+                {name: $("#supplier-name-select").val()})[0].id or null
             storeName = $("#store-name-select").val()
             shipCompany = $("#ship-company-input").val()
             cost = parseFloat($("#ship-cost-input").val(), 10) * 100
             estArrival = $("#est-arrival-input").val()
 
-            prod.storeName = storeName for prod in currentProducts
-
             order =
                 referenceNum: referenceNum
-                _supplier: supplier[0].get '_id'
+                _supplier: supplier
+                storeName: storeName
                 products: currentProducts
                 shippingInfo:
                     company: shipCompany
@@ -376,19 +382,30 @@ jQuery ->
             category = $("#category-input").val()
             price = parseFloat($("#price-input").val(), 10) * 100
             cost = parseFloat($("#cost-input").val(), 10) * 100
-            totalQuantity = 0
-            subTotalQuantity = []
+            individualProperties = []
+
             if subQuants
                 # this product has a subTotalQuantity
-                totalQuantity += parseInt(quant, 10) for quant in subQuants.subQuantValues
+                primaryMeasurementFactor = subQuants.subQuantTypes[0]
+                measurementPossibleValues = subQuants.subQuantTypes[1..]
                 for quantity, i in subQuants.subQuantValues
-                    subTotalQuantity.push
-                        measurementName: subQuants.subQuantTypes[0]
-                        measurementValue: subQuants.subQuantTypes[i+1]
-                        quantity: quantity
+                    if quantity isnt "0"
+                        for individualProperty in [1..parseInt(quantity, 10)]
+                            # we want to represent each product as an identity
+                            individualProperties.push
+                                measurements: [
+                                    factor: primaryMeasurementFactor
+                                    value: subQuants.subQuantTypes[i+1]
+                                ]
             else
                 # this product has a GrandTotalQuantity
+                primaryMeasurementFactor = null
+                measurementPossibleValues = null
                 totalQuantity = parseInt $("#grand-total-input").val(), 10
+                for individualProperty in [1..totalQuantity]
+                    # we want to represent each product as an identity
+                    individualProperties.push {}
+
             orderProduct =
                 description:
                     name: name
@@ -396,8 +413,9 @@ jQuery ->
                 category: category
                 price: price
                 cost: cost
-                totalQuantity: totalQuantity
-                subTotalQuantity: subTotalQuantity
+                primaryMeasurementFactor: primaryMeasurementFactor
+                measurementPossibleValues: measurementPossibleValues
+                individualProperties: individualProperties
             return orderProduct
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid

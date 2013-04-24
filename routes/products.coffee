@@ -26,9 +26,10 @@ restifyProducts = (app, restify, model) ->
                     ,
                         (err, stock) ->
                             if not err
-                                console.log stock.products
+                                console.log 'NO ERROR', stock.products
                                 res.send stock
                             else
+                                console.log 'BIG ERROR'
                                 res.send (errMsg err)
                 else
                     res.send (errMsg err)
