@@ -354,56 +354,59 @@ jQuery ->
             price = parseFloat($("#price-input").val(), 10) * 100
             cost = parseFloat($("#cost-input").val(), 10) * 100
             supplierName = $("#supplier-name-select").val()
-            primaryMeasurementFactor = subQuants.subQuantTypes[0]
-            measurementPossibleValues = [value for value in subQuants.subQuantTypes]
             storeName = $("#store-name-select").val()
             individualProperties = []
 
             if subQuants
+                primaryMeasurementFactor = subQuants.subQuantTypes[0]
+                measurementPossibleValues = subQuants.subQuantTypes[1..]
                 for quantity, i in subQuants.subQuantValues
-                    for individualProperty in [1..quantity]
-                        # we want to represent each product as an identity
-                        individualProperties.push
-                            storeName: storeName
-                            sourceHistory:
-                                _supplier: app.Suppliers.where(
-                                    {name: supplierName})[0].id or null
-                            measurements: [
-                                factor: primaryMeasurementFactor
-                                value: subQuants.subQuantTypes[i+1]
-                            ]
-                console.log subQuants
-                console.log individualProperties
-            #     # this product has a subTotalQuantity
-            #     for quantity, i in subQuants.subQuantValues
-            #         subTotalQuantity.push
-            #             measurementName: subQuants.subQuantTypes[0]
-            #             measurementValue: subQuants.subQuantTypes[i+1]
-            #             quantity: quantity
-            # else
-            #     # this product has a GrandTotalQuantity
-            #     totalQuantity = parseInt $("#grand-total-input").val(), 10
+                    if quantity isnt "0"
+                        for individualProperty in [1..parseInt(quantity, 10)]
+                            # we want to represent each product as an identity
+                            individualProperties.push
+                                storeName: storeName
+                                sourceHistory:
+                                    _supplier: app.Suppliers.where(
+                                        {name: supplierName})[0].id or null
+                                measurements: [
+                                    factor: primaryMeasurementFactor
+                                    value: subQuants.subQuantTypes[i+1]
+                                ]
+            else
+                # this product has a GrandTotalQuantity
+                primaryMeasurementFactor = null
+                measurementPossibleValues = null
+                totalQuantity = parseInt $("#grand-total-input").val(), 10
+                for individualProperty in [1..totalQuantity]
+                    # we want to represent each product as an identity
+                    individualProperties.push
+                        storeName: storeName
+                        sourceHistory:
+                            _supplier: app.Suppliers.where(
+                                {name: supplierName})[0].id or null
 
-            # productModel =
-            #     description:
-            #         name: name
-            #         brand: brand
-            #     storeName: storeName
-            #     category: category
-            #     price: price
-            #     cost: cost
-            #     totalQuantity: totalQuantity
-            #     subTotalQuantity: subTotalQuantity
-            # if @model # we are in edit mode
-            #     @model.save productModel
-            # else
-            #     app.Products.create productModel
-# 
-#             message = successMessage
-#             alertWarning = new app.AlertView
-#                 alertType: 'success'
-#             $("#root-backbone-alert-view").
-#                 html(alertWarning.render( "alert-success", message).el)
+            productModel =
+                description:
+                    name: name
+                    brand: brand
+                category: category
+                price: price
+                cost: cost
+                primaryMeasurementFactor: primaryMeasurementFactor
+                measurementPossibleValues: measurementPossibleValues
+                individualProperties: individualProperties
+
+            if @model # we are in edit mode
+                @model.save productModel
+            else
+                app.Products.create productModel
+
+            message = successMessage
+            alertWarning = new app.AlertView
+                alertType: 'success'
+            $("#root-backbone-alert-view").
+                html(alertWarning.render( "alert-success", message).el)
 
         subQuantTotalValid: (types, values) ->
             # check to see if table sub quants are valid
@@ -418,9 +421,10 @@ jQuery ->
                 message = "For sub quantity totals, there must be at" +
                     " least one value higher than: 0. Only positive numbers are" +
                     " accepted."
-                alertWarning = new app.AlertView 'error'
-                $("#main-alert-div").html(alertWarning.render(
-                    "alert-error alert-block", message).el)
+                alertWarning = new app.AlertView
+                    alertType: 'warning'
+                $("#root-backbone-alert-view").
+                    html(alertWarning.render("alert-error alert-block", message).el)
                 return false
             return true
         quantityOptionInput: (e) ->

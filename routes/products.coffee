@@ -8,7 +8,6 @@ restifyProducts = (app, restify, model) ->
 
     app.get path, (req, res) ->
         (model.findOne {_company: req.user._company})
-            .populate('products._order')
             .exec (err, result) ->
                 if not err
                     res.send result.products
@@ -17,7 +16,6 @@ restifyProducts = (app, restify, model) ->
 
     app.post path, (req, res) ->
         (model.findOne {_company: req.user._company})
-            .populate('products._order')
             .exec (err, stock) ->
                 if not err
                     model.update
@@ -40,7 +38,6 @@ restifyProducts = (app, restify, model) ->
 
     app.put pathWithId, (req, res) ->
         (model.findOne {_company: req.user._company})
-            .populate('products._order')
             .exec (err, stock) ->
                 if not err
                     product = stock.products.id req.params.id
@@ -56,7 +53,6 @@ restifyProducts = (app, restify, model) ->
 
     app.del pathWithId, (req, res) ->
         (model.findOne {_company: req.user._company})
-            .populate('products._order')
             .exec (err, stock) ->
                 if not err
                     product = stock.products.id(req.params.id).remove()
