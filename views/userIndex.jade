@@ -56,7 +56,7 @@ block content
               a(href='#people-main-content', data-toggle='tab')
                 <i class='icon-user'></i> People
             li#finance-link
-              a(href='#finance-main-content', data-toggle='tab')
+              a(href='#finances-main-content', data-toggle='tab')
                 <i class='icon-book'></i> Finance
       div.span10
         div#main-window-main-content.tab-content.active
@@ -66,6 +66,9 @@ block content
                 h1 Welcome
                   p.lead an easier way to manage your business
           div#pos-main-content.tab-pane
+            div.page-header
+              h1 Sales <small> handling every transaction </small>
+            #sales-main-view
           div#inventory-main-content.tab-pane
             div.page-header
               h1 Inventory <small> everything on one shelf </small>
@@ -103,6 +106,10 @@ block content
                       #order-item-view-content.tab-pane
                       #order-create-view-content.tab-pane
 
+          div#company-main-content.tab-pane
+            div.page-header
+              h1 Company <small> a profile overview </small>
+            #company-main-view
           div#people-main-content.tab-pane
             div.page-header
               h1 People <small> counting who matters most </small>
@@ -154,3 +161,7 @@ block content
                       #suppliers-list-view-content.tab-pane.active
                       #supplier-item-view-content.tab-pane
                       #supplier-create-view-content.tab-pane
+          div#finances-main-content.tab-pane
+            div.page-header
+              h1 Finances <small> graphing every penny </small>
+            #finances-main-view

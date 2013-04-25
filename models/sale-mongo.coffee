@@ -22,7 +22,6 @@ SaleSchema = new mongoose.Schema
         cost: Number
         price: Number
         primaryMeasurementFactor: String
-        measurementPossibleValues: []
         individualProperties: [{
             storeName: String
             sourceHistory:

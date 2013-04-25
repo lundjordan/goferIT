@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var AppControllerView, InventoryControllerView, PeopleControllerView, _ref;
+    var AppControllerView, InventoryControllerView, POSControllerView, PeopleControllerView, _ref;
     AppControllerView = (function(_super) {
 
       __extends(AppControllerView, _super);
@@ -18,12 +18,14 @@
       AppControllerView.prototype.events = {
         'click #dashboard-link': "dashboardRender",
         'click #inventory-link': "inventoryRender",
-        'click #people-link': "peopleRender"
+        'click #people-link': "peopleRender",
+        'click #pos-link': "posRender"
       };
 
       AppControllerView.prototype.initialize = function() {
         this.inventoryControllerView = this.options.inventoryControllerView;
         this.peopleControllerView = this.options.peopleControllerView;
+        this.posControllerView = this.options.posControllerView;
         return this.currentMenuView = this.inventoryControllerView;
       };
 
@@ -43,9 +45,43 @@
         return this.currentMenuView.renderCustomersInitView();
       };
 
+      AppControllerView.prototype.posRender = function() {
+        this.currentMenuView.removeCurrentContentView();
+        this.currentMenuView = this.posControllerView;
+        return this.currentMenuView.renderPOSInitView();
+      };
+
       AppControllerView.prototype.dashboardRender = function() {};
 
       return AppControllerView;
+
+    })(Backbone.View);
+    POSControllerView = (function(_super) {
+
+      __extends(POSControllerView, _super);
+
+      function POSControllerView() {
+        return POSControllerView.__super__.constructor.apply(this, arguments);
+      }
+
+      POSControllerView.prototype.el = '#sales-main-content';
+
+      POSControllerView.prototype.initialize = function() {
+        this.salesControllerView = this.options.salesControllerView;
+        return this.currentPOSView = this.salesControllerView;
+      };
+
+      POSControllerView.prototype.renderPOSInitView = function() {
+        this.currentPOSView.removeCurrentContentView();
+        this.currentPOSView = this.salesControllerView;
+        return this.currentPOSView.renderSalesConstructView();
+      };
+
+      POSControllerView.prototype.removeCurrentContentView = function() {
+        return this.currentPOSView.removeCurrentContentView();
+      };
+
+      return POSControllerView;
 
     })(Backbone.View);
     PeopleControllerView = (function(_super) {
@@ -144,7 +180,8 @@
     this.app = (_ref = window.app) != null ? _ref : {};
     this.app.AppControllerView = AppControllerView;
     this.app.InventoryControllerView = InventoryControllerView;
-    return this.app.PeopleControllerView = PeopleControllerView;
+    this.app.PeopleControllerView = PeopleControllerView;
+    return this.app.POSControllerView = POSControllerView;
   });
 
 }).call(this);

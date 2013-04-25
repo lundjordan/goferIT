@@ -35,6 +35,7 @@ app = module.exports = express()
 (require './routes/suppliers') app, restify, Supplier
 (require './routes/orders') app, restify, Order
 (require './routes/products') app, restify, Stock
+(require './routes/sales') app, restify, Sale
 # (require './routes/sales') app, restify, Sale
 ##
 

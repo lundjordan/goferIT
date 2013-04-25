@@ -7,9 +7,11 @@ jQuery ->
             'click #dashboard-link': "dashboardRender"
             'click #inventory-link': "inventoryRender"
             'click #people-link': "peopleRender"
+            'click #pos-link': "posRender"
         initialize: ->
             @inventoryControllerView = @options.inventoryControllerView
             @peopleControllerView = @options.peopleControllerView
+            @posControllerView = @options.posControllerView
             @currentMenuView = @inventoryControllerView
         inventoryRender: ->
             # first remove the previous view's subview (the content)
@@ -29,7 +31,26 @@ jQuery ->
             # now reasign the currentMenuView
             @currentMenuView = @peopleControllerView
             @currentMenuView.renderCustomersInitView()
+        posRender: ->
+            # first remove the previous view's subview (the content)
+            @currentMenuView.removeCurrentContentView()
+            @currentMenuView = @posControllerView
+            @currentMenuView.renderPOSInitView()
         dashboardRender: ->
+
+    class POSControllerView extends Backbone.View
+        # this controller keeps the format of the others in case we expand
+        # sales functionality to support more inner nav tabs
+        el: '#sales-main-content'
+        initialize: ->
+            @salesControllerView = @options.salesControllerView
+            @currentPOSView = @salesControllerView
+        renderPOSInitView: ->
+            @currentPOSView.removeCurrentContentView()
+            @currentPOSView = @salesControllerView
+            @currentPOSView.renderSalesConstructView()
+        removeCurrentContentView: ->
+            @currentPOSView.removeCurrentContentView()
 
     class PeopleControllerView extends Backbone.View
         el: '#people-main-content'
@@ -86,3 +107,4 @@ jQuery ->
     @app.AppControllerView = AppControllerView
     @app.InventoryControllerView = InventoryControllerView
     @app.PeopleControllerView = PeopleControllerView
+    @app.POSControllerView = POSControllerView

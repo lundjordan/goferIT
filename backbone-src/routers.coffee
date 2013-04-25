@@ -14,6 +14,7 @@ jQuery ->
             app.Suppliers.fetch()
             app.Orders.fetch()
             app.Products.fetch()
+            app.Sales.fetch()
             app.appControllerView = new app.AppControllerView
                 inventoryControllerView: new app.InventoryControllerView
                     productControllerView: new app.ProductControllerView
@@ -22,6 +23,8 @@ jQuery ->
                     customerControllerView: new app.CustomerControllerView
                     employeeControllerView: new app.EmployeeControllerView
                     supplierControllerView: new app.SupplierControllerView
+                posControllerView: new app.POSControllerView
+                    salesControllerView: new app.SalesControllerView
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->

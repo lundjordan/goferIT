@@ -1,11 +1,12 @@
-# Product Model
+# Sale Model
 
-# class Product extends Backbone.Model
-class Product extends Backbone.DeepModel
+# class Sale extends Backbone.Model
+class Sale extends Backbone.DeepModel
     idAttribute: "_id"
     initialize: (attributes, options) ->
         if !attributes.createdAt
             @attributes.dateCreated = (new Date).toISOString()
 
 @app = window.app ? {}
-@app.Product = Product
+@app.Sale = Sale
+
