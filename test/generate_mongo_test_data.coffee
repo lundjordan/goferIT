@@ -867,65 +867,154 @@ async.series [
     ,(callback) -> # sale - generate test data
         sale1 = new Sale
             _company: companyArray[0].id
-            storeName: companyArray[0].stores[0].name
             _employee: employeeArray[0].id
+            _customer: customerArray[0].id
             products: [
                 description:
-                    brand: 'Adidas'
-                    name: 'F30 TRX'
-                category: 'Men\'s Soccer Cleats'
+                    brand: 'CCM'
+                    name: 'Crazy Light'
+                category: 'Hockey Skates'
                 cost: 45000
-                price: 65000
-                size: 11
+                price: 65099
+                primaryMeasurementFactor: 'size'
+                individualProperties: [
+                    storeName: companyArray[0].stores[0].name
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "8"
+                    ]
+                ]
+            ,
+                description:
+                    brand: 'Nike'
+                    name: 'Featherlite'
+                category: 'Basketball'
+                cost: 2000
+                price: 3599
+                primaryMeasurementFactor: null
+                measurementPossibleFactors: []
+                individualProperties: [
+                    sourceHistory:
+                        _order: orderArray[2].id
+                        _supplier: supplierArray[0].id
+                    measurements: []
+                ]
             ]
         sale2 = new Sale
             _company: companyArray[0].id
-            storeName: companyArray[0].stores[0].name
-            _employee: employeeArray[0].id
+            _employee: employeeArray[1].id
+            _customer: customerArray[0].id
             products: [
                 description:
-                    brand: 'Adidas'
-                    name: 'Nike Vapor Talon Elite'
-                category: 'Men\'s Football Cleats'
-                cost: 45000
-                price: 65000
-                size: 9
-            ,
-                description:
-                    brand: 'Adidas'
-                    name: 'F30 TRX'
-                category: 'Men\'s Football Cleats'
-                cost: 6000
-                price: 19000
-                size: 8
+                    brand: 'Bauer'
+                    name: 'Vapor X4.0'
+                category: 'Hockey Skates'
+                cost: 30000
+                price: 40099
+                primaryMeasurementFactor: 'size'
+                individualProperties: [
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
+                ]
             ]
         sale3 = new Sale
             _company: companyArray[0].id
-            storeName: companyArray[0].stores[0].name
-            _employee: employeeArray[0].id
+            _employee: employeeArray[1].id
+            _customer: customerArray[0].id
             products: [
                 description:
-                    brand: 'CCM'
-                    name: 'Crazy Light'
+                    brand: 'Nike'
+                    name: 'Zooms'
                 category: 'Hockey Skates'
-                cost: 45000
-                price: 65000
-                size: 9
+                cost: 35000
+                price: 40099
+                primaryMeasurementFactor: 'size'
+                individualProperties: [
+                    measurements: [
+                        factor: 'size'
+                        value: "11"
+                    ]
+                ]
             ]
         sale4 = new Sale
             _company: companyArray[0].id
-            storeName: companyArray[0].stores[0].name
-            _employee: employeeArray[1].id
+            _employee: employeeArray[0].id
+            products: [
+                description:
+                    brand: 'Under Armor'
+                    name: 'Light Tee'
+                category: 'Shirt'
+                cost: 1200
+                price: 2599
+                primaryMeasurementFactor: 'size'
+                individualProperties: [
+                    storeName: companyArray[0].stores[0].name
+                    sourceHistory:
+                        _order: orderArray[1].id
+                        _supplier: supplierArray[2].id
+                    measurements: [
+                        factor: 'size'
+                        value: "large"
+                    ]
+                ,
+                    storeName: companyArray[0].stores[0].name
+                    sourceHistory:
+                        _order: orderArray[1].id
+                        _supplier: supplierArray[2].id
+                    measurements: [
+                        factor: 'size'
+                        value: "small"
+                    ]
+                ]
+            ,
+                description:
+                    brand: 'Adidas'
+                    name: 'Runner'
+                category: 'Running Footwear'
+                cost: 8000
+                price: 12099
+                primaryMeasurementFactor: 'size'
+                individualProperties: [
+                    storeName: companyArray[0].stores[0].name
+                    measurements: [
+                        factor: 'size'
+                        value: "9"
+                    ]
+                ]
+            ]
+
+        sale5 = new Sale
+            _company: companyArray[0].id
+            _employee: employeeArray[0].id
+            _customer: customerArray[2].id
             products: [
                 description:
                     brand: 'CCM'
                     name: 'Crazy Light'
                 category: 'Hockey Skates'
                 cost: 45000
-                price: 65000
-                size: 10
+                price: 65099
+                primaryMeasurementFactor: 'size'
+                individualProperties: [
+                    storeName: companyArray[0].stores[1].name
+                    sourceHistory:
+                        _order: orderArray[0].id
+                        _supplier: supplierArray[0].id
+                    measurements: [
+                        factor: 'size'
+                        value: "10"
+                    ]
+                ]
             ]
-        async.each [sale1, sale2, sale3, sale4], (obj) ->
+        async.each [sale1, sale2, sale3, sale4, sale5], (obj) ->
             obj.save (err) ->
                 if err
                     throw err

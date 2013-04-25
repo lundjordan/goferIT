@@ -4,9 +4,14 @@ SaleSchema = new mongoose.Schema
     _company:
         type: mongoose.Schema.Types.ObjectId
         ref: 'Company'
-    storeName:
-        type: String
+    _employee:
+        type: mongoose.Schema.Types.ObjectId
+        ref: 'Employee'
         required: true
+    _customer:
+        type: mongoose.Schema.Types.ObjectId
+        ref: 'Customer'
+        required: false
     products: [{
         serialID:
             type: String
@@ -16,18 +21,26 @@ SaleSchema = new mongoose.Schema
         category: String
         cost: Number
         price: Number
+        primaryMeasurementFactor: String
+        measurementPossibleValues: []
+        individualProperties: [{
+            storeName: String
+            sourceHistory:
+                _order:
+                    type: mongoose.Schema.Types.ObjectId
+                    ref: 'Company'
+                _supplier:
+                    type: mongoose.Schema.Types.ObjectId
+                    ref: 'Supplier'
+            measurements: [{
+                factor: String
+                value: String
+            }]
+        }]
         dateCreated:
             type: Date
             default: new Date().toISOString()
     }]
-    _employee:
-        type: mongoose.Schema.Types.ObjectId
-        ref: 'Employee'
-        required: true
-    _customer:
-        type: mongoose.Schema.Types.ObjectId
-        ref: 'Customer'
-        required: false
     dateCreated:
         type: Date
         default: new Date().toISOString()
