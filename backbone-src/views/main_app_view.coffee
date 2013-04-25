@@ -28,8 +28,8 @@ jQuery ->
             # then wehave to physically tell bootstrap to show the subtab
             $('#customers-menu-pill a').tab('show')
             $('#customers-list-tab a').tab('show')
-            # now reasign the currentMenuView
-            @currentMenuView = @peopleControllerView
+            # now reasign the currentmenuview
+            @currentmenuview = @peoplecontrollerview
             @currentMenuView.renderCustomersInitView()
         posRender: ->
             # first remove the previous view's subview (the content)

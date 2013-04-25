@@ -7,22 +7,29 @@ jQuery ->
             @currentView = null
         renderSalesConstructView: ->
             @removeCurrentContentView()
-            # @currentView = new app.GenericListView
-            #     collection: app.Sales
-            #     storeSelectView: SalesListStoreSelectView
-            #     tableTemplate: '#sales-table-template'
-            #     tableListID: '#sales-table-list'
-            #     itemTrTemplate: '#sale-tr-template'
-            #     deleteModalTemplate: '#sale-view-delete-template'
-            #     ItemsTableClass: SalesListTable # this overrides GenericItemsTable
-            #     itemControllerView: @
-            # $("#sales-list-view-content").html @currentView.render().el
+            @currentView = new SalesConstructControllerView
+                collection: app.Sales
+            $("#sales-main-view").html @currentView.render().el
         renderSalesConfirmView: ->
             @removeCurrentContentView()
 
         removeCurrentContentView: ->
             if @currentView
                 @currentView.remove()
+
+    class SalesConstructControllerView extends Backbone.View
+        template: _.template ($ '#root-backbone-content-template').html()
+        render: ->
+            @$el.html this.template({})
+            @$("#root-backbone-view-body").html(
+                (new SalesConstructSkeletonView).render(@model).el)
+            @
+    class SalesConstructSkeletonView extends Backbone.View
+        template: _.template ($ '#sales-skeleton-template').html()
+        render: ->
+            @$el.html this.template({})
+            @
+
 
 
 

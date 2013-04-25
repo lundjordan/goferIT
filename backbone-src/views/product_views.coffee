@@ -137,15 +137,12 @@ jQuery ->
             'click #item-view-edit-link': 'renderSpecificEditView'
             'click #item-view-delete-link': 'renderSpecificDeleteView'
         initialize: (options) ->
-            # @storeSelectView = new ProductsListStoreSelectView()
             @listenTo app.Products, 'remove', @renderProductItemNextView
             @productView =  new ProductItemBodyView()
             @itemControllerView = @options.itemControllerView
         render: (productModel) ->
             @model = productModel
             @$el.html this.template({})
-            # @$("#root-backbone-view-head").html @storeSelectView.render().el
-            # @storeSelectView.render()
             @$("#root-backbone-view-body").html @productView.render(@model).el
             @
         renderProductItemPrevView: (event) ->

@@ -41,7 +41,7 @@
         this.currentMenuView.removeCurrentContentView();
         $('#customers-menu-pill a').tab('show');
         $('#customers-list-tab a').tab('show');
-        this.currentMenuView = this.peopleControllerView;
+        this.currentmenuview = this.peoplecontrollerview;
         return this.currentMenuView.renderCustomersInitView();
       };
 
