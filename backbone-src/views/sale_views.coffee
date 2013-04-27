@@ -5,6 +5,7 @@ jQuery ->
         el: '#sales-main-view'
         initialize: ->
             @currentView = null
+            @currentSale = new app.Sale({})
         renderSalesConstructView: ->
             @removeCurrentContentView()
             @currentView = new SalesConstructControllerView
@@ -94,7 +95,7 @@ jQuery ->
                 @addToTransaction.remove()
     class AddToTransactionModal extends Backbone.View
         events:
-            'click #delete-confirmed-button': 'confirmedDeletion'
+            'click #confirm-add-button': 'confirmAdd'
         template: _.template ($ '#add-to-transaction-template').html()
         initialize: ->
             @storeName = @options.storeName
@@ -103,14 +104,35 @@ jQuery ->
             if @model.get('primaryMeasurementFactor') isnt null
                 @showSubQuantities()
             @
-        confirmedDeletion: ->
-            $("#delete-item-modal").modal 'hide'
-            @model.destroy()
-            message = "removed..."
-            alertInfo = new AlertView
-                alertType: 'info'
-            $("#root-backbone-alert-view").
-                html(alertInfo.render( "alert-info", message).el)
+        confirmAdd: ->
+            subQuantTypes = []
+            subQuantValues = []
+            @$("th").each ->
+                subQuantTypes.push $(this).html()
+            @$("td").each ->
+                if $(this).html() isnt "Totals"
+                    subQuantValues.push $(this).find("input").val()
+            if @subQuantTotalValid subQuantValues
+                $("#add-to-transaction-modal").modal 'hide'
+            else
+                console.log 'made it here'
+                message = "One value must be higher than 0. " +
+                    "Only positive integers are accepted"
+                alertWarning = new app.AlertView
+                    alertType: 'warning'
+                @$("#add-to-transaction-alert").
+                    html(alertWarning.render("alert-error", message).el)
+
+        subQuantTotalValid: (values) ->
+            # check to see if table sub quants are valid
+            oneValueMoreThan0 = false
+            anyValuesLessThan0 = false
+            for value in values
+                if parseInt(value, 10) > 0
+                    oneValueMoreThan0 = true
+                if parseInt(value, 10) < 0
+                    anyValuesLessThan0 = true
+            return oneValueMoreThan0 and not anyValuesLessThan0
         showSubQuantities: ->
             # XXX this is mostly duplicate code from product_views
             # first let's sort the subquantities for readibility in table
@@ -124,8 +146,9 @@ jQuery ->
             for subTotalValues in @model.get 'measurementPossibleValues'
                 if subTotalTotals[subTotalValues]
                     quantityHTML = "<ul class='inline'> " +
-                        "<li><input class='input-mini' type='text'></li>" +
-                        "<li><p>Of #{subTotalTotals[subTotalValues]}" +
+                        "<li><input class='input-mini' type='text' " +
+                        "value='0'></li><li><p>" +
+                        " Of #{subTotalTotals[subTotalValues]}" +
                         "</p></li></ul>"
                     individualProducts.push
                         measurementValue: subTotalValues

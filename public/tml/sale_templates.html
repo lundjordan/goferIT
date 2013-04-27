@@ -133,6 +133,7 @@
       </h3> 
     </div>
     <div class="modal-body">
+      <div id="add-to-transaction-alert"></div>
       <p class="lead">
         <strong>Name: </strong> <%= description.name %>
       </p>
@@ -143,15 +144,13 @@
         <p> <strong> Total In Stock </strong><br />
         <table class="table table-bordered">
           <tbody>
-            <th>
-              Total
-            </th>
-            <th>
+            <th>Total</th>
+            <td>
               <ul class="inline">
-                <li><input class="input-mini" type="text"></li>
+                <li><input class="input-mini" type="text" value="0"></li>
                 <li><p>Of <%= individualProperties.length %></p></li>
               </ul>
-            </th>
+            </td>
             </tr>
           </tbody>
         </table>
@@ -162,7 +161,7 @@
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal"
         aria-hidden="true">Cancel</button>
-       <a href="#" id='delete-confirmed-button' class="btn btn-primary">Add</a>
+       <a href="#" id='confirm-add-button' class="btn btn-primary">Add</a>
     </div>
   </div>
 </script>

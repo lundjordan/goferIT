@@ -302,7 +302,7 @@ jQuery ->
                         if $(this).html() isnt "Totals"
                             subQuantValues.push $(this).find("input").val()
 
-                    if not @subQuantTotalValid(subQuantTypes, subQuantValues)
+                    if not @subQuantTotalValid subQuantValues
                         return # not valid
                     return @createOrUpdateProduct "Updated an existing product!",
                         subQuantTypes: subQuantTypes
@@ -407,7 +407,7 @@ jQuery ->
             $("#root-backbone-alert-view").
                 html(alertWarning.render( "alert-success", message).el)
 
-        subQuantTotalValid: (types, values) ->
+        subQuantTotalValid: (values) ->
             # check to see if table sub quants are valid
             oneValueMoreThan0 = false
             anyValuesLessThan0 = false
