@@ -29,7 +29,7 @@ jQuery ->
             $('#customers-menu-pill a').tab('show')
             $('#customers-list-tab a').tab('show')
             # now reasign the currentmenuview
-            @currentmenuview = @peoplecontrollerview
+            @currentMenuView = @peopleControllerView
             @currentMenuView.renderCustomersInitView()
         posRender: ->
             # first remove the previous view's subview (the content)

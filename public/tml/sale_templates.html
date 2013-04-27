@@ -12,43 +12,83 @@
     <div class="tab-pane active" id="process-content">
       <div class="row-fluid">
         <div class="span9">
-          <div class="well">
-            <ul class='inline'>
-              <li> <p class='lead'>Products</p> </li>
-              <li class="divider-vertical"> </li>
-              <li>
-                <div class="btn-group" data-toggle="buttons-radio">
-                  <button type="button" class="btn active">
-                    Existing Products
-                  </button>
-                  <button type="button" class="btn">
-                    Not In Stock
-                  </button>
+          <div class="">
+            <div class="accordion" id="accordion2">
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                    Inventory Selection
+                  </a>
                 </div>
-              </li>
-            </ul>
+                <div id="collapseOne" class="accordion-body collapse in">
+                  <div class="accordion-inner">
+                    <ul class='inline'>
+                      <li> <p class='lead'>Products</p> </li>
+                      <li class="divider-vertical"> </li>
+                      <li>
+                      <div class="btn-group" data-toggle="buttons-radio">
+                        <button type="button" class="btn active">
+                          Existing Products
+                        </button>
+                        <button type="button" class="btn">
+                          Not In Stock
+                        </button>
+                      </div>
+                      </li>
+                    </ul>
+                    <ul class='inline'>
+                      <li>
+                        <div class="input-append">
+                          <input class="input-medium" id="appendedInputButton"
+                          type="text">
+                          <button class="btn" type="button">Name</button>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="input-append">
+                          <input class="input-medium" id="appendedInputButton"
+                          type="text">
+                          <button class="btn" type="button">Brand</button>
+                        </div>
+                      </li>
+                      <li>
+                        <select id='store-name-select'>
+                        </select>
+                      </li>
+                      <li>
+                        <p class="lead">Store</p>
+                      </li>
+                    </ul>
+                    <div id="products-table-id"> </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                    Customer Selection
+                  </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <div class="row-fluid">
+                      <p class='lead'>Customers</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="span3">
           <div class="well">
             <div class="row-fluid">
-              <p class='lead'>Transaction Items</p>
+              <legend>Transaction Items</legend>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="span9">
           <div class="well">
             <div class="row-fluid">
-              <p class='lead'>Customers</p>
-            </div>
-          </div>
-        </div>
-        <div class="span3">
-          <div class="well">
-            <div class="row-fluid">
-              <p class='lead'>Customer</p>
+              <legend>Customer</legend>
             </div>
           </div>
           <ul class="pager inline">
@@ -63,7 +103,6 @@
               </button>
             </li>
           </ul>
-        </div>
       </div>
     </div>
     <div class="tab-pane" id="payment-content">
