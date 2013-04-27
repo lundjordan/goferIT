@@ -11,10 +11,9 @@ jQuery ->
                 collection: app.Sales
             $("#sales-main-view").html @currentView.render().el
         renderSalesConfirmView: ->
-            @removeCurrentContentView()
-
         removeCurrentContentView: ->
             if @currentView
+                # clean up incomplete transaction
                 @currentView.remove()
 
     class SalesConstructControllerView extends Backbone.View
@@ -87,6 +86,7 @@ jQuery ->
         productSelected: (e) ->
             @addToTransaction = new AddToTransactionModal
                 model: @model
+                storeName: @storeName
             $("#root-backbone-view-body").
                 append @addToTransaction.render().el
             $("#add-to-transaction-modal").modal 'show'
@@ -96,6 +96,8 @@ jQuery ->
         events:
             'click #delete-confirmed-button': 'confirmedDeletion'
         template: _.template ($ '#add-to-transaction-template').html()
+        initialize: ->
+            @storeName = @options.storeName
         render: ->
             @$el.html @template(@model.attributes)
             if @model.get('primaryMeasurementFactor') isnt null
@@ -110,20 +112,24 @@ jQuery ->
             $("#root-backbone-alert-view").
                 html(alertInfo.render( "alert-info", message).el)
         showSubQuantities: ->
-            # XXX this is duplicate code from product_views
+            # XXX this is mostly duplicate code from product_views
             # first let's sort the subquantities for readibility in table
             individualProducts = []
             individualProps = @model.get('individualProperties')
-            subTotalTotals = _.countBy individualProps, (elem) ->
+            productsByStoreNames = _.groupBy individualProps, 'storeName'
+            prodsByCurrentStore =
+                productsByStoreNames[$('#store-name-select option:selected').val()]
+            subTotalTotals = _.countBy prodsByCurrentStore, (elem) ->
                 elem.measurements[0]['value']
             for subTotalValues in @model.get 'measurementPossibleValues'
-                quantityHTML = "<ul class='inline'> " +
-                    "<li><input class='input-mini' type='text'></li>" +
-                    "<li><p>Of #{subTotalTotals[subTotalValues] or 0}" +
-                    "</p></li></ul>"
-                individualProducts.push
-                    measurementValue: subTotalValues
-                    quantity: quantityHTML
+                if subTotalTotals[subTotalValues]
+                    quantityHTML = "<ul class='inline'> " +
+                        "<li><input class='input-mini' type='text'></li>" +
+                        "<li><p>Of #{subTotalTotals[subTotalValues]}" +
+                        "</p></li></ul>"
+                    individualProducts.push
+                        measurementValue: subTotalValues
+                        quantity: quantityHTML
             individualProducts = _.sortBy individualProducts, (el) ->
                 return el.measurementValue
             subQuantView = new app.ProductItemSubQuantityView()
