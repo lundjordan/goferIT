@@ -110,3 +110,76 @@
   </div>
 </script>
 <!--sale construct view templates-->
+
+<!--sale product list view templates-->
+<script type="text/template" id="sale-products-table-template">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Brand</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+    <tbody id="products-table-list">
+    </tbody>
+  </table>
+</script>
+<script type="text/template" id="sale-product-tr-template">
+  <td>
+    <a href='#' id='product-purchase-link'><i class='icon-ok'></i><a>
+    <%= description.name %>
+  </td>
+  <td><%= description.brand %> </td>
+  <td><%= category %> </td>
+  <td><%= price * 0.01 %> </td>
+  <td><%= storeQuantityCount %> </td>
+</script>
+<!--product list view templates-->
+<script type="text/template" id="add-to-transaction-template">
+  <div id="add-to-transaction-modal" class="modal hide fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"
+        aria-hidden="true">×</button>
+      <h3 id="myModalLabel">
+        Add Product To Transaction
+      </h3> 
+    </div>
+    <div class="modal-body">
+      <p class="lead">
+        <strong>Name: </strong> <%= description.name %>
+      </p>
+      <p class="lead">
+        <strong>Brand: </strong> <%= description.brand  %>
+      </p>
+      <% if (primaryMeasurementFactor === null) { %>
+        <p> <strong> Total In Stock </strong><br />
+        <table class="table table-bordered">
+          <tbody>
+            <th>
+              Total
+            </th>
+            <th>
+              <ul class="inline">
+                <li><input class="input-mini" type="text"></li>
+                <li><p>Of <%= individualProperties.length %></p></li>
+              </ul>
+            </th>
+            </tr>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p id="sub-quantity-totals"> </p>
+      <% } %>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal"
+        aria-hidden="true">Cancel</button>
+       <a href="#" id='delete-confirmed-button' class="btn btn-primary">Add</a>
+    </div>
+  </div>
+</script>

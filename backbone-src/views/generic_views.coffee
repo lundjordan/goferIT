@@ -68,7 +68,7 @@ jQuery ->
             @collection.each @addOne, @
     class SingleListItemView extends Backbone.View
         tagName: 'tr'
-        events:
+        events: ->
             'mouseover': 'showItemOptions'
             'mouseout': 'hideItemOptions'
             'click #item-view-eye-link': 'renderSpecificItemView'
@@ -97,6 +97,8 @@ jQuery ->
                 model: @model
                 template: @deleteModalTemplate
             $("#root-backbone-view-body").append @deleteView.render().el
+            $('#delete-item-modal').on 'hidden', =>
+                @deleteView.remove()
             $("#delete-item-modal").modal 'show'
     # ###############
 
