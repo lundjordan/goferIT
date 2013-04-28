@@ -1,1 +1,103 @@
-/* Nothing Custom Yet :( */
+
+/* line 224 */
+body {
+    font-family: Century Gothic, sans-serif;
+}
+
+/* line 233 */
+a {
+  color: rgb(0, 0, 0);
+}
+
+/* line 238 */
+a:hover,
+a:focus {
+  color: rgb(128, 128, 128);
+}
+
+/* line 4084 */
+.nav-pills > li > a {
+    padding: 14px 25px;
+}
+
+/* line 4096 */
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover,
+.nav-pills > .active > a:focus {
+    padding: 14px 25px;
+    background-color: rgb(90, 143, 255);
+}
+
+/* line 3021 */
+.well {
+    background-color: rgb(248, 248, 248);
+}
+
+/* line 3998 */
+.nav-list > .active > a,
+.nav-list > .active > a:hover,
+.nav-list > .active > a:focus {
+    background-color: rgb(90, 143, 255);
+}
+
+/* line 4396 */
+.navbar .container {
+  height: 5em;
+}
+
+/* line 4405 */
+.navbar .brand {
+  padding: 25px 20px 10px;
+}
+
+/* line 4421 */
+.navbar-text {
+  line-height: 70px;
+}
+
+/* line 4436 */
+.navbar .divider-vertical {
+  height: 70px;
+}
+
+/* line 4604 */
+.navbar .nav > li > a {
+  padding: 25px 15px 10px;
+}
+
+/* line 4784 */
+.navbar-inverse .navbar-inner {
+  background-color: #1b1b1b;
+  background-image: -moz-linear-gradient(top, #222222, #111111);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#111111));
+  background-image: -webkit-linear-gradient(top, #222222, #111111);
+  background-image: -o-linear-gradient(top, #222222, #111111);
+  background-image: linear-gradient(to bottom, #222222, #111111);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
+}
+
+/* line 4797 */
+.navbar-inverse .brand,
+.navbar-inverse .nav > li > a {
+  font-size: 18px;
+  color: rgb(255, 255, 255);
+}
+
+
+/* line 4810 */
+.navbar-inverse .brand {
+  color: rgb(255, 255, 255);
+  font-size: 34px;
+}
+
+/* line 4813 */
+.navbar-inverse .navbar-text {
+    color: rgb(165, 165, 165);
+}
+
+.nav-a-tag {
+  font-size: 18px;
+  color: rgb(255, 255, 255);
+}
+
