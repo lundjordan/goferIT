@@ -6,7 +6,9 @@ jQuery ->
         initialize: ->
             @currentView = null
             @currentSale = new app.Sale({})
+            @listenTo @currentSale, 'change', @renderSalesConstructView
         renderSalesConstructView: ->
+            console.log 'rendered salesconstructView'
             @removeCurrentContentView()
             @currentView = new SalesConstructControllerView
                 collection: app.Sales
@@ -18,13 +20,71 @@ jQuery ->
             if @currentView
                 # clean up incomplete transaction
                 @currentView.remove()
-        addSelectedToTransaction: (productModel, productsToAdd) ->
+        addSelectedToTransaction: (productModel, addToTransactionData) ->
             individualProducts = productModel.get 'individualProperties'
-            console.log individualProducts, productsToAdd
-            # _.filter individualProducts, (product) ->
-            #     product.measurements[0].value is "8"
+            for subTotal, i in addToTransactionData.measurementValues
+                [allProductsWithoutValue, allProductsByValue] = [[], []]
+                value = addToTransactionData.measurementValues[i]
+                available = parseInt(addToTransactionData.measurementsAvailable[i], 10)
+                wanted = parseInt(addToTransactionData.measurementsWanted[i],10)
+                willBeRemaining = available - wanted
+                console.log "value", value, "available", available, "wanted", wanted, "willBeRemaining", willBeRemaining
+                if wanted > 0
+                    allProductsByValue = $.grep individualProducts, (elem) ->
+                        elem.measurements[0].value is value
+                    allProductsWithoutValue = $.grep individualProducts, (elem) ->
+                        elem.measurements[0].value isnt value
 
-            # console.log productModel, measureVals[i], allTotals
+                    for i in [1..willBeRemaining]
+                        productWithValueNotNeeded = allProductsByValue[i]
+                        allProductsByValue.splice i, 1
+                        allProductsWithoutValue.push productWithValueNotNeeded
+                    for productToAdd in allProductsByValue
+                        # first delete the _id property of this product
+                        # as it will just confuse mongo on creation
+                        delete productToAdd._id
+                        if productToAdd.measurements
+                            for measurement in productToAdd.measurements
+                                # also delete all the generated _ids from subdocs
+                                delete measurement._id
+                    console.log individualProducts, allProductsWithoutValue, allProductsByValue
+
+                    # if @currentSale.productExists(productName, productBrand)
+                    #     productName = productModel.get 'description.name'
+                    #     productBrand = productModel.get 'description.brand'
+                    #     for product in @currentSale.get 'products'
+                    #         ref = product.description
+                    #         if ref.name is productName and ref.brand is productBrand
+                    #             product.individualProperties.concat allProductsByValue
+                    #             break
+                    #     @currentSale.save()
+                    # else
+                    #     @currentSale.get('products').push
+                    #         description:
+                    #             name: productModel.get 'description.name'
+                    #             brand: productModel.get 'description.brand'
+                    #         category: productModel.get 'category'
+                    #         price: productModel.get 'price'
+                    #         cost: productModel.get 'cost'
+                    #         primaryMeasurementFactor:
+                    #             productModel.get 'primaryMeasurementFactor'
+                    #         individualProperties:
+                    #             @currentSale.get('products').concat allProductsByValue
+                    # console.log allProductsWithoutValue, allProductsByValue
+                    # console.log @currentSale.attributes
+                    # productModel.save
+                    #     individualProperties: allProductsWithoutValue
+                    # console.log allProductsWithoutValue, allProductsByValue
+                    # console.log @currentSale.attributes
+                    # console.log productModel.attributes
+
+
+            # TODO START HERE DUDE!
+                    # console.log "value", value
+                    # console.log "available", available
+                    # console.log "wanted", wanted
+                    # console.log "willBeRemain", willBeRemaining
+
 
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
@@ -121,41 +181,45 @@ jQuery ->
                 @showSubQuantities()
             @
         confirmAdd: ->
-            [measurementValues, measurementQuants, productsToAdd] =
-                [[], [], []]
-            @$("th").each ->
-                measurementValues.push $(this).html()
-            @$("td").each ->
-                if $(this).html() isnt "Totals"
-                    measurementQuants.push $(this).find("input").val()
-            # remove first elem as it's the primaryMeasurementFactor
-            measurementValues = measurementValues[1..]
-            if @subQuantTotalValid measurementQuants
-                # filter only quants > 0
-                for quant, i in measurementQuants
-                    if parseInt(quant, 10) > 0
-                        productsToAdd.push
-                            factor: measurementValues[i]
-                            value: quant
-                @controller.addSelectedToTransaction @model, productsToAdd
+            addToTransactionData = {
+                measurementValues: []
+                measurementsAvailable: []
+                measurementsWanted: []
+            }
+            @$("th.measurement-value").each ->
+                addToTransactionData.measurementValues.push $(this).html()
+            @$("td.measurement-available").each ->
+                addToTransactionData.measurementsAvailable.push $(this).html()
+            @$("td.quantity-to-add").each ->
+                addToTransactionData.measurementsWanted.push $(this).find("input").val()
+            if @productsToAddAreValid addToTransactionData
+                @controller.addSelectedToTransaction @model, addToTransactionData
                 $("#add-to-transaction-modal").modal 'hide'
             else
-                message = "One value must be higher than 0. " +
-                    "Only positive integers are accepted"
+                message = "To add an item to a sale, include a quantity greater than 0." +
+                    " The quantity given must be less than the quantity available."
                 alertWarning = new app.AlertView
                     alertType: 'warning'
                 @$("#add-to-transaction-alert").
                     html(alertWarning.render("alert-error", message).el)
-        subQuantTotalValid: (values) ->
+        productsToAddAreValid: (addToTransactionData) ->
             # check to see if table sub quants are valid
-            oneValueMoreThan0 = false
-            anyValuesLessThan0 = false
-            for value in values
-                if parseInt(value, 10) > 0
-                    oneValueMoreThan0 = true
-                if parseInt(value, 10) < 0
-                    anyValuesLessThan0 = true
-            return oneValueMoreThan0 and not anyValuesLessThan0
+            noWantsLessThan0 = true
+            oneWantGreaterThan0 = false
+            noWantsLessThanAvailable = true
+
+            for subTotal, i in addToTransactionData.measurementValues
+                value = parseInt(addToTransactionData.measurementValues[i], 10)
+                available = parseInt(addToTransactionData.measurementsAvailable[i], 10)
+                wanted = parseInt(addToTransactionData.measurementsWanted[i],10)
+                # separating cases so we can add specific alerts if needed
+                if wanted < 0
+                    noWantsLessThan0 = false
+                if wanted > 0
+                    oneWantGreaterThan0 = true
+                if wanted > available
+                    noWantsLessThanAvailable = false
+            return noWantsLessThan0 and oneWantGreaterThan0 and noWantsLessThanAvailable
         showSubQuantities: ->
             # XXX this is mostly duplicate code from product_views
             # first let's sort the subquantities for readibility in table
@@ -168,20 +232,42 @@ jQuery ->
                 elem.measurements[0]['value']
             for subTotalValues in @model.get 'measurementPossibleValues'
                 if subTotalTotals[subTotalValues]
-                    quantityHTML = "<ul class='inline'> " +
-                        "<li><input class='input-mini' type='text' " +
-                        "value='0'></li><li><p>" +
-                        " Of #{subTotalTotals[subTotalValues]}" +
-                        "</p></li></ul>"
+                    quantityHTML = "<input class='input-mini' type='text' " +
+                        "value='0'>"
                     individualProducts.push
                         measurementValue: subTotalValues
-                        quantity: quantityHTML
+                        quantityAvailable: subTotalTotals[subTotalValues]
+                        quantityToAdd: quantityHTML
             individualProducts = _.sortBy individualProducts, (el) ->
                 return el.measurementValue
-            subQuantView = new app.ProductItemSubQuantityView()
+            subQuantView = new SaleProductItemSubQuantityView()
             quantityViewHTML = subQuantView.render(individualProducts,
                 @model.get('primaryMeasurementFactor')).el
             @$('#sub-quantity-totals').html quantityViewHTML
+    class SaleProductItemSubQuantityView extends Backbone.View
+        template: _.template ($ '#sale-product-view-sub-quantity-template').html()
+        render: (individualProducts, measurementFactor) ->
+            @$el.html this.template({})
+
+            # now let's add column 1 name and row 1 titles
+            tableHeaderValues = "<th>#{measurementFactor}</th>"
+            tableRow1Quantity = "<td>Available</td>"
+            tableRow2Wanted  = "<td>Quantity</td>"
+
+            # fill in the remaining rows/columns with the subquants
+            _.each individualProducts, (elem) ->
+                tableHeaderValues +=
+                    "<th class='measurement-value'>#{elem.measurementValue}</th>"
+                tableRow1Quantity +=
+                    "<td class='measurement-available'>#{elem.quantityAvailable}</td>"
+                tableRow2Wanted += "<td class='quantity-to-add'>#{elem.quantityToAdd}</td>"
+
+            # finally append this to their respective th and td tags
+            @$('#product-sub-quantity-thead-tr').append tableHeaderValues
+            @$('#product-sub-quantity-available-td').append tableRow1Quantity
+            @$('#product-sub-quantity-wanted-td').append tableRow2Wanted
+
+            @
 
 
     class SalesConstructSkeletonView extends Backbone.View

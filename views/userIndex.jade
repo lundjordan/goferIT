@@ -4,10 +4,11 @@ block content
 
   // Top Navbar
   // div#someID.navbar
-  div#someID.navbar.navbar-inverse
+  div#head-navbar.navbar.navbar-inverse
     div.navbar-inner
       div.container
-        a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
+        a.btn.btn-navbar(data-toggle="collapse",
+        data-target=".nav-collapse")
           span.icon-bar
           span.icon-bar
           span.icon-bar
@@ -15,13 +16,14 @@ block content
         div.nav-collapse
           ul.nav.pull-right
             li
-              p.navbar-text.pull-right <a href="/logout", data-toggle='modal'> Sign out </a>
+              p.navbar-text.pull-right
+                a.nav-a-tag(href="/logout", data-toggle='modal') Sign out
             li.divider-vertical
             li
               p.navbar-text.pull-right #{user.name.first} #{user.name.last}
           ul.nav
             li
-              a(href="#") Help
+              a.nav-a-tag(href="#") Help
 
   if info_alert != ''
     div.alert.alert-success
