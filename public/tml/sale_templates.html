@@ -65,8 +65,7 @@
         </div>
         <div class="span3">
           <div class="well">
-            <div class="row-fluid">
-              <legend>Transaction Items</legend>
+            <div id="transaction-list" class="row-fluid">
             </div>
           </div>
           <div class="well">
@@ -164,6 +163,14 @@
        <a href="#" id='confirm-add-button' class="btn btn-primary">Add</a>
     </div>
   </div>
+</script>
+<script type="text/template" id='transaction-li-template'>
+  <strong><%= description.name %></strong> X <%= individualProperties.length %>
+</script>
+<script type="text/template" id='sale-transaction-list-template'>
+  <legend>Transaction Items</legend>
+  <ul id='transaction-ul'>
+  </ul>
 </script>
 <script type="text/template" id='sale-product-view-sub-quantity-template'>
     <strong> Sub Totals </strong><br>

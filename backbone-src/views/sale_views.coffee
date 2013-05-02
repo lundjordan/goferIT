@@ -6,9 +6,10 @@ jQuery ->
         initialize: ->
             @currentView = null
             @currentSale = new app.Sale({})
-            @listenTo @currentSale, 'change', @renderSalesConstructView
+            # @listenTo @currentSale, 'change', @renderSalesConstructView
+        getCurrentSale: ->
+            @currentSale
         renderSalesConstructView: ->
-            console.log 'rendered salesconstructView'
             @removeCurrentContentView()
             @currentView = new SalesConstructControllerView
                 collection: app.Sales
@@ -22,23 +23,24 @@ jQuery ->
                 @currentView.remove()
         addSelectedToTransaction: (productModel, addToTransactionData) ->
             individualProducts = productModel.get 'individualProperties'
+            requiredStoreName = $('#store-name-select option:selected').val()
             for subTotal, i in addToTransactionData.measurementValues
-                [allProductsWithoutValue, allProductsByValue] = [[], []]
                 value = addToTransactionData.measurementValues[i]
                 available = parseInt(addToTransactionData.measurementsAvailable[i], 10)
                 wanted = parseInt(addToTransactionData.measurementsWanted[i],10)
                 willBeRemaining = available - wanted
-                console.log "value", value, "available", available, "wanted", wanted, "willBeRemaining", willBeRemaining
                 if wanted > 0
                     allProductsByValue = $.grep individualProducts, (elem) ->
-                        elem.measurements[0].value is value
+                        elem.measurements[0].value is value and
+                            elem.storeName is requiredStoreName
                     allProductsWithoutValue = $.grep individualProducts, (elem) ->
                         elem.measurements[0].value isnt value
 
-                    for i in [1..willBeRemaining]
-                        productWithValueNotNeeded = allProductsByValue[i]
-                        allProductsByValue.splice i, 1
-                        allProductsWithoutValue.push productWithValueNotNeeded
+                    if willBeRemaining
+                        for i in [1..willBeRemaining]
+                            productWithValueNotNeeded = allProductsByValue[i-1]
+                            allProductsByValue.splice i-1, 1
+                            allProductsWithoutValue.push productWithValueNotNeeded
                     for productToAdd in allProductsByValue
                         # first delete the _id property of this product
                         # as it will just confuse mongo on creation
@@ -47,44 +49,38 @@ jQuery ->
                             for measurement in productToAdd.measurements
                                 # also delete all the generated _ids from subdocs
                                 delete measurement._id
-                    console.log individualProducts, allProductsWithoutValue, allProductsByValue
-
-                    # if @currentSale.productExists(productName, productBrand)
-                    #     productName = productModel.get 'description.name'
-                    #     productBrand = productModel.get 'description.brand'
-                    #     for product in @currentSale.get 'products'
-                    #         ref = product.description
-                    #         if ref.name is productName and ref.brand is productBrand
-                    #             product.individualProperties.concat allProductsByValue
-                    #             break
-                    #     @currentSale.save()
-                    # else
-                    #     @currentSale.get('products').push
-                    #         description:
-                    #             name: productModel.get 'description.name'
-                    #             brand: productModel.get 'description.brand'
-                    #         category: productModel.get 'category'
-                    #         price: productModel.get 'price'
-                    #         cost: productModel.get 'cost'
-                    #         primaryMeasurementFactor:
-                    #             productModel.get 'primaryMeasurementFactor'
-                    #         individualProperties:
-                    #             @currentSale.get('products').concat allProductsByValue
-                    # console.log allProductsWithoutValue, allProductsByValue
-                    # console.log @currentSale.attributes
-                    # productModel.save
-                    #     individualProperties: allProductsWithoutValue
-                    # console.log allProductsWithoutValue, allProductsByValue
-                    # console.log @currentSale.attributes
-                    # console.log productModel.attributes
-
-
-            # TODO START HERE DUDE!
-                    # console.log "value", value
-                    # console.log "available", available
-                    # console.log "wanted", wanted
-                    # console.log "willBeRemain", willBeRemaining
-
+                    productName = productModel.get 'description.name'
+                    productBrand = productModel.get 'description.brand'
+                    existingProduct =  @currentSale.
+                        getProductIfExists productName, productBrand
+                    if existingProduct
+                        console.log 'product exists'
+                        productIndex =
+                            @currentSale.get('products').indexOf(existingProduct)
+                        currentProducts = @currentSale.get('products')
+                        newIndividualProps =
+                            currentProducts[productIndex].
+                            individualProperties.concat allProductsByValue
+                        currentProducts[productIndex].individualProperties =
+                            newIndividualProps
+                        # [productIndex].individualProperties
+                        # console.log 
+                    else
+                        console.log 'product is new'
+                        @currentSale.get('products').push
+                            description:
+                                name: productModel.get 'description.name'
+                                brand: productModel.get 'description.brand'
+                            category: productModel.get 'category'
+                            price: productModel.get 'price'
+                            cost: productModel.get 'cost'
+                            primaryMeasurementFactor:
+                                productModel.get 'primaryMeasurementFactor'
+                            individualProperties: allProductsByValue
+                    productModel.set
+                        individualProperties: allProductsWithoutValue
+                    $("#add-to-transaction-modal").modal 'hide'
+                    @renderSalesConstructView()
 
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
@@ -93,30 +89,58 @@ jQuery ->
         initialize: ->
             @listenTo app.Sales, 'change', @render
             @controller = @options.controller
+            @currentSale = @options.currentSale
         render: ->
             @$el.html this.template({})
             @$("#root-backbone-view-body").html(
                 (new SalesConstructSkeletonView).render(@model).el)
             @addStoreNames()
             @productsListRender()
+            @transactionListRender()
             @
         addStoreNames: ->
             storeNames = app.Companies.models[0].get 'stores'
             @addOneStoreNameToSelect(store.name) for store in storeNames
-            if @model
-                # incase we are in edit mode, set the select tag to 
-                # whatever the model's store name is
-                @$("select[id=store-name-select]").
-                    val(@model.attributes.storeName)
+            # TODO should we delete below?
         addOneStoreNameToSelect: (storeName) ->
             @$('#store-name-select').append(
                 "<option value='#{storeName}'>#{storeName}</option>")
+        transactionListRender: ->
+            transactionList = new SaleTransactionList
+                model: @controller.getCurrentSale()
+                controller: @controller
+            @$("#transaction-list").html transactionList.render().el
         productsListRender: ->
             productsList = new SaleProductList
                 collection: app.Products
                 controller: @controller
                 storeName: @$('#store-name-select option:selected').val()
             @$("#products-table-id").html productsList.render().el
+
+    class SaleTransactionList extends Backbone.View
+        template: _.template ($ '#sale-transaction-list-template').html()
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            @$el.html @template({})
+            @addAll()
+            @
+        addAll: ->
+            currentSaleProducts = @controller.getCurrentSale().get 'products'
+            _.each currentSaleProducts, @addOne, @
+        addOne: (product) ->
+            view = new SaleTransactionItemView
+                currentSaleProduct: product
+            (@$ "#transaction-ul").append view.render().el
+
+    class SaleTransactionItemView extends Backbone.View
+        template: _.template ($ '#transaction-li-template').html()
+        tagName: 'li'
+        initialize: ->
+            @currentSaleProduct = @options.currentSaleProduct
+        render: ->
+            @$el.html @template @currentSaleProduct
+            @
 
     class SaleProductList extends Backbone.View
         template: _.template ($ '#sale-products-table-template').html()
@@ -169,6 +193,7 @@ jQuery ->
             $("#add-to-transaction-modal").modal 'show'
             $('#add-to-transaction-modal').on 'hidden', =>
                 @addToTransaction.remove()
+
     class AddToTransactionModal extends Backbone.View
         events:
             'click #confirm-add-button': 'confirmAdd'
@@ -194,7 +219,6 @@ jQuery ->
                 addToTransactionData.measurementsWanted.push $(this).find("input").val()
             if @productsToAddAreValid addToTransactionData
                 @controller.addSelectedToTransaction @model, addToTransactionData
-                $("#add-to-transaction-modal").modal 'hide'
             else
                 message = "To add an item to a sale, include a quantity greater than 0." +
                     " The quantity given must be less than the quantity available."
@@ -207,7 +231,6 @@ jQuery ->
             noWantsLessThan0 = true
             oneWantGreaterThan0 = false
             noWantsLessThanAvailable = true
-
             for subTotal, i in addToTransactionData.measurementValues
                 value = parseInt(addToTransactionData.measurementValues[i], 10)
                 available = parseInt(addToTransactionData.measurementsAvailable[i], 10)
@@ -221,8 +244,6 @@ jQuery ->
                     noWantsLessThanAvailable = false
             return noWantsLessThan0 and oneWantGreaterThan0 and noWantsLessThanAvailable
         showSubQuantities: ->
-            # XXX this is mostly duplicate code from product_views
-            # first let's sort the subquantities for readibility in table
             individualProducts = []
             individualProps = @model.get('individualProperties')
             productsByStoreNames = _.groupBy individualProps, 'storeName'
@@ -244,16 +265,15 @@ jQuery ->
             quantityViewHTML = subQuantView.render(individualProducts,
                 @model.get('primaryMeasurementFactor')).el
             @$('#sub-quantity-totals').html quantityViewHTML
+
     class SaleProductItemSubQuantityView extends Backbone.View
         template: _.template ($ '#sale-product-view-sub-quantity-template').html()
         render: (individualProducts, measurementFactor) ->
             @$el.html this.template({})
-
             # now let's add column 1 name and row 1 titles
             tableHeaderValues = "<th>#{measurementFactor}</th>"
             tableRow1Quantity = "<td>Available</td>"
             tableRow2Wanted  = "<td>Quantity</td>"
-
             # fill in the remaining rows/columns with the subquants
             _.each individualProducts, (elem) ->
                 tableHeaderValues +=
@@ -261,22 +281,17 @@ jQuery ->
                 tableRow1Quantity +=
                     "<td class='measurement-available'>#{elem.quantityAvailable}</td>"
                 tableRow2Wanted += "<td class='quantity-to-add'>#{elem.quantityToAdd}</td>"
-
             # finally append this to their respective th and td tags
             @$('#product-sub-quantity-thead-tr').append tableHeaderValues
             @$('#product-sub-quantity-available-td').append tableRow1Quantity
             @$('#product-sub-quantity-wanted-td').append tableRow2Wanted
-
             @
-
 
     class SalesConstructSkeletonView extends Backbone.View
         template: _.template ($ '#sales-skeleton-template').html()
         render: ->
             @$el.html this.template({})
             @
-
-
 
 
     @app = window.app ? {}
