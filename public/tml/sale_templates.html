@@ -1,5 +1,47 @@
+<!--sale payment view template-->
+<script type="text/template" id="sales-payment-skeleton-template">
+  <ul class="nav nav-tabs">
+    <li class="disabled">
+      <a href="#process-content">Process</a>
+    </li>
+    <li class="active">
+      <a href="#payment-content">Payment</a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane" id="process-content">
+    </div>
+    <div class="tab-pane active" id="payment-content">
+      <div class="row-fluid">
+        <div class="span5 well">
+          <p>HELLO WORLD</p>
+        </div>
+        <div class="span4 well">
+        </div>
+        <div class="span3">
+          <div id="transaction-list-id" class="well">
+          </div>
+          <ul class="pager inline">
+            <li>
+            <button class="btn btn-info" id='back-to-construct-btn'
+              type="button">Go Back</button>
+            </li>
+            <li class="divider-vertical"> </li>
+            </li>
+            <li>
+              <button class="btn btn-large btn-success" id='payment-btn'
+                type="button"> Confirm </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<!--sale payment view template-->
+
 <!--sale construct view templates-->
-<script type="text/template" id="sales-skeleton-template">
+<script type="text/template" id="sales-construct-skeleton-template">
   <ul class="nav nav-tabs">
     <li class="active">
       <a href="#process-content">Process</a>
@@ -93,14 +135,13 @@
             <li class="divider-vertical"> </li>
             </li>
             <li>
-              <button class="btn btn-large btn-success" type="button">
+            <button class="btn btn-large btn-success"
+              id='payment-btn' type="button">
                 Payment
               </button>
             </li>
           </ul>
       </div>
-    </div>
-    <div class="tab-pane" id="payment-content">
     </div>
   </div>
 </script>

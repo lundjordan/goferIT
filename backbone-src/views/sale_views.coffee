@@ -3,6 +3,9 @@
 jQuery ->
     class SalesControllerView extends Backbone.View
         el: '#sales-main-view'
+        events:
+            'click #payment-btn': 'renderSalesPaymentView'
+            'click #back-to-construct-btn': 'renderSalesConstructView'
         initialize: ->
             @currentView = null
             @currentSale = new app.Sale({})
@@ -17,7 +20,22 @@ jQuery ->
                 controller: @ # bubble this all the way down
             # not the best way but @ is needed in AddToTransactionModal
             $("#sales-main-view").html @currentView.render().el
-        renderSalesConfirmView: ->
+        renderSalesPaymentView: ->
+            # if @currentSale.get('products').length
+            if true
+                @removeCurrentContentView()
+                @currentView = new SalesPaymentControllerView
+                    collection: app.Sales
+                    controller: @ # bubble this all the way down
+                $("#sales-main-view").html @currentView.render().el
+            else
+                message = "To make a payment you must have at least " +
+                    " one item in the transaction list."
+                alertWarningView = new app.AlertView
+                    alertType: 'warning'
+                alertHTML = alertWarningView.render("alert-error", message).el
+                $("#root-backbone-alert-view").html(alertHTML)
+
         removeCurrentContentView: ->
             if @currentView
                 # clean up incomplete transaction
@@ -93,6 +111,32 @@ jQuery ->
             @currentSale.set
                 _customer: customer.get '_id'
 
+    class SalesConstructSkeletonView extends Backbone.View
+        template: _.template ($ '#sales-construct-skeleton-template').html()
+        render: ->
+            @$el.html this.template({})
+            @
+
+    class SalesPaymentSkeletonView extends Backbone.View
+        template: _.template ($ '#sales-payment-skeleton-template').html()
+        render: ->
+            @$el.html this.template({})
+            @
+    class SalesPaymentControllerView extends Backbone.View
+        template: _.template ($ '#root-backbone-content-template').html()
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            @$el.html this.template({})
+            @$("#root-backbone-view-body").html(
+                (new SalesPaymentSkeletonView).render(@model).el)
+            @transactionListRender()
+        transactionListRender: ->
+            transactionList = new SaleTransactionList
+                controller: @controller
+            @$("#transaction-list-id").html transactionList.render().el
+            @
+
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
         events:
@@ -102,9 +146,7 @@ jQuery ->
             'keyup #customer-last-name-search': 'customerListRender'
             'keyup #customer-email-search': 'customerListRender'
         initialize: ->
-            @listenTo app.Sales, 'change', @render
             @controller = @options.controller
-            @currentSale = @options.currentSale
         render: ->
             @$el.html this.template({})
             @$("#root-backbone-view-body").html(
@@ -196,11 +238,6 @@ jQuery ->
         customerSelected: (e) ->
             @controller.addCustomerToSale(@model)
 
-    class SalesConstructSkeletonView extends Backbone.View
-        template: _.template ($ '#sales-skeleton-template').html()
-        render: ->
-            @$el.html this.template({})
-            @
 
     class SaleProductList extends Backbone.View
         template: _.template ($ '#sale-products-table-template').html()
