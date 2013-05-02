@@ -97,6 +97,10 @@ jQuery ->
         template: _.template ($ '#root-backbone-content-template').html()
         events:
             'change #store-name-select': 'productsListRender'
+            'keyup #product-brand-search': 'productsListRender'
+            'keyup #product-name-search': 'productsListRender'
+            'keyup #customer-last-name-search': 'customerListRender'
+            'keyup #customer-email-search': 'customerListRender'
         initialize: ->
             @listenTo app.Sales, 'change', @render
             @controller = @options.controller
@@ -119,15 +123,20 @@ jQuery ->
             @$('#store-name-select').append(
                 "<option value='#{storeName}'>#{storeName}</option>")
         productsListRender: ->
+            console.log 'productsListRender called'
             productsList = new SaleProductList
                 collection: app.Products
                 controller: @controller
                 storeName: @$('#store-name-select option:selected').val()
+                nameSearch: @$('#product-name-search').val()
+                brandSearch: @$('#product-brand-search').val()
             @$("#products-table-id").html productsList.render().el
         customerListRender: ->
             customersList = new SaleCustomerList
                 collection: app.Customers
                 controller: @controller
+                lastNameSearch: @$('#customer-last-name-search').val()
+                emailSearch: @$('#customer-email-search').val()
             @$("#customers-list-id").html customersList.render().el
         transactionListRender: ->
             transactionList = new SaleTransactionList
@@ -142,6 +151,8 @@ jQuery ->
         template: _.template ($ '#sale-customers-table-template').html()
         initialize: ->
             @controller = @options.controller
+            @lastNameSearch = @options.lastNameSearch
+            @emailSearch = @options.emailSearch
         render: ->
             @$el.html @template({})
             @addAll()
@@ -152,7 +163,19 @@ jQuery ->
                 controller: @controller
             (@$ "#customers-table-list").append view.render().el
         addAll: ->
-            @collection.each @addOne, @
+            if @lastNameSearch or @emailSearch
+                customerResults = []
+                if @lastNameSearch
+                    customerResults = @collection.filter (model) =>
+                        nameString = model.get('name').last.toLowerCase()
+                        nameString.indexOf(@lastNameSearch.toLowerCase()) isnt -1
+                if @emailSearch
+                    customerResults = @collection.filter (model) =>
+                        emailString = model.get('email').toLowerCase()
+                        emailString.indexOf(@emailSearch.toLowerCase()) isnt -1
+                _.each customerResults, @addOne, @
+            else
+                @collection.each @addOne, @
     class SaleCustomerListItemView extends Backbone.View
         template: _.template ($ '#sale-customer-tr-template').html()
         tagName: 'tr'
@@ -182,6 +205,8 @@ jQuery ->
     class SaleProductList extends Backbone.View
         template: _.template ($ '#sale-products-table-template').html()
         initialize: ->
+            @nameSearch = @options.nameSearch
+            @brandSearch = @options.brandSearch
             @storeName = @options.storeName
             @controller = @options.controller
         render: ->
@@ -200,7 +225,18 @@ jQuery ->
                     controller: @controller
                 (@$ "#products-table-list").append view.render().el
         addAll: ->
-            @collection.each @addOne, @
+            if @nameSearch or @brandSearch
+                if @nameSearch
+                    productResults = @collection.filter (model) =>
+                        nameString = model.get('description.name').toLowerCase()
+                        nameString.indexOf(@nameSearch.toLowerCase()) isnt -1
+                if @brandSearch
+                    productResults = @collection.filter (model) =>
+                        brandString = model.get('description.brand').toLowerCase()
+                        brandString.indexOf(@brandSearch.toLowerCase()) isnt -1
+                _.each productResults, @addOne, @
+            else
+                @collection.each @addOne, @
 
     class ProductListItemView extends Backbone.View
         template: _.template ($ '#sale-product-tr-template').html()
@@ -356,10 +392,8 @@ jQuery ->
             @controller = @options.controller
         render: ->
             currentSaleCustomerID = @controller.getCurrentSale().get '_customer'
-            console.log currentSaleCustomerID
             customerModel = app.Customers.where({_id: currentSaleCustomerID})[0]
             if customerModel
-                console.log customerModel.attributes
                 @$el.html @template(customerModel.attributes)
             else
                 @$el.html @template({})
