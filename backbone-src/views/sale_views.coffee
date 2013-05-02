@@ -22,65 +22,73 @@ jQuery ->
                 # clean up incomplete transaction
                 @currentView.remove()
         addSelectedToTransaction: (productModel, addToTransactionData) ->
-            individualProducts = productModel.get 'individualProperties'
+            individualProds = productModel.get 'individualProperties'
             requiredStoreName = $('#store-name-select option:selected').val()
-            for subTotal, i in addToTransactionData.measurementValues
+            for subTotal, i in addToTransactionData.measurementsAvailable
+                # we have subValues
                 value = addToTransactionData.measurementValues[i]
-                available = parseInt(addToTransactionData.measurementsAvailable[i], 10)
+                available =
+                    parseInt(addToTransactionData.measurementsAvailable[i], 10)
                 wanted = parseInt(addToTransactionData.measurementsWanted[i],10)
                 willBeRemaining = available - wanted
-                if wanted > 0
-                    allProductsByValue = $.grep individualProducts, (elem) ->
-                        elem.measurements[0].value is value and
+                if wanted > 0 # the user selected a value higher 
+                    if value # we have subtypes
+                        allProdsByRequest = $.grep individualProds, (elem) ->
+                            elem.measurements[0].value is value and
+                                elem.storeName is requiredStoreName
+                        allProdsWithoutRequest = $.grep individualProds, (elem) ->
+                            elem.measurements[0].value isnt value or
+                                elem.storeName isnt requiredStoreName
+                    else # there is just a grand total
+                        allProdsByRequest = $.grep individualProds, (elem) ->
                             elem.storeName is requiredStoreName
-                    allProductsWithoutValue = $.grep individualProducts, (elem) ->
-                        elem.measurements[0].value isnt value
-
+                        allProdsWithoutRequest = $.grep individualProds, (elem) ->
+                            elem.storeName isnt requiredStoreName
                     if willBeRemaining
                         for i in [1..willBeRemaining]
-                            productWithValueNotNeeded = allProductsByValue[i-1]
-                            allProductsByValue.splice i-1, 1
-                            allProductsWithoutValue.push productWithValueNotNeeded
-                    for productToAdd in allProductsByValue
+                            extraProdsFromRequest = allProdsByRequest[i-1]
+                            allProdsByRequest.splice i-1, 1
+                            allProdsWithoutRequest.push extraProdsFromRequest
+                    for productToAdd in allProdsByRequest
                         # first delete the _id property of this product
                         # as it will just confuse mongo on creation
                         delete productToAdd._id
                         if productToAdd.measurements
                             for measurement in productToAdd.measurements
-                                # also delete all the generated _ids from subdocs
+                                # also delete all generated _ids from subdocs
                                 delete measurement._id
-                    productName = productModel.get 'description.name'
-                    productBrand = productModel.get 'description.brand'
-                    existingProduct =  @currentSale.
-                        getProductIfExists productName, productBrand
-                    if existingProduct
-                        console.log 'product exists'
-                        productIndex =
-                            @currentSale.get('products').indexOf(existingProduct)
-                        currentProducts = @currentSale.get('products')
-                        newIndividualProps =
-                            currentProducts[productIndex].
-                            individualProperties.concat allProductsByValue
-                        currentProducts[productIndex].individualProperties =
-                            newIndividualProps
-                        # [productIndex].individualProperties
-                        # console.log 
-                    else
-                        console.log 'product is new'
-                        @currentSale.get('products').push
-                            description:
-                                name: productModel.get 'description.name'
-                                brand: productModel.get 'description.brand'
-                            category: productModel.get 'category'
-                            price: productModel.get 'price'
-                            cost: productModel.get 'cost'
-                            primaryMeasurementFactor:
-                                productModel.get 'primaryMeasurementFactor'
-                            individualProperties: allProductsByValue
+                    @updateProductsInSale(productModel, allProdsByRequest)
                     productModel.set
-                        individualProperties: allProductsWithoutValue
-                    $("#add-to-transaction-modal").modal 'hide'
-                    @renderSalesConstructView()
+                        individualProperties: allProdsWithoutRequest
+            $("#add-to-transaction-modal").modal 'hide'
+            @renderSalesConstructView()
+        updateProductsInSale: (productModel, allProdsByRequest) ->
+            productName = productModel.get 'description.name'
+            productBrand = productModel.get 'description.brand'
+            existingProduct =  @currentSale.
+                getProductIfExists productName, productBrand
+            if existingProduct # this item is already in transaction list
+                console.log 'product exists'
+                productIndex =
+                    @currentSale.get('products').indexOf(existingProduct)
+                currentProducts = @currentSale.get('products')
+                newIndividualProps =
+                    currentProducts[productIndex].
+                    individualProperties.concat allProdsByRequest
+                currentProducts[productIndex].individualProperties =
+                    newIndividualProps
+            else # currentSale does have this product in its list
+                console.log 'product is new'
+                @currentSale.get('products').push
+                    description:
+                        name: productModel.get 'description.name'
+                        brand: productModel.get 'description.brand'
+                    category: productModel.get 'category'
+                    price: productModel.get 'price'
+                    cost: productModel.get 'cost'
+                    primaryMeasurementFactor:
+                        productModel.get 'primaryMeasurementFactor'
+                    individualProperties: allProdsByRequest
 
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
@@ -211,17 +219,18 @@ jQuery ->
                 measurementsAvailable: []
                 measurementsWanted: []
             }
-            @$("th.measurement-value").each ->
+            @$("th.measurements-value").each ->
                 addToTransactionData.measurementValues.push $(this).html()
-            @$("td.measurement-available").each ->
+            @$("td.measurements-available").each ->
                 addToTransactionData.measurementsAvailable.push $(this).html()
             @$("td.quantity-to-add").each ->
                 addToTransactionData.measurementsWanted.push $(this).find("input").val()
             if @productsToAddAreValid addToTransactionData
                 @controller.addSelectedToTransaction @model, addToTransactionData
             else
-                message = "To add an item to a sale, include a quantity greater than 0." +
-                    " The quantity given must be less than the quantity available."
+                message = "To add to a sale, include a quantity greater than 0." +
+                    " The quantity given must be less than or equal to the" +
+                    " quantity available."
                 alertWarning = new app.AlertView
                     alertType: 'warning'
                 @$("#add-to-transaction-alert").
@@ -231,8 +240,8 @@ jQuery ->
             noWantsLessThan0 = true
             oneWantGreaterThan0 = false
             noWantsLessThanAvailable = true
-            for subTotal, i in addToTransactionData.measurementValues
-                value = parseInt(addToTransactionData.measurementValues[i], 10)
+            console.log addToTransactionData
+            for subTotal, i in addToTransactionData.measurementsAvailable
                 available = parseInt(addToTransactionData.measurementsAvailable[i], 10)
                 wanted = parseInt(addToTransactionData.measurementsWanted[i],10)
                 # separating cases so we can add specific alerts if needed
@@ -277,9 +286,9 @@ jQuery ->
             # fill in the remaining rows/columns with the subquants
             _.each individualProducts, (elem) ->
                 tableHeaderValues +=
-                    "<th class='measurement-value'>#{elem.measurementValue}</th>"
+                    "<th class='measurements-value'>#{elem.measurementValue}</th>"
                 tableRow1Quantity +=
-                    "<td class='measurement-available'>#{elem.quantityAvailable}</td>"
+                    "<td class='measurements-available'>#{elem.quantityAvailable}</td>"
                 tableRow2Wanted += "<td class='quantity-to-add'>#{elem.quantityToAdd}</td>"
             # finally append this to their respective th and td tags
             @$('#product-sub-quantity-thead-tr').append tableHeaderValues

@@ -142,14 +142,20 @@
       <% if (primaryMeasurementFactor === null) { %>
         <p> <strong> Total In Stock </strong><br />
         <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Available</th>
+              <td class='measurements-available'>
+                <%= individualProperties.length %>
+              </td>
+            </tr>
+          </thead>
           <tbody>
-            <th>Total</th>
-            <td>
-              <ul class="inline">
-                <li><input class="input-mini" type="text" value="0"></li>
-                <li><p>Of <%= individualProperties.length %></p></li>
-              </ul>
-            </td>
+            <tr>
+              <td>Quantity</td>
+              <td class='quantity-to-add'>
+                <input class="input-mini" type="text" value="0">
+              </td>
             </tr>
           </tbody>
         </table>
