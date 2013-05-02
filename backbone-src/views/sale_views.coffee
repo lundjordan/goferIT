@@ -6,10 +6,11 @@ jQuery ->
         initialize: ->
             @currentView = null
             @currentSale = new app.Sale({})
-            # @listenTo @currentSale, 'change', @renderSalesConstructView
+            @listenTo @currentSale, 'change', @renderSalesConstructView
         getCurrentSale: ->
             @currentSale
         renderSalesConstructView: ->
+            console.log 'whole view rendered'
             @removeCurrentContentView()
             @currentView = new SalesConstructControllerView
                 collection: app.Sales
@@ -68,7 +69,6 @@ jQuery ->
             existingProduct =  @currentSale.
                 getProductIfExists productName, productBrand
             if existingProduct # this item is already in transaction list
-                console.log 'product exists'
                 productIndex =
                     @currentSale.get('products').indexOf(existingProduct)
                 currentProducts = @currentSale.get('products')
@@ -78,7 +78,6 @@ jQuery ->
                 currentProducts[productIndex].individualProperties =
                     newIndividualProps
             else # currentSale does have this product in its list
-                console.log 'product is new'
                 @currentSale.get('products').push
                     description:
                         name: productModel.get 'description.name'
@@ -89,6 +88,10 @@ jQuery ->
                     primaryMeasurementFactor:
                         productModel.get 'primaryMeasurementFactor'
                     individualProperties: allProdsByRequest
+        addCustomerToSale: (customer) ->
+            # this should fire an event to render construct view again
+            @currentSale.set
+                _customer: customer.get '_id'
 
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
@@ -105,6 +108,8 @@ jQuery ->
             @addStoreNames()
             @productsListRender()
             @transactionListRender()
+            @customerListRender()
+            @customerSelectedRender()
             @
         addStoreNames: ->
             storeNames = app.Companies.models[0].get 'stores'
@@ -113,41 +118,65 @@ jQuery ->
         addOneStoreNameToSelect: (storeName) ->
             @$('#store-name-select').append(
                 "<option value='#{storeName}'>#{storeName}</option>")
-        transactionListRender: ->
-            transactionList = new SaleTransactionList
-                model: @controller.getCurrentSale()
-                controller: @controller
-            @$("#transaction-list").html transactionList.render().el
         productsListRender: ->
             productsList = new SaleProductList
                 collection: app.Products
                 controller: @controller
                 storeName: @$('#store-name-select option:selected').val()
             @$("#products-table-id").html productsList.render().el
+        customerListRender: ->
+            customersList = new SaleCustomerList
+                collection: app.Customers
+                controller: @controller
+            @$("#customers-list-id").html customersList.render().el
+        transactionListRender: ->
+            transactionList = new SaleTransactionList
+                controller: @controller
+            @$("#transaction-list-id").html transactionList.render().el
+        customerSelectedRender: ->
+            customerSelected = new SaleCustomerSelected
+                controller: @controller
+            @$("#customer-selected-id").html customerSelected.render().el
 
-    class SaleTransactionList extends Backbone.View
-        template: _.template ($ '#sale-transaction-list-template').html()
+    class SaleCustomerList extends Backbone.View
+        template: _.template ($ '#sale-customers-table-template').html()
         initialize: ->
             @controller = @options.controller
         render: ->
             @$el.html @template({})
             @addAll()
             @
+        addOne: (customer) ->
+            view = new SaleCustomerListItemView
+                model: customer
+                controller: @controller
+            (@$ "#customers-table-list").append view.render().el
         addAll: ->
-            currentSaleProducts = @controller.getCurrentSale().get 'products'
-            _.each currentSaleProducts, @addOne, @
-        addOne: (product) ->
-            view = new SaleTransactionItemView
-                currentSaleProduct: product
-            (@$ "#transaction-ul").append view.render().el
-
-    class SaleTransactionItemView extends Backbone.View
-        template: _.template ($ '#transaction-li-template').html()
-        tagName: 'li'
+            @collection.each @addOne, @
+    class SaleCustomerListItemView extends Backbone.View
+        template: _.template ($ '#sale-customer-tr-template').html()
+        tagName: 'tr'
+        events:
+            'mouseover': 'showItemOptions'
+            'mouseout': 'hideItemOptions'
+            'click #customer-purchase-link': 'customerSelected'
         initialize: ->
-            @currentSaleProduct = @options.currentSaleProduct
+            @controller = @options.controller
         render: ->
-            @$el.html @template @currentSaleProduct
+            @$el.html this.template @model.attributes
+            $(@el).find('i').hide()
+            @
+        showItemOptions: (event) ->
+            $(@el).find('i').show()
+        hideItemOptions: (event) ->
+            $(@el).find('i').hide()
+        customerSelected: (e) ->
+            @controller.addCustomerToSale(@model)
+
+    class SalesConstructSkeletonView extends Backbone.View
+        template: _.template ($ '#sales-skeleton-template').html()
+        render: ->
+            @$el.html this.template({})
             @
 
     class SaleProductList extends Backbone.View
@@ -172,6 +201,7 @@ jQuery ->
                 (@$ "#products-table-list").append view.render().el
         addAll: ->
             @collection.each @addOne, @
+
     class ProductListItemView extends Backbone.View
         template: _.template ($ '#sale-product-tr-template').html()
         tagName: 'tr'
@@ -240,7 +270,6 @@ jQuery ->
             noWantsLessThan0 = true
             oneWantGreaterThan0 = false
             noWantsLessThanAvailable = true
-            console.log addToTransactionData
             for subTotal, i in addToTransactionData.measurementsAvailable
                 available = parseInt(addToTransactionData.measurementsAvailable[i], 10)
                 wanted = parseInt(addToTransactionData.measurementsWanted[i],10)
@@ -296,10 +325,44 @@ jQuery ->
             @$('#product-sub-quantity-wanted-td').append tableRow2Wanted
             @
 
-    class SalesConstructSkeletonView extends Backbone.View
-        template: _.template ($ '#sales-skeleton-template').html()
+    class SaleTransactionList extends Backbone.View
+        template: _.template ($ '#sale-transaction-list-template').html()
+        initialize: ->
+            @controller = @options.controller
         render: ->
-            @$el.html this.template({})
+            @$el.html @template({})
+            @addAll()
+            @
+        addAll: ->
+            currentSaleProducts = @controller.getCurrentSale().get 'products'
+            _.each currentSaleProducts, @addOne, @
+        addOne: (product) ->
+            view = new SaleTransactionItemView
+                currentSaleProduct: product
+            (@$ "#transaction-ul").append view.render().el
+
+    class SaleTransactionItemView extends Backbone.View
+        template: _.template ($ '#transaction-li-template').html()
+        tagName: 'li'
+        initialize: ->
+            @currentSaleProduct = @options.currentSaleProduct
+        render: ->
+            @$el.html @template @currentSaleProduct
+            @
+
+    class SaleCustomerSelected extends Backbone.View
+        template: _.template ($ '#sale-customer-selected-template').html()
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            currentSaleCustomerID = @controller.getCurrentSale().get '_customer'
+            console.log currentSaleCustomerID
+            customerModel = app.Customers.where({_id: currentSaleCustomerID})[0]
+            if customerModel
+                console.log customerModel.attributes
+                @$el.html @template(customerModel.attributes)
+            else
+                @$el.html @template({})
             @
 
 
