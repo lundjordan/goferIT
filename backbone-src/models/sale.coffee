@@ -9,7 +9,6 @@ class Sale extends Backbone.DeepModel
         if !attributes.products
             @attributes.products = []
     getProductIfExists: (productName, productBrand) ->
-        console.log productName, productBrand
         products = @attributes.products
         for product in products
             ref = product.description

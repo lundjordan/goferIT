@@ -6,13 +6,18 @@ jQuery ->
         events:
             'click #payment-btn': 'renderSalesPaymentView'
             'click #back-to-construct-btn': 'renderSalesConstructView'
+            'click #cancel-sale-btn': 'cancelCurrentSale'
         initialize: ->
             @currentView = null
+            @currentSale = new app.Sale({})
+            @listenTo @currentSale, 'change', @renderSalesConstructView
         getCurrentSale: ->
             @currentSale
         renderInitSalesConstructView: ->
-            @currentSale = new app.Sale({})
-            @listenTo @currentSale, 'change', @renderSalesConstructView
+            if @currentSale
+                @stopListening()
+                @currentSale = new app.Sale({})
+                @listenTo @currentSale, 'change', @renderSalesConstructView
             @renderSalesConstructView()
         renderSalesConstructView: ->
             if @currentView
@@ -43,9 +48,10 @@ jQuery ->
                     'description.brand': product.description.brand
                 productFromStock.applyUndo()
             # now put the sale back to an initial state
-            @currentSale.destroy()
-            # to be sure to be sure
-            delete @currentSale
+            @currentSale.clear({silent: true})
+            @currentSale.set
+                products: []
+                dateCreated: (new Date).toISOString()
         removeCurrentContentView: ->
             if @currentView
                 # clean up incomplete transaction
