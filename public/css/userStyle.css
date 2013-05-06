@@ -9,6 +9,10 @@ a {
   color: rgb(0, 0, 0);
 }
 
+.btn-group-center {
+    text-align: center;
+}
+
 /* line 238 */
 a:hover,
 a:focus {

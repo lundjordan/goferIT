@@ -124,18 +124,44 @@ jQuery ->
             @
     class SalesPaymentControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
+        events: ->
+            "click #cash-btn": "renderCashDetails"
+            "click #credit-btn": "renderCardDetails"
+            "click #debit-btn": "renderCardDetails"
         initialize: ->
             @controller = @options.controller
         render: ->
             @$el.html this.template({})
             @$("#root-backbone-view-body").html(
                 (new SalesPaymentSkeletonView).render(@model).el)
+            @renderCashDetails()
             @transactionListRender()
+            @customerSelectedRender()
+            @employeeSelectedRender()
+            @
+        renderCashDetails: ->
+            cashDetailsView = new SaleCashDetailsView
+                controller: @controller
+            @$("#payment-total-details").html cashDetailsView.render().el
+            @
+        renderCardDetails: ->
+            cardDetailsView = new SaleCardDetailsView
+                controller: @controller
+            @$("#payment-total-details").html cardDetailsView.render().el
+            @
         transactionListRender: ->
             transactionList = new SaleTransactionList
                 controller: @controller
             @$("#transaction-list-id").html transactionList.render().el
             @
+        customerSelectedRender: ->
+            customerSelected = new SaleCustomerSelected
+                controller: @controller
+            @$("#customer-selected-id").html customerSelected.render().el
+        employeeSelectedRender: ->
+            customerSelected = new SaleEmployeeSelected
+                controller: @controller
+            @$("#employee-selected-id").html customerSelected.render().el
 
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
@@ -423,13 +449,49 @@ jQuery ->
             @$el.html @template @currentSaleProduct
             @
 
+    class SaleCashDetailsView extends Backbone.View
+        template: _.template ($ '#sales-payment-total-cash-template').html()
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            currentSale = @controller.getCurrentSale().attributes
+            totalDue = 0
+            for product in currentSale
+                totalDue = product.price * product.individualProperties.length
+            @$el.html @template
+                totalDue: totalDue
+            @
+    class SaleCardDetailsView extends Backbone.View
+        template: _.template ($ '#sales-payment-total-card-template').html()
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            currentSale = @controller.getCurrentSale().attributes
+            totalDue = 0
+            for product in currentSale.products
+                totalDue += product.price * product.individualProperties.length
+            console.log totalDue
+            @$el.html @template
+                totalDue: totalDue
+            @
+
+    class SaleEmployeeSelected extends Backbone.View
+        template: _.template ($ '#sale-employee-selected-template').html()
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            currentSaleEmail = $("#current-user-email-id").text()
+            emailModel = app.Employees.findWhere({email: currentSaleEmail})
+            console.log currentSaleEmail
+            @$el.html @template(emailModel.attributes)
+            @
     class SaleCustomerSelected extends Backbone.View
         template: _.template ($ '#sale-customer-selected-template').html()
         initialize: ->
             @controller = @options.controller
         render: ->
             currentSaleCustomerID = @controller.getCurrentSale().get '_customer'
-            customerModel = app.Customers.where({_id: currentSaleCustomerID})[0]
+            customerModel = app.Customers.findWhere({_id: currentSaleCustomerID})
             if customerModel
                 @$el.html @template(customerModel.attributes)
             else

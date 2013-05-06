@@ -13,10 +13,28 @@
     </div>
     <div class="tab-pane active" id="payment-content">
       <div class="row-fluid">
-        <div class="span5 well">
-          <p>HELLO WORLD</p>
+        <div class="span5">
+          <div id="payment-method-div">
+            <div class="btn-group-center">
+              <div class="btn-group" data-toggle="buttons-radio">
+                <button type="button" class="btn btn-large active" id='cash-btn'>
+                  Cash
+                </button>
+                <button type="button" class="btn btn-large" id='credit-btn'>
+                  Credit
+                </button>
+                <button type="button" class="btn btn-large" id='debit-btn'>
+                  Debit
+                </button>
+              </div>
+            </div>
+            <div id="payment-total-details">
+            </div>
+          </div>
         </div>
-        <div class="span4 well">
+        <div class="span4 ">
+          <div id="employee-selected-id" class='well'> </div>
+          <div id="customer-selected-id" class='well'> </div>
         </div>
         <div class="span3">
           <div id="transaction-list-id" class="well">
@@ -39,6 +57,24 @@
   </div>
 </script>
 <!--sale payment view template-->
+
+<!--sale payment card template-->
+<script type="text/template" id="sales-payment-total-card-template">
+  <div class="control-group">
+    <label class="control-label" for="total">Total Due</label>
+    <div class="controls">
+      <input type="text" id="total"
+      value="<%= (totalDue / 100).toFixed(2) %>" disabled>
+    </div>
+  </div>
+</script>
+<!--sale payment card templates-->
+
+<!--sale payment cash template-->
+<script type="text/template" id="sales-payment-total-cash-template">
+  <p>not implemented</p>
+</script>
+<!--sale payment cash templates-->
 
 <!--sale construct view templates-->
 <script type="text/template" id="sales-construct-skeleton-template">
@@ -281,9 +317,26 @@
 <script type="text/template" id='sale-customer-selected-template'>
   <legend>Customer</legend>
   <% if (obj.email) { %>
-    <strong><%= email %></strong>
+    <address>
+      <strong>Name</strong><br>
+      <%= (name.first + " " + name.last) %><br />
+      <strong>Email</strong><br>
+      <%= email %>
+    </address>
   <% } else { %>
     <p>No customer for this sale</p>
   <% } %>
+</script>
+<!--sale customer selected -->
+
+<!--sale employee selected -->
+<script type="text/template" id='sale-employee-selected-template'>
+  <legend>Employee</legend>
+  <address>
+    <strong>Name</strong><br>
+    <%= (name.first + " " + name.last) %><br />
+    <strong>Email</strong><br>
+    <%= email %>
+  </address>
 </script>
 <!--sale customer selected -->
