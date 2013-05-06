@@ -7,6 +7,7 @@ jQuery ->
             'click #payment-btn': 'renderSalesPaymentView'
             'click #back-to-construct-btn': 'renderSalesConstructView'
             'click #cancel-sale-btn': 'cancelCurrentSale'
+            'click #sale-confirm-btn': 'createSale'
         initialize: ->
             @currentView = null
             @currentSale = new app.Sale({})
@@ -17,9 +18,9 @@ jQuery ->
             if @currentSale
                 @stopListening()
                 @currentSale = new app.Sale({})
-                @listenTo @currentSale, 'change', @renderSalesConstructView
             @renderSalesConstructView()
         renderSalesConstructView: ->
+            @listenTo @currentSale, 'change', @renderSalesConstructView
             if @currentView
                 @currentView.remove()
             @currentView = new SalesConstructControllerView
@@ -27,6 +28,9 @@ jQuery ->
             # not the best way but @ is needed in AddToTransactionModal
             $("#sales-main-view").html @currentView.render().el
         renderSalesPaymentView: ->
+            #stop listening  when in this view so we don't render anything from
+            #renderSalesConstructView
+            @stopListening()
             if @currentSale.get('products').length
                 if @currentView
                     @currentView.remove()
@@ -57,6 +61,26 @@ jQuery ->
                 # clean up incomplete transaction
                 @cancelCurrentSale()
                 @currentView.remove()
+        createSale: ->
+            console.log 'creating a sale'
+            # first let's clean up the products with mementos and save them
+            for product in @currentSale.get 'products'
+                productFromStock = app.Products.findWhere
+                    'description.name': product.description.name
+                    'description.brand': product.description.brand
+                productFromStock.removeMemento()
+                productFromStock.save()
+            # then take the current selected payment method
+            # TODO not implemented
+            # save the currentSale to the Sales collection
+            app.Sales.add(@currentSale)
+            # finally render the sales init view with a success alert
+            @renderInitSalesConstructView()
+            message = "Sale created!"
+            alertSuccessView = new app.AlertView
+                alertType: 'success'
+            alertHTML = alertSuccessView.render("alert-success", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
         addSelectedToTransaction: (productModel, addToTransactionData) ->
             # first let's capture the current state of the product in case we
             # want to revert (cancel a sale)

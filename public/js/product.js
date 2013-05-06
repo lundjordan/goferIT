@@ -38,6 +38,10 @@
       return this._memento === null;
     };
 
+    Product.prototype.removeMemento = function() {
+      return this._memento = null;
+    };
+
     return Product;
 
   })(Backbone.DeepModel);

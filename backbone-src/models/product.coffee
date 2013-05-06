@@ -16,6 +16,8 @@ class Product extends Backbone.DeepModel
         @_memento = null
     currentMementoIsNull: ->
         @_memento is null
+    removeMemento: ->
+        @_memento = null
 
 @app = window.app ? {}
 @app.Product = Product
