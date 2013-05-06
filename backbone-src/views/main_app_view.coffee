@@ -37,6 +37,7 @@ jQuery ->
             @currentMenuView = @posControllerView
             @currentMenuView.renderPOSInitView()
         dashboardRender: ->
+            @currentMenuView = @inventoryControllerView
 
     class POSControllerView extends Backbone.View
         # this controller keeps the format of the others in case we expand
@@ -46,9 +47,8 @@ jQuery ->
             @salesControllerView = @options.salesControllerView
             @currentPOSView = @salesControllerView
         renderPOSInitView: ->
-            @currentPOSView.removeCurrentContentView()
             @currentPOSView = @salesControllerView
-            @currentPOSView.renderSalesConstructView()
+            @currentPOSView.renderInitSalesConstructView()
         removeCurrentContentView: ->
             @currentPOSView.removeCurrentContentView()
 

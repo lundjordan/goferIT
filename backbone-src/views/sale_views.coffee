@@ -8,38 +8,56 @@ jQuery ->
             'click #back-to-construct-btn': 'renderSalesConstructView'
         initialize: ->
             @currentView = null
-            @currentSale = new app.Sale({})
-            @listenTo @currentSale, 'change', @renderSalesConstructView
         getCurrentSale: ->
             @currentSale
+        renderInitSalesConstructView: ->
+            @currentSale = new app.Sale({})
+            @listenTo @currentSale, 'change', @renderSalesConstructView
+            @renderSalesConstructView()
         renderSalesConstructView: ->
-            @removeCurrentContentView()
+            if @currentView
+                @currentView.remove()
             @currentView = new SalesConstructControllerView
-                collection: app.Sales
                 controller: @ # bubble this all the way down
             # not the best way but @ is needed in AddToTransactionModal
             $("#sales-main-view").html @currentView.render().el
         renderSalesPaymentView: ->
-            # if @currentSale.get('products').length
-            if true
-                @removeCurrentContentView()
+            if @currentSale.get('products').length
+                if @currentView
+                    @currentView.remove()
                 @currentView = new SalesPaymentControllerView
                     collection: app.Sales
                     controller: @ # bubble this all the way down
                 $("#sales-main-view").html @currentView.render().el
             else
                 message = "To make a payment you must have at least " +
-                    " one item in the transaction list."
+                    "one item in the transaction list."
                 alertWarningView = new app.AlertView
                     alertType: 'warning'
                 alertHTML = alertWarningView.render("alert-error", message).el
                 $("#root-backbone-alert-view").html(alertHTML)
-
+        cancelCurrentSale: ->
+            for product in @currentSale.get 'products'
+                productFromStock = app.Products.findWhere
+                    'description.name': product.description.name
+                    'description.brand': product.description.brand
+                productFromStock.applyUndo()
+            # now put the sale back to an initial state
+            @currentSale.destroy()
+            # to be sure to be sure
+            delete @currentSale
         removeCurrentContentView: ->
             if @currentView
                 # clean up incomplete transaction
+                @cancelCurrentSale()
                 @currentView.remove()
         addSelectedToTransaction: (productModel, addToTransactionData) ->
+            # first let's capture the current state of the product in case we
+            # want to revert (cancel a sale)
+            if productModel.currentMementoIsNull()
+                # we only want to capture the state once!
+                productModel.captureState()
+
             individualProds = productModel.get 'individualProperties'
             requiredStoreName = $('#store-name-select option:selected').val()
             for subTotal, i in addToTransactionData.measurementsAvailable
@@ -439,7 +457,7 @@ jQuery ->
             for product in currentSale.products
                 totalDue += product.price * product.individualProperties.length
             if totalDue isnt 0
-                totalTaxesInCurrency = ((totalDue * 1.21) / 100).toFixed(2)
+                totalTaxesInCurrency = ((totalDue * 0.21) / 100).toFixed(2)
                 totalInCurrency = (totalDue / 100).toFixed(2)
             totalStringDetailsHTML = "<li class='nav-header'>Taxes</li> <li class='pull-right'>#{totalTaxesInCurrency}</li> <li class='nav-header'>Total</li> <li class='pull-right'>#{totalInCurrency}</li>"
             (@$ "#transaction-ul").append totalStringDetailsHTML
@@ -454,18 +472,9 @@ jQuery ->
                 currentSaleProduct: product
             (@$ "#transaction-ul").append view.render().el
 
-    class SaleTransactionTotalsView extends Backbone.View
-        template: _.template ($ '#sale-transaction-totals-template').html()
-        initialize: ->
-            @controller = @options.controller
-        render: ->
-            $("#transaction-ul").append @template
-                totalDue: totalDue
-                totalTaxed: totalDue * 1.21
     class SaleTransactionItemView extends Backbone.View
         template: _.template ($ '#transaction-li-template').html()
         tagName: 'li'
-        className: 'pull-right'
         initialize: ->
             @currentSaleProduct = @options.currentSaleProduct
         render: ->

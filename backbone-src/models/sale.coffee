@@ -17,6 +17,7 @@ class Sale extends Backbone.DeepModel
                 return product
         return false
 
+
 @app = window.app ? {}
 @app.Sale = Sale
 

@@ -51,7 +51,9 @@
         return this.currentMenuView.renderPOSInitView();
       };
 
-      AppControllerView.prototype.dashboardRender = function() {};
+      AppControllerView.prototype.dashboardRender = function() {
+        return this.currentMenuView = this.inventoryControllerView;
+      };
 
       return AppControllerView;
 
@@ -72,9 +74,8 @@
       };
 
       POSControllerView.prototype.renderPOSInitView = function() {
-        this.currentPOSView.removeCurrentContentView();
         this.currentPOSView = this.salesControllerView;
-        return this.currentPOSView.renderSalesConstructView();
+        return this.currentPOSView.renderInitSalesConstructView();
       };
 
       POSControllerView.prototype.removeCurrentContentView = function() {

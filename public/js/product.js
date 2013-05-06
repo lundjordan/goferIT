@@ -16,8 +16,26 @@
 
     Product.prototype.initialize = function(attributes, options) {
       if (!attributes.createdAt) {
-        return this.attributes.dateCreated = (new Date).toISOString();
+        this.attributes.dateCreated = (new Date).toISOString();
       }
+      return this._memento = null;
+    };
+
+    Product.prototype.captureState = function() {
+      return this._memento = _.clone(this.attributes);
+    };
+
+    Product.prototype.applyUndo = function() {
+      if (this._memento) {
+        this.set(this._memento, {
+          silent: true
+        });
+      }
+      return this._memento = null;
+    };
+
+    Product.prototype.currentMementoIsNull = function() {
+      return this._memento === null;
     };
 
     return Product;

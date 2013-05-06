@@ -12,8 +12,8 @@
     <div class="tab-pane" id="process-content">
     </div>
     <div class="tab-pane active" id="payment-content">
-      <div class="row-fluid">
-        <div class="span5">
+      <div class="span5">
+        <div class="row-fluid">
           <div id="payment-method-div">
             <div class="btn-group-center">
               <div class="btn-group" data-toggle="buttons-radio">
@@ -28,10 +28,11 @@
                 </button>
               </div>
             </div>
-            <div id="payment-total-details">
-            </div>
           </div>
         </div>
+        <hr />
+        <div class='row-fluid offset3' id="payment-total-details"> </div>
+      </div>
         <div class="span4 ">
           <div id="employee-selected-id" class='well'> </div>
           <div id="customer-selected-id" class='well'> </div>
@@ -72,7 +73,26 @@
 
 <!--sale payment cash template-->
 <script type="text/template" id="sales-payment-total-cash-template">
-  <p>not implemented</p>
+  <div class="control-group">
+    <label class="control-label" for="cash-given-input">Cash Given</label>
+    <div class="controls">
+      <input type="text" id="cash-given-input" placeholder="0">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="change-due-input">Change Due</label>
+    <div class="controls">
+      <input type="text" id="change-due-input"
+      value="0" disabled>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="total-due-input">Total</label>
+    <div class="controls">
+      <input type="text" id="total-due-input"
+      value="<%= (totalDue / 100).toFixed(2) %>" disabled>
+    </div>
+  </div>
 </script>
 <!--sale payment cash templates-->
 
@@ -304,7 +324,18 @@
 
 <!--sale transaction list -->
 <script type="text/template" id='transaction-li-template'>
-  <strong><%= description.name %></strong> X <%= individualProperties.length %>
+  <ul class="inline">
+    <li>
+      <% if (description.name.length > 15) { %>
+        <strong><%= description.name.slice(0, 15) %>...</strong>
+      <% } else { %>
+        <strong><%= description.name %></strong>
+      <% } %>
+    </li>
+    <li class='pull-right'>
+      <%= (price / 100).toFixed(2) %> x <%= individualProperties.length %>
+    </li>
+  </ul>
 </script>
 <script type="text/template" id='sale-transaction-list-template'>
   <legend>Transaction Items</legend>
@@ -313,23 +344,6 @@
   </ul>
 </script>
 <!--sale transaction list -->
-
-<!--sale transaction total / taxes -->
-<script type="text/template" id='sale-transaction-totals-template'>
-  <li class="nav-header">Taxes</li>
-  <% if (totalDue !== 0) { %>
-    <li class='pull-right'><%= (totalTaxed / 100).toFixed(2) %></li>
-  <% } else { %>
-    <li class='pull-right'>0</li>
-  <% } %>
-  <li class="nav-header">Total</li>
-  <% if (totalDue !== 0) { %>
-    <li class='pull-right'><%= (totalDue / 100).toFixed(2) %></li>
-  <% } else { %>
-    <li class='pull-right'>0</li>
-  <% } %>
-</script>
-<!--sale transaction total / taxes -->
 
 <!--sale customer selected -->
 <script type="text/template" id='sale-customer-selected-template'>
