@@ -13,7 +13,6 @@ jQuery ->
         getCurrentSale: ->
             @currentSale
         renderSalesConstructView: ->
-            console.log 'whole view rendered'
             @removeCurrentContentView()
             @currentView = new SalesConstructControllerView
                 collection: app.Sales
@@ -191,7 +190,6 @@ jQuery ->
             @$('#store-name-select').append(
                 "<option value='#{storeName}'>#{storeName}</option>")
         productsListRender: ->
-            console.log 'productsListRender called'
             productsList = new SaleProductList
                 collection: app.Products
                 controller: @controller
@@ -431,18 +429,43 @@ jQuery ->
         render: ->
             @$el.html @template({})
             @addAll()
+            @addTotalsDetails()
             @
+        addTotalsDetails: ->
+            totalDue = 0
+            totalInCurrency = 0
+            totalTaxesInCurrency = 0
+            currentSale = @controller.getCurrentSale().attributes
+            for product in currentSale.products
+                totalDue += product.price * product.individualProperties.length
+            if totalDue isnt 0
+                totalTaxesInCurrency = ((totalDue * 1.21) / 100).toFixed(2)
+                totalInCurrency = (totalDue / 100).toFixed(2)
+            totalStringDetailsHTML = "<li class='nav-header'>Taxes</li> <li class='pull-right'>#{totalTaxesInCurrency}</li> <li class='nav-header'>Total</li> <li class='pull-right'>#{totalInCurrency}</li>"
+            (@$ "#transaction-ul").append totalStringDetailsHTML
         addAll: ->
             currentSaleProducts = @controller.getCurrentSale().get 'products'
+            if not currentSaleProducts.length
+                (@$ "#transaction-ul").append(
+                    "<li class='pull-right'>no products</li>")
             _.each currentSaleProducts, @addOne, @
         addOne: (product) ->
             view = new SaleTransactionItemView
                 currentSaleProduct: product
             (@$ "#transaction-ul").append view.render().el
 
+    class SaleTransactionTotalsView extends Backbone.View
+        template: _.template ($ '#sale-transaction-totals-template').html()
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            $("#transaction-ul").append @template
+                totalDue: totalDue
+                totalTaxed: totalDue * 1.21
     class SaleTransactionItemView extends Backbone.View
         template: _.template ($ '#transaction-li-template').html()
         tagName: 'li'
+        className: 'pull-right'
         initialize: ->
             @currentSaleProduct = @options.currentSaleProduct
         render: ->
@@ -456,8 +479,8 @@ jQuery ->
         render: ->
             currentSale = @controller.getCurrentSale().attributes
             totalDue = 0
-            for product in currentSale
-                totalDue = product.price * product.individualProperties.length
+            for product in currentSale.products
+                totalDue += product.price * product.individualProperties.length
             @$el.html @template
                 totalDue: totalDue
             @
@@ -470,7 +493,6 @@ jQuery ->
             totalDue = 0
             for product in currentSale.products
                 totalDue += product.price * product.individualProperties.length
-            console.log totalDue
             @$el.html @template
                 totalDue: totalDue
             @
@@ -482,7 +504,6 @@ jQuery ->
         render: ->
             currentSaleEmail = $("#current-user-email-id").text()
             emailModel = app.Employees.findWhere({email: currentSaleEmail})
-            console.log currentSaleEmail
             @$el.html @template(emailModel.attributes)
             @
     class SaleCustomerSelected extends Backbone.View

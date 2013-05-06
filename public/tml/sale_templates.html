@@ -308,10 +308,28 @@
 </script>
 <script type="text/template" id='sale-transaction-list-template'>
   <legend>Transaction Items</legend>
-  <ul id='transaction-ul'>
+  <ul class="nav nav-list" id='transaction-ul'>
+    <li class="nav-header">Products</li>
   </ul>
 </script>
 <!--sale transaction list -->
+
+<!--sale transaction total / taxes -->
+<script type="text/template" id='sale-transaction-totals-template'>
+  <li class="nav-header">Taxes</li>
+  <% if (totalDue !== 0) { %>
+    <li class='pull-right'><%= (totalTaxed / 100).toFixed(2) %></li>
+  <% } else { %>
+    <li class='pull-right'>0</li>
+  <% } %>
+  <li class="nav-header">Total</li>
+  <% if (totalDue !== 0) { %>
+    <li class='pull-right'><%= (totalDue / 100).toFixed(2) %></li>
+  <% } else { %>
+    <li class='pull-right'>0</li>
+  <% } %>
+</script>
+<!--sale transaction total / taxes -->
 
 <!--sale customer selected -->
 <script type="text/template" id='sale-customer-selected-template'>
