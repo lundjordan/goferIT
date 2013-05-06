@@ -151,6 +151,7 @@ jQuery ->
             "click #cash-btn": "renderCashDetails"
             "click #credit-btn": "renderCardDetails"
             "click #debit-btn": "renderCardDetails"
+            'keyup #cash-given-input': 'showChangeDue'
         initialize: ->
             @controller = @options.controller
         render: ->
@@ -172,6 +173,17 @@ jQuery ->
                 controller: @controller
             @$("#payment-total-details").html cardDetailsView.render().el
             @
+        showChangeDue: ->
+            cashGiven = parseFloat($("#cash-given-input").val())
+            changeDue = parseFloat($("#change-due-input").val())
+            totalDue =  parseFloat($("#total-due-input").val())
+            console.log cashGiven, changeDue, totalDue
+            if cashGiven > totalDue
+                console.log cashGiven - totalDue
+                $("#change-due-input").val((cashGiven - totalDue).toFixed(2))
+            else
+                $("#change-due-input").val("not enough cash given")
+
         transactionListRender: ->
             transactionList = new SaleTransactionList
                 controller: @controller
@@ -465,7 +477,7 @@ jQuery ->
             if totalDue isnt 0
                 totalTaxesInCurrency = ((totalDue * 0.21) / 100).toFixed(2)
                 totalInCurrency = (totalDue / 100).toFixed(2)
-            totalStringDetailsHTML = "<li class='nav-header'>Taxes</li> <li class='pull-right'>#{totalTaxesInCurrency}</li> <li class='nav-header'>Total</li> <li class='pull-right'>#{totalInCurrency}</li>"
+            totalStringDetailsHTML = "<li class='nav-header'>Taxes</li> <li class='pull-right'>#{totalTaxesInCurrency}</li> <li class='nav-header'>Total</li> <li class='pull-right'>#{totalInCurrency}</li><hr />"
             (@$ "#transaction-ul").append totalStringDetailsHTML
         addAll: ->
             currentSaleProducts = @controller.getCurrentSale().get 'products'
