@@ -41,13 +41,14 @@ restifyProducts = (app, restify, model) ->
         (model.findOne {_company: req.user._company})
             .exec (err, stock) ->
                 if not err
+                    console.log 'req.body: ', req.body
                     product = stock.products.id req.params.id
                     for key, value of req.body
                         product[key] = value
                     stock.save (err) ->
                         if not err
-                            console.log stock
-                            res.send stock
+                            console.log 'stock: ', stock.products.id req.params.id
+                            res.send stock.products.id req.params.id
                         else
                             console.log(errMsg err)
                             res.send (errMsg err)

@@ -10,6 +10,7 @@ jQuery ->
             'click #sale-confirm-btn': 'createSale'
         initialize: ->
             @currentView = null
+            currentUserEmail = $("#current-user-email-id").text()
             @currentSale = new app.Sale({})
             @listenTo @currentSale, 'change', @renderSalesConstructView
         getCurrentSale: ->
@@ -17,7 +18,9 @@ jQuery ->
         renderInitSalesConstructView: ->
             if @currentSale
                 @stopListening()
-                @currentSale = new app.Sale({})
+                currentUserEmail = $("#current-user-email-id").text()
+                employeeModel = app.Employees.findWhere({email: currentUserEmail})
+                @currentSale = new app.Sale({_employeee: employeeModel.id})
             @renderSalesConstructView()
         renderSalesConstructView: ->
             @listenTo @currentSale, 'change', @renderSalesConstructView
@@ -62,7 +65,6 @@ jQuery ->
                 @cancelCurrentSale()
                 @currentView.remove()
         createSale: ->
-            console.log 'creating a sale'
             # first let's clean up the products with mementos and save them
             for product in @currentSale.get 'products'
                 productFromStock = app.Products.findWhere
@@ -201,9 +203,7 @@ jQuery ->
             cashGiven = parseFloat($("#cash-given-input").val())
             changeDue = parseFloat($("#change-due-input").val())
             totalDue =  parseFloat($("#total-due-input").val())
-            console.log cashGiven, changeDue, totalDue
             if cashGiven > totalDue
-                console.log cashGiven - totalDue
                 $("#change-due-input").val((cashGiven - totalDue).toFixed(2))
             else
                 $("#change-due-input").val("not enough cash given")
@@ -218,9 +218,9 @@ jQuery ->
                 controller: @controller
             @$("#customer-selected-id").html customerSelected.render().el
         employeeSelectedRender: ->
-            customerSelected = new SaleEmployeeSelected
+            employeeSelected = new SaleEmployeeSelected
                 controller: @controller
-            @$("#employee-selected-id").html customerSelected.render().el
+            @$("#employee-selected-id").html employeeSelected.render().el
 
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
@@ -553,8 +553,8 @@ jQuery ->
         initialize: ->
             @controller = @options.controller
         render: ->
-            currentSaleEmail = $("#current-user-email-id").text()
-            emailModel = app.Employees.findWhere({email: currentSaleEmail})
+            currentUserEmail = $("#current-user-email-id").text()
+            emailModel = app.Employees.findWhere({email: currentUserEmail})
             @$el.html @template(emailModel.attributes)
             @
     class SaleCustomerSelected extends Backbone.View
