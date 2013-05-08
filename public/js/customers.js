@@ -16,6 +16,12 @@
 
     Customers.prototype.url = '/customers';
 
+    Customers.prototype.initialize = function() {
+      return this.comparator = function(customer) {
+        return customer.get('name').last.toLowerCase();
+      };
+    };
+
     Customers.prototype.findPrev = function(currentModel) {
       var indexCurrentModel;
       indexCurrentModel = this.indexOf(currentModel);

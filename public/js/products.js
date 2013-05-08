@@ -16,6 +16,12 @@
 
     Products.prototype.url = '/products';
 
+    Products.prototype.initialize = function() {
+      return this.comparator = function(product) {
+        return product.get('description').name.toLowerCase();
+      };
+    };
+
     Products.prototype.findPrev = function(currentModel) {
       var indexCurrentModel;
       indexCurrentModel = this.indexOf(currentModel);

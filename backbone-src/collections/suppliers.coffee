@@ -3,6 +3,9 @@
 class Suppliers extends Backbone.Collection
     model: app.Supplier
     url: '/suppliers'
+    initialize: ->
+        @comparator = (supplier) ->
+            supplier.get('name').toLowerCase()
     findPrev: (currentModel) ->
         indexCurrentModel = @indexOf(currentModel)
         if indexCurrentModel is 0

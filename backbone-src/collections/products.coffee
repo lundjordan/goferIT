@@ -3,6 +3,9 @@
 class Products extends Backbone.Collection
     model: app.Product
     url: '/products'
+    initialize: ->
+        @comparator = (product) ->
+            product.get('description').name.toLowerCase()
     findPrev: (currentModel) ->
         indexCurrentModel = @indexOf(currentModel)
         if indexCurrentModel is 0

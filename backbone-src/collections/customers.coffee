@@ -3,6 +3,9 @@
 class Customers extends Backbone.Collection
     model: app.Customer
     url: '/customers'
+    initialize: ->
+        @comparator = (customer) ->
+            customer.get('name').last.toLowerCase()
     findPrev: (currentModel) ->
         indexCurrentModel = @indexOf(currentModel)
         if indexCurrentModel is 0

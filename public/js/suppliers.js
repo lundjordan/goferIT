@@ -16,6 +16,12 @@
 
     Suppliers.prototype.url = '/suppliers';
 
+    Suppliers.prototype.initialize = function() {
+      return this.comparator = function(supplier) {
+        return supplier.get('name').toLowerCase();
+      };
+    };
+
     Suppliers.prototype.findPrev = function(currentModel) {
       var indexCurrentModel;
       indexCurrentModel = this.indexOf(currentModel);

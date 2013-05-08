@@ -11,6 +11,7 @@
         <th>Supplier</th>
         <th>Shipping Company</th>
         <th>Quantity</th>
+        <th>Created</th>
         <th>Arrival</th>
       </tr>
     </thead>
@@ -27,6 +28,7 @@
   <td><%= supplierName %> </td>
   <td><%= shippingInfo.company %> </td>
   <td><%= products.length %> </td>
+  <td><%= new Date(dateCreated).toDateString()  %> </td>
   <% if (dateArrived) { %>
     <td>
       Arrived: <%= new Date(dateArrived).toDateString() %>
