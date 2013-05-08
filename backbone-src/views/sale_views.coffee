@@ -288,7 +288,15 @@ jQuery ->
                 model: customer
                 controller: @controller
             (@$ "#customers-table-list").append view.render().el
+        noCustomerAlert: ->
+            message = "You don't have any customers yet. Click on the" +
+                " 'People' menu link to start adding some regulars."
+            alertWarning = new app.AlertView
+                alertType: 'info'
+            @$el.append alertWarning.render( "alert-info", message).el
         addAll: ->
+            if not app.Customers.length
+                return @noCustomerAlert()
             if @lastNameSearch or @emailSearch
                 customerResults = []
                 if @lastNameSearch
@@ -345,7 +353,15 @@ jQuery ->
                     storeQuantityCount: storeQuantityCount
                     controller: @controller
                 (@$ "#products-table-list").append view.render().el
+        noProductsAlert: ->
+            message = "To make a sale, you need products. Click on the" +
+                " 'Inventory' menu link to start stocking up."
+            alertWarning = new app.AlertView
+                alertType: 'info'
+            @$el.append alertWarning.render( "alert-info", message).el
         addAll: ->
+            if not app.Products.length
+                return @noProductsAlert()
             if @nameSearch or @brandSearch
                 if @nameSearch
                     productResults = @collection.filter (model) =>
