@@ -200,11 +200,14 @@ jQuery ->
     class ItemCreateBodyView extends Backbone.View
         events:
             "click #create-new-item-button": "checkValidityAndCreateNewItem"
+            "click #clear-new-item-button": "clearNewItemFields"
         initialize: ->
             @template = _.template ($ @options.template).html()
             @formRules = @options.formRules
             @isValidMongoEntryFunction = @options.isValidMongoEntryFunction
             @commitFormSubmitFunction = @options.commitFormSubmitFunction
+        clearNewItemFields: ->
+            @render()
         render: ->
             if @model
                 @$el.html this.template(@model.attributes)

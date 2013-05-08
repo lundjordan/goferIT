@@ -198,12 +198,10 @@ jQuery ->
     class OrderCreateView extends Backbone.View
         events:
             "click #add-new-order-product": "renderAddNewOrderProductForm"
-            "click #create-new-order-product":
-                "checkValidityAndAddNewOrderProduct"
-            "click #cancel-new-order-product":
-                "renderOrderProductSummaryView"
-            "click #create-new-order-button":
-                "checkValidityAndCreateNewOrder"
+            "click #create-new-order-product": "checkValidityAndAddNewOrderProduct"
+            "click #cancel-new-order-product": "renderOrderProductSummaryView"
+            "click #create-new-order-button": "checkValidityAndCreateNewOrder"
+            "click #clear-new-order-button": "clearNewOrderForm"
         template: _.template ($ '#root-backbone-content-template').html()
         initialize: ->
             @orderCreateBodyView =  new OrderCreateBodyView
@@ -246,6 +244,8 @@ jQuery ->
             e.preventDefault()
             @orderCreateBodyView.checkValidityAndCreateNewOrder(
                 @currentOrderProducts)
+        clearNewOrderForm: ->
+            $("#order-create-tab").click()
     class OrderCreateBodyView extends Backbone.View
         initialize: ->
             @template = _.template ($ @options.template).html()

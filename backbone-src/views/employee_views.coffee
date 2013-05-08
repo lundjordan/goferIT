@@ -129,7 +129,7 @@ jQuery ->
                 state: $("#state-select").val()
                 country: BFHCountriesList[$("#countries_input").val()]
             dob: $("#dob-input").val()
-            title: $('#title-input').val()
+            title: $('#title-select').val()
         app.Employees.create employeeModel
         message = "You have added a new employee!"
         alertWarning = new app.AlertView

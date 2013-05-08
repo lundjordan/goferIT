@@ -3,7 +3,7 @@
 
   jQuery(function() {
     $.validator.addMethod("decimalTwo", function(value, element) {
-      return this.optional(element) || /^(\d{1,3})(\.\d{2})$/.test(value);
+      return this.optional(element) || /^(\d{1,9})(\.\d{2})$/.test(value);
     }, "Must be in currency format 0.99");
     return _.extend(Backbone.View.prototype, {
       validateForm: function(form, rules) {

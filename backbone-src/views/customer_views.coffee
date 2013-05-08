@@ -120,7 +120,6 @@ jQuery ->
             alertType: 'success'
         $("#root-backbone-alert-view").
             html(alertWarning.render( "alert-success", message).el)
-
     updateExistingCustomer = ->
         customerModel =
             name:

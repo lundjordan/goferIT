@@ -254,6 +254,7 @@ jQuery ->
             "click #cancel-sub-total-options": "cancelSubTotalOptions"
             "click #save-sub-total-options": "saveSubTotalOptions"
             "click #create-new-product-button": "checkValidityAndCreateNewProduct"
+            "click #clear-new-product-button": "clearFields"
             "click #update-existing-product-button": "checkValidityAndUpdateProduct"
         initialize: ->
             @template = _.template ($ @options.template).html()
@@ -346,6 +347,8 @@ jQuery ->
                 @createOrUpdateProduct "Added a new product!"
             else
                 return # not valid
+        clearFields: ->
+            $("#product-create-tab").click()
         createOrUpdateProduct: (successMessage, subQuants) ->
             name = $("#name-input").val()
             brand = $("#brand-input").val()
