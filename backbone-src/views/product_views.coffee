@@ -98,7 +98,6 @@ jQuery ->
             # fill in the remaining rows/columns with the subquants
             prodsSortedByValue = _.sortBy individualProducts, (prod) ->
                 parseInt(prod.measurementValue)
-            console.log prodsSortedByValue
             _.each prodsSortedByValue, (elem) ->
                 tableHeaderValues += "<th>#{elem.measurementValue}</th>"
                 tableRow1Values += "<td>#{elem.quantity}</td>"
@@ -129,12 +128,22 @@ jQuery ->
                 storeQuantityCount: storeQuantityCount
             (@$ @tableListID).append view.render().el
     class ProductListItemView extends app.GenericSingleListItemView
+        findClassName: ->
+            if @storeQuantityCount is 0
+                @$el.addClass('error')
+            else if @storeQuantityCount in [1..4]
+                @$el.addClass('warning')
+            else if @storeQuantityCount in [5..8]
+                @$el.addClass('info')
+            else
+                @$el.addClass('success')
         initialize: ->
             @template = _.template ($ @options.template).html()
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
             @storeQuantityCount = @options.storeQuantityCount
         render: ->
+            @findClassName()
             renderObject = @model.attributes
             renderObject.storeQuantityCount = @storeQuantityCount
             @$el.html this.template renderObject
