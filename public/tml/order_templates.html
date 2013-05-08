@@ -20,11 +20,7 @@
     <a href='#' id='item-view-delete-link'><i class='icon-trash'></i><a>
     <%= referenceNum %>
   </td>
-  <% if (_supplier) { %>
-    <td><%= app.Suppliers.get(_supplier).get("name") %> </td>
-  <% } else { %>
-    <td>n/a</td>
-  <% } %>
+  <td><%= supplierName %> </td>
   <td><%= shippingInfo.company %> </td>
   <td><%= products.length %> </td>
   <% if (dateArrived) { %>
@@ -78,11 +74,7 @@
 <script type="text/template" id="order-view-content-template">
   <div class="row-fluid">
     <h3> RefNum: <%= referenceNum %> </h3>
-    <% if (_supplier) { %>
-      <p class="lead"><a href="mailto:#">Supplier: <%= app.Suppliers.get(_supplier).get("name") %> </a></p>
-    <% } else { %>
-      <p class="lead">Supplier: "n/a" </p>
-    <% } %>
+    <p class="lead">Supplier: <%= supplierName %>  </p>
   </div>
   <div class="row-fluid">
     <div class="span4">

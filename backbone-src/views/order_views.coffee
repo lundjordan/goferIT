@@ -52,6 +52,21 @@ jQuery ->
             @currentView = new OrderCreateView
                 template: '#order-create-template'
             $("#order-create-view-content").html @currentView.render().el
+        preSingleItemContentHook: (orderModel) ->
+            @modelAttrsWithSupplier(orderModel)
+        preSingleListItemHook: (orderModel) ->
+            @modelAttrsWithSupplier(orderModel)
+        modelAttrsWithSupplier: (orderModel) ->
+            supplierID = orderModel.get '_supplier'
+            supplierModel = app.Suppliers.get supplierID
+            if supplierModel
+                supplierName = supplierModel.get("name")
+            else
+                supplierName = "N/A"
+            _.extend
+                supplierName: supplierName
+            ,
+                orderModel.attributes
         removeCurrentContentView: ->
             if @currentView
                 @currentView.remove()
@@ -162,12 +177,12 @@ jQuery ->
             @$el.html this.template({})
             @
         addOne: (orderProduct) ->
-            view = new SingleListItemView
+            view = new OrderProductListItemView
                 orderProduct: orderProduct
             ($ "#products-table-list").append view.render().el
         addAll: ->
             _.each @model.attributes.products, @addOne
-    class SingleListItemView extends Backbone.View
+    class OrderProductListItemView extends Backbone.View
         template: _.template ($ '#order-product-tr-template').html()
         tagName: 'tr'
         initialize: ->
@@ -176,7 +191,6 @@ jQuery ->
             @$el.html this.template @orderProduct
             @
     # ###############
-
 
 
     # ###############

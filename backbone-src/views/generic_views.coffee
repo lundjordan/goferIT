@@ -79,7 +79,12 @@ jQuery ->
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
         render: ->
-            @$el.html this.template @model.attributes
+            templateAttrs = null
+            if @itemControllerView.preSingleListItemHook
+                templateAttrs = @itemControllerView.preSingleListItemHook(@model)
+            else
+                templateAttrs = @model.attributes
+            @$el.html this.template templateAttrs
             $(@el).find('i').hide()
             @
         showItemOptions: (event) ->
@@ -120,6 +125,7 @@ jQuery ->
             @singleView =  new ItemLayoutView
                 template: @options.singleLayoutTemplate
                 singleContentTemplate: @options.singleContentTemplate
+                itemControllerView: @options.itemControllerView
         renderNextAvailableModel: ->
             @render @collection.models[0]
         render: (currentModel) ->
@@ -148,6 +154,7 @@ jQuery ->
         initialize: ->
             @template = _.template ($ @options.template).html()
             @singleContentTemplate = @options.singleContentTemplate
+            @itemControllerView = @options.itemControllerView
             @currentModelView = null
         render: (currentModel) ->
             @$el.html this.template(currentModel.attributes)
@@ -156,14 +163,22 @@ jQuery ->
         renderSingleContent: (currentModel) ->
             @currentModelView = new ItemContentView
                 template: @singleContentTemplate
+                itemControllerView: @options.itemControllerView
             @$('#single-item-view-content')
                 .html @currentModelView.render(currentModel).el
     class ItemContentView extends Backbone.View
         className: 'container-fluid'
         initialize: ->
             @template = _.template ($ @options.template).html()
+            @itemControllerView = @options.itemControllerView
         render: (currentModel) ->
-            @$el.html this.template(currentModel.attributes)
+            templateAttrs = null
+            if @itemControllerView.preSingleListItemHook
+                templateAttrs = @itemControllerView.
+                    preSingleListItemHook(currentModel)
+            else
+                templateAttrs = currentModel.attributes
+            @$el.html @template templateAttrs
             @
     # ###############
 
@@ -274,5 +289,6 @@ jQuery ->
     @app.GenericSingleListItemView = SingleListItemView
     @app.GenericSingleView = GenericSingleView
     @app.GenericCreateView = GenericCreateView
+    @app.GenericSingleItemContentView = ItemContentView
     @app.ConfirmDeleteModal = ConfirmDeleteModal
     @app.StoreSelectView = StoreSelectView
