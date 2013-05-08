@@ -49,7 +49,7 @@
   </td>
   <td><%= name.first %> </td>
   <td><%= email %> </td>
-  <td><%= phone %> </td>
+  <td><%= obj.phone || "" %> </td>
   <td> <%= new Date(dateCreated).toDateString() %> </p> </td>
 </script>
 <!--employee list view templates-->
@@ -64,19 +64,21 @@
   <div class="row-fluid">
     <div class="span4">
       <p class="lead"><a href="mailto:#"><%= email %></a></p>
-      <address>
-        <strong> Address </strong><br />
-        <%= address.street || "n/a" %><br />
-        <%= address.city || "n/a" %>, <%= address.country %><br />
-        <%= address.postalCode || "n/a" %><br />
-        <abbr title="Phone">P:</abbr> <%= phone || "n/a" %>
-      </address>
+      <% if (obj.address) { %>
+        <address>
+          <strong> Address </strong><br />
+          <%= address.street || "" %><br />
+          <%= address.city || "" %> <%= address.country || "" %><br />
+          <%= address.postalCode || "" %><br />
+          <abbr title="Phone">P:</abbr> <%= phone || "not given" %>
+        </address>
+      <% } %>
     </div>
     <div class="span8">
       <p> <strong> Date Added</strong><br />
       <%= new Date(dateCreated).toDateString() %> </p>
       <p> <strong> Date Of Birth</strong><br /> 
-      <%= dob || "n/a" %> </p>
+      <%= obj.dob || "not given" %> </p>
       <p> <strong> Title </strong><br />
       <%= title %> </p>
     </div>

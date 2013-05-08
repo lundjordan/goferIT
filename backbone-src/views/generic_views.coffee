@@ -71,7 +71,15 @@ jQuery ->
                 (@$ @tableListID).append view.render().el
 
         addAll: ->
-            @collection.each @addOne, @
+            if @collection.length
+                @collection.each @addOne, @
+            else
+                message = "It looks like you don't have anything in this list " +
+                    "yet. Click on the green create button or the " +
+                    "'Create/Edit' tab to get populating."
+                alertWarning = new app.AlertView
+                    alertType: 'info'
+                @$el.append alertWarning.render( "alert-info", message).el
     class SingleListItemView extends Backbone.View
         tagName: 'tr'
         events: ->
@@ -164,8 +172,17 @@ jQuery ->
             @itemControllerView = @options.itemControllerView
             @currentModelView = null
         render: (currentModel) ->
-            @$el.html this.template(currentModel.attributes)
-            @renderSingleContent(currentModel)
+            @$el.html this.template({})
+            if currentModel
+                @renderSingleContent(currentModel)
+            else
+                message = "It looks like you don't have anything for this yet. " +
+                    "Click on the 'create/edit' tab to start populating your" +
+                    " company with everything it cares about."
+                alertWarning = new app.AlertView
+                    alertType: 'info'
+                @$("#single-item-view-content").
+                    html(alertWarning.render( "alert-info", message).el)
             @
         renderSingleContent: (currentModel) ->
             @currentModelView = new ItemContentView

@@ -7,10 +7,13 @@ restifyProducts = (app, restify, model) ->
     pathWithId = "/products/:id"
 
     app.get path, (req, res) ->
-        (model.findOne {_company: req.user._company})
+        model.findOne({_company: req.user._company})
             .exec (err, result) ->
                 if not err
-                    res.send result.products
+                    if result
+                        res.send result.products
+                    else
+                        res.send []
                 else
                     res.send (errMsg err)
 

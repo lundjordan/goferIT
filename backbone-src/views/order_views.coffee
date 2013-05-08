@@ -29,10 +29,12 @@ jQuery ->
                 itemControllerView: @
             model = app.Orders.models[0]
             $("#order-item-view-content").html((@currentView.render model).el)
-            orderProductsTable = new OrderProductsTable
-                model: model
-            $("#order-products-list").html((orderProductsTable.render()).el)
-            orderProductsTable.addAll()
+            if model
+                orderProductsTable = new OrderProductsTable
+                    model: model
+                $("#order-products-list").html((orderProductsTable.render()).el)
+                orderProductsTable.addAll()
+
         renderSpecificItemView: (model) ->
             @removeCurrentContentView()
             $('#order-item-tab a').tab('show')

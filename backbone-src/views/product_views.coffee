@@ -195,6 +195,14 @@ jQuery ->
             @renderProductContent(productModel)
             @
         renderProductContent: (productModel) ->
+            if not productModel
+                message = "Seems like you don't have any products yet in your" +
+                    " inventory. Click on the 'Create/Edit' tab to start" +
+                    " stocking up."
+                alertWarning = new app.AlertView
+                    alertType: 'info'
+                return @$('#product-view-content').
+                    html alertWarning.render( "alert-info", message).el
             @currentProduct = new ProductItemContentView()
             @currentProductSubQuantity = new ProductItemSubQuantityView()
             @$('#product-view-content')

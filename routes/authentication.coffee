@@ -4,27 +4,12 @@ Company = require '../models/company-mongo'
 routes = (app, passport) ->
     failureRedirection = {failureRedirect: '/', failureFlash: true}
 
-    # app.get '/login', (req, res) ->
-    #     res.render "#{__dirname}/../views/authentication",
-    #         title: 'Login',
-    #         stylesheet: 'login',
-    #         user: req.user,
-    #         message: req.flash('error'),
-
     app.post '/login', (passport.authenticate 'local', failureRedirection), (req, res) ->
         res.redirect '/'
 
     app.get '/logout', (req, res) ->
         req.logout()
         res.redirect '/'
-
-    # TODO make sure I can remove this
-    # app.get '/register', (req, res) ->
-    #     res.render "#{__dirname}/../views/register",
-    #         title: 'Register',
-    #         stylesheet: 'register',
-    #         user: req.user,
-    #         message: req.flash('error'),
 
     app.post '/register', (req, res) ->
         registeredErrorFree = true
