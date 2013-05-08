@@ -9,8 +9,8 @@ jQuery ->
         events:
             'change #store-name-select': 'renderItemsTable'
         initialize: ->
-            if @options.storeSelectView
-                @storeSelectView = new @options.storeSelectView()
+            @headView = @options.headView
+            @itemControllerView = @options.itemControllerView
             # below is not the cleanest but it allows GenericItemsTable
             # to be overridden by a subclass. For example products does this
             # so that it can manage how products based on storename and
@@ -24,12 +24,14 @@ jQuery ->
                 template: @options.tableTemplate
                 tableListID: @options.tableListID
                 itemTrTemplate: @options.itemTrTemplate
-                itemControllerView: @options.itemControllerView
+                itemControllerView: @itemControllerView
                 deleteModalTemplate: @options.deleteModalTemplate
         render: ->
             @$el.html this.template({})
-            if @storeSelectView
-                @$("#root-backbone-view-head").html @storeSelectView.render().el
+            if @headView
+                headView = new @headView
+                    itemControllerView: @itemControllerView
+                @$("#root-backbone-view-head").html headView.render().el
                 @itemsTable.setItemsToBeStoreSpecificBy(
                     @$('#store-name-select option:selected').val())
             @$("#root-backbone-view-body").html @itemsTable.render().el
@@ -39,6 +41,8 @@ jQuery ->
                 @$('#store-name-select option:selected').val())
             @itemsTable.render()
     class GenericItemsTable extends Backbone.View
+        events:
+            'click #create-item-button': 'createNewButton'
         initialize: ->
             @listenTo @collection, 'remove', @render
             @template = _.template ($ @options.template).html()
@@ -51,6 +55,8 @@ jQuery ->
             @$el.html this.template({})
             @addAll()
             @
+        createNewButton: ->
+            @itemControllerView.renderCreateView()
         setItemsToBeStoreSpecificBy: (storeName) ->
             @storeName = storeName
         addOne: (item) ->
@@ -98,13 +104,17 @@ jQuery ->
         renderSpecificEditView: ->
             @itemControllerView.renderSpecificEditView @model
         renderSpecificDeleteView: ->
-            @deleteView =  new ConfirmDeleteModal
-                model: @model
-                template: @deleteModalTemplate
-            $("#root-backbone-view-body").append @deleteView.render().el
-            $('#delete-item-modal').on 'hidden', =>
-                @deleteView.remove()
-            $("#delete-item-modal").modal 'show'
+            passesCondition = true
+            if @itemControllerView.deleteConditionHook
+                passesCondition = @itemControllerView.deleteConditionHook(@model)
+            if passesCondition
+                @deleteView =  new ConfirmDeleteModal
+                    model: @model
+                    template: @deleteModalTemplate
+                $("#root-backbone-view-body").append @deleteView.render().el
+                $('#delete-item-modal').on 'hidden', =>
+                    @deleteView.remove()
+                $("#delete-item-modal").modal 'show'
     # ###############
 
 
@@ -121,7 +131,6 @@ jQuery ->
             @listenTo @collection, 'remove', @renderNextAvailableModel
             @itemControllerView = @options.itemControllerView
             @deleteModalTemplate = @options.deleteModalTemplate
-            # @storeSelectView = new SinglesListStoreSelectView()
             @singleView =  new ItemLayoutView
                 template: @options.singleLayoutTemplate
                 singleContentTemplate: @options.singleContentTemplate
@@ -131,8 +140,6 @@ jQuery ->
         render: (currentModel) ->
             @currentModel = currentModel
             @$el.html this.template({})
-            # @$("#root-backbone-view-head").html @storeSelectView.render().el
-            # @storeSelectView.render()
             @$("#root-backbone-view-body").html @singleView.render(@currentModel).el
             @
         renderSingleItemPrevView: (event) ->
@@ -269,6 +276,8 @@ jQuery ->
                 message: message
             @
     class StoreSelectView extends Backbone.View
+        initialize: ->
+            @itemControllerView = @options.itemControllerView
         render: ->
             @$el.html this.template({})
             storeNames = app.Companies.models[0].get 'stores'

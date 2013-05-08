@@ -40,8 +40,14 @@ jQuery ->
                 deleteModalTemplate: "#employee-view-delete-template"
                 itemControllerView: @
             $("#employee-item-view-content").html (@currentView.render model).el
+        renderCreateView: ->
+            # we use this in generic views for when clicking on create
+            # it is a generic method name so it can be more agnostic
+            @renderEmployeeCreateView()
         renderEmployeeCreateView: ->
             @removeCurrentContentView()
+            # need to explicitly show, in case user clicked create in listView
+            $('#employee-create-tab a').tab('show')
             @currentView = new app.GenericCreateView
                 createFormTemplate: "#employee-create-template"
                 formRules:
@@ -87,7 +93,18 @@ jQuery ->
                     return true # if it passes form validation, that's fine
                 commitFormSubmitFunction: updateExistingEmployee
             $("#employee-create-view-content").html @currentView.render().el
-
+        deleteConditionHook: (model) ->
+            passes = true # innocent until proven guilty ;)
+            if model.get('title') is 'admin'
+                if app.Employees.where({title: 'admin'}).length <= 1
+                    passes = false
+                    msg = "This employee is the only admin left. " +
+                        "You must have at least one admin."
+                    alertWarning = new app.AlertView
+                        alertType: 'warning'
+                    $("#root-backbone-alert-view").
+                        html(alertWarning.render( "alert-error", msg).el)
+            return passes
         removeCurrentContentView: ->
             if @currentView
                 @currentView.remove()

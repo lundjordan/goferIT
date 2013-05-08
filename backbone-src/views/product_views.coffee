@@ -18,7 +18,7 @@ jQuery ->
             @removeCurrentContentView()
             @currentView = new app.GenericListView
                 collection: app.Products
-                storeSelectView: ProductsListStoreSelectView
+                headView: ProductsListHeadView
                 tableTemplate: '#products-table-template'
                 tableListID: '#products-table-list'
                 itemTrTemplate: '#product-tr-template'
@@ -40,6 +40,7 @@ jQuery ->
             $("#product-item-view-content").html (@currentView.render model).el
         renderProductCreateView: ->
             @removeCurrentContentView()
+            $('#product-create-tab a').tab('show')
             @currentView = new ProductCreateView
                 template: '#product-create-template'
             $("#product-create-view-content").html @currentView.render().el
@@ -50,6 +51,10 @@ jQuery ->
                 template: '#product-edit-template'
                 model: model
             $("#product-create-view-content").html @currentView.render().el
+        renderCreateView: ->
+            # we use this in generic views for when clicking on create
+            # it is a generic method name so it can be more agnostic
+            @renderProductCreateView()
 
         removeCurrentContentView: ->
             if @currentView
@@ -73,8 +78,14 @@ jQuery ->
         addToSelect: (supplierName) ->
             @$('#supplier-name-select').append(
                 "<option value='#{supplierName}'>#{supplierName}</option>")
-    class ProductsListStoreSelectView extends app.StoreSelectView
+    class ProductsListHeadView extends app.StoreSelectView
         template: _.template ($ '#store-names-template').html()
+        events:
+            'click #create-item-button': 'createNewButton'
+        initialize: ->
+            @itemControllerView = @options.itemControllerView
+        createNewButton: ->
+            @itemControllerView.renderCreateView()
     class ProductItemSubQuantityView extends Backbone.View
         template: _.template ($ '#product-view-sub-quantity-template').html()
         render: (individualProducts, measurementFactor) ->

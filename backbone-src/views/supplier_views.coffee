@@ -40,8 +40,14 @@ jQuery ->
                 deleteModalTemplate: "#supplier-view-delete-template"
                 itemControllerView: @
             $("#supplier-item-view-content").html (@currentView.render model).el
+        renderCreateView: ->
+            # we use this in generic views for when clicking on create
+            # it is a generic method name so it can be more agnostic
+            @renderSupplierCreateView()
         renderSupplierCreateView: ->
             @removeCurrentContentView()
+            # need to explicitly show, in case user clicked create in listView
+            $('#supplier-create-tab a').tab('show')
             @currentView = new app.GenericCreateView
                 createFormTemplate: "#supplier-create-template"
                 formRules:

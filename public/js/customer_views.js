@@ -63,8 +63,13 @@
         return $("#customer-item-view-content").html((this.currentView.render(model)).el);
       };
 
+      CustomerControllerView.prototype.renderCreateView = function() {
+        return this.renderCustomerCreateView();
+      };
+
       CustomerControllerView.prototype.renderCustomerCreateView = function() {
         this.removeCurrentContentView();
+        $('#customer-create-tab a').tab('show');
         this.currentView = new app.GenericCreateView({
           createFormTemplate: "#customer-create-template",
           formRules: {
