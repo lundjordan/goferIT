@@ -96,7 +96,10 @@ jQuery ->
             tableRow1Values = "<td>Totals</td>"
 
             # fill in the remaining rows/columns with the subquants
-            _.each individualProducts, (elem) ->
+            prodsSortedByValue = _.sortBy individualProducts, (prod) ->
+                parseInt(prod.measurementValue)
+            console.log prodsSortedByValue
+            _.each prodsSortedByValue, (elem) ->
                 tableHeaderValues += "<th>#{elem.measurementValue}</th>"
                 tableRow1Values += "<td>#{elem.quantity}</td>"
 
@@ -197,8 +200,6 @@ jQuery ->
                     individualProducts.push
                         measurementValue: subTotalValues
                         quantity: subTotalTotals[subTotalValues] or 0
-                individualProducts = _.sortBy individualProducts, (el) ->
-                    return el.measurementValue
                 @$('#sub-quantity-totals')
                     .html @currentProductSubQuantity.render(individualProducts,
                         productModel.get('primaryMeasurementFactor')).el
