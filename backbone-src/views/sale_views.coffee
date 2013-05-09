@@ -510,14 +510,16 @@ jQuery ->
         addTotalsDetails: ->
             totalDue = 0
             totalInCurrency = 0
-            totalTaxesInCurrency = 0
+            totalTaxesDue = 0
+            taxRate = parseInt(app.Companies.at(0).get 'taxRate')
             currentSale = @controller.getCurrentSale().attributes
             for product in currentSale.products
                 totalDue += product.price * product.individualProperties.length
             if totalDue isnt 0
-                totalTaxesInCurrency = ((totalDue * 0.21) / 100).toFixed(2)
-                totalInCurrency = (totalDue / 100).toFixed(2)
-            totalStringDetailsHTML = "<li class='nav-header'>Taxes</li> <li class='pull-right'>#{totalTaxesInCurrency}</li> <li class='nav-header'>Total</li> <li class='pull-right'>#{totalInCurrency}</li><hr />"
+                totalTaxesDue =
+                    Math.round(((totalDue * taxRate / 100) / 100)*100)/100
+                totalInCurrency = ((totalDue / 100) + totalTaxesDue).toFixed(2)
+            totalStringDetailsHTML = "<li class='nav-header'>Taxes</li> <li class='pull-right'>#{taxRate}% is #{totalTaxesDue.toFixed(2)}</li> <li class='nav-header'>Total</li> <li class='pull-right'>#{totalInCurrency}</li><hr />"
             (@$ "#transaction-ul").append totalStringDetailsHTML
         addAll: ->
             currentSaleProducts = @controller.getCurrentSale().get 'products'

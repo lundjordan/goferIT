@@ -77,6 +77,12 @@ jQuery ->
             @render()
             @alertNewStoreAdded()
         showUpgradeModal: ->
+            console.log 'made it here'
+            upgradeModal = new TrialUpgradeModal()
+            @$el.append upgradeModal.render().el
+            @$("#upgrade-modal").modal 'show'
+            $('#upgrade-modal').on 'hidden', ->
+                upgradeModal.remove()
         render: ->
             totalsAttrs =
                 custTotal: app.Customers.length
@@ -110,6 +116,17 @@ jQuery ->
                 alertType: 'warning'
             alertHTML = alertWarningView.render("alert-error", message).el
             $("#root-backbone-alert-view").html(alertHTML)
+
+    class TrialUpgradeModal extends Backbone.View
+        events:
+            "click #close-upgrade-modal": "closeModal"
+        template: _.template ($ '#trial-upgrade-template').html()
+        render: ->
+            @$el.html @template({})
+            @
+        closeModal: ->
+            $("#upgrade-modal").modal 'hide'
+
 
 
     @app = window.app ? {}
