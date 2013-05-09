@@ -18,6 +18,9 @@ CompanySchema = new mongoose.Schema
     suppliers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Supplier'}]
     customers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Customer'}]
     subscriptionType: String
+    taxRate:
+        type: Number
+        default: 22.5
     dateCreated:
         type: Date
         default: new Date().toISOString()

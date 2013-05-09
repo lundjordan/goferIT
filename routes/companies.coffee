@@ -1,8 +1,6 @@
-Employee = require '../models/company-mongo'
-
 restifyCompanies = (app, restify, model) ->
     path = "/companies"
-    pathWithId = "companies/:id"
+    pathWithId = "/companies/:id"
 
     app.get path, (req, res) ->
         model.findOne {_id: req.user._company}, (err, result) ->

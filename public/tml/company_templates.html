@@ -29,43 +29,65 @@
       <tbody>
         <tr>
           <td># Customers</td>
-          <td><strong>10</strong></td>
+          <td><strong><%= custTotal %></strong></td>
         </tr>
         <tr>
           <td># Employees</td>
-          <td><strong>8</strong></td>
+          <td><strong><%= empTotal %></strong></td>
         </tr>
         <tr>
           <td># Suppliers</td>
-          <td><strong>10</strong></td>
+          <td><strong><%= suppliersTotal %></strong></td>
         </tr>
         <tr>
           <td># Products</td>
-          <td><strong>10</strong></td>
+          <td><strong><%= productsTotal %></strong></td>
         </tr>
       </tbody>
     </table>
   </div>
+  <div class="span2 offset1">
+    <h3>Tax Rate</h3>
+    <div class="">
+      <div id='tax-rate-div'> </div>
+      <div class="input-append">
+        <input class="input-small" type="text"
+        id="tax-rate-input" value="<%= taxRate %>" />
+        <span class="add-on">%</span>
+      </div>
+      <button type="button" class="btn btn-info" id='tax-btn' disabled>
+        Save Rate
+      </button>
+      <button type="button" class="btn btn-small" id='tax-cancel-btn'>
+        Cancel
+      </button>
+    </div>
+  </div>
   <div class="span3 offset1">
     <h3>Stores</h3>
     <div class="">
-      <div id='store-names-div'> </div>
-      <button type="button" class="btn btn-info" id='store-btn'>Add Another</button>
+      <table class="table table-striped">
+        <tbody id='stores-table-body'>
+          <tr>
+            <td>
+              <input type="text" class='input-medium'
+                id="new-store-input" value="" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" class="btn btn-info" id='store-btn' disabled>
+        Add Store
+      </button>
+      <button type="button" class="btn btn-small" id='store-cancel-btn'>
+        Clear
+      </button>
     </div>
   </div>
-  <div class="span2 offset1">
-    <h3>Tax Rate</h3>
-    <div class="well">
-      <div id='tax-rate-div'> </div>
-      <label for="">Percent</label>
-      <div class="input-append">
-        <input class="input-small" type="text"
-        id="tax-rate-input" value="" disabled />
-        <span class="add-on">%</span>
-      </div>
-      <button type="button" class="btn btn-info" id='tax-btn'>Change Rate</button>
-    </div>
-  </div>
+</script>
+
+<script type="text/template" id="store-names-tr-template">
+
 </script>
 
 <script type="text/template" id="company-content-templateinrsietn">
