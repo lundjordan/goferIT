@@ -25,6 +25,8 @@ jQuery ->
                     supplierControllerView: new app.SupplierControllerView
                 posControllerView: new app.POSControllerView
                     salesControllerView: new app.SalesControllerView
+                companyControllerView: new app.CompanyControllerView
+                    companyProfileView: new app.CompanyProfileControllerView
         dashboard: ->
             # console.log 'WIP :('
         inventory: ->

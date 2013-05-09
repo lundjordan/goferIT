@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var AppControllerView, InventoryControllerView, POSControllerView, PeopleControllerView, _ref;
+    var AppControllerView, CompanyControllerView, InventoryControllerView, POSControllerView, PeopleControllerView, _ref;
     AppControllerView = (function(_super) {
 
       __extends(AppControllerView, _super);
@@ -19,6 +19,7 @@
         'click #dashboard-link': "dashboardRender",
         'click #inventory-link': "inventoryRender",
         'click #people-link': "peopleRender",
+        'click #company-link': "companyRender",
         'click #pos-link': "posRender"
       };
 
@@ -26,7 +27,14 @@
         this.inventoryControllerView = this.options.inventoryControllerView;
         this.peopleControllerView = this.options.peopleControllerView;
         this.posControllerView = this.options.posControllerView;
+        this.companyControllerView = this.options.companyControllerView;
         return this.currentMenuView = this.inventoryControllerView;
+      };
+
+      AppControllerView.prototype.companyRender = function() {
+        this.currentMenuView.removeCurrentContentView();
+        this.currentMenuView = this.companyControllerView;
+        return this.currentMenuView.renderCompanyInitView();
       };
 
       AppControllerView.prototype.inventoryRender = function() {
@@ -56,6 +64,32 @@
       };
 
       return AppControllerView;
+
+    })(Backbone.View);
+    CompanyControllerView = (function(_super) {
+
+      __extends(CompanyControllerView, _super);
+
+      function CompanyControllerView() {
+        return CompanyControllerView.__super__.constructor.apply(this, arguments);
+      }
+
+      CompanyControllerView.prototype.el = '#company-main-content';
+
+      CompanyControllerView.prototype.initialize = function() {
+        return this.companyProfileView = this.options.companyProfileView;
+      };
+
+      CompanyControllerView.prototype.renderCompanyInitView = function() {
+        this.currentCompanyView = this.companyProfileView;
+        return this.currentCompanyView.renderCompanyProfileView();
+      };
+
+      CompanyControllerView.prototype.removeCurrentContentView = function() {
+        return this.currentCompanyView.removeCurrentContentView();
+      };
+
+      return CompanyControllerView;
 
     })(Backbone.View);
     POSControllerView = (function(_super) {
@@ -182,7 +216,8 @@
     this.app.AppControllerView = AppControllerView;
     this.app.InventoryControllerView = InventoryControllerView;
     this.app.PeopleControllerView = PeopleControllerView;
-    return this.app.POSControllerView = POSControllerView;
+    this.app.POSControllerView = POSControllerView;
+    return this.app.CompanyControllerView = CompanyControllerView;
   });
 
 }).call(this);

@@ -1,0 +1,74 @@
+<script type="text/template" id="company-content-template">
+  <div class="row-fluid">
+    <ul class="unstyled inline">
+      <li><h2 class='text-info'> <%= name %> </h2></li>
+      <li> &nbsp &nbsp &nbsp &nbsp &nbsp</li>
+      <li><h4>Creator</h4></li>
+      <li>Jordan Lund</li>
+      <li> <h4>|</h4> </li>
+      <li><h4>Date Created</h4></li>
+      <li><%= new Date(dateCreated).toDateString() %></li>
+      <li><h4>Subscription</h4></li>
+      <li>
+        <%= subscriptionType.charAt(0).toUpperCase() + subscriptionType.slice(1) %>
+      </li>
+      <% if (subscriptionType === 'trial') { %>
+        <li class="pull-right inline-btn">
+          <button type="button" class="btn btn-success" id='upgrade-btn'>
+            <i class='icon-arrow-up'></i>
+            Upgrade
+          </button>
+        </li>
+      <% } %>
+    </ul>
+    <hr />
+  </div>
+  <div class="span3">
+    <h3>Summary</h3>
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td># Customers</td>
+          <td><strong>10</strong></td>
+        </tr>
+        <tr>
+          <td># Employees</td>
+          <td><strong>8</strong></td>
+        </tr>
+        <tr>
+          <td># Suppliers</td>
+          <td><strong>10</strong></td>
+        </tr>
+        <tr>
+          <td># Products</td>
+          <td><strong>10</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="span3 offset1">
+    <h3>Stores</h3>
+    <div class="">
+      <div id='store-names-div'> </div>
+      <button type="button" class="btn btn-info" id='store-btn'>Add Another</button>
+    </div>
+  </div>
+  <div class="span2 offset1">
+    <h3>Tax Rate</h3>
+    <div class="well">
+      <div id='tax-rate-div'> </div>
+      <label for="">Percent</label>
+      <div class="input-append">
+        <input class="input-small" type="text"
+        id="tax-rate-input" value="" disabled />
+        <span class="add-on">%</span>
+      </div>
+      <button type="button" class="btn btn-info" id='tax-btn'>Change Rate</button>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="company-content-templateinrsietn">
+</script>
+
+

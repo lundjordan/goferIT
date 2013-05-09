@@ -7,12 +7,20 @@ jQuery ->
             'click #dashboard-link': "dashboardRender"
             'click #inventory-link': "inventoryRender"
             'click #people-link': "peopleRender"
+            'click #company-link': "companyRender"
             'click #pos-link': "posRender"
         initialize: ->
             @inventoryControllerView = @options.inventoryControllerView
             @peopleControllerView = @options.peopleControllerView
             @posControllerView = @options.posControllerView
+            @companyControllerView = @options.companyControllerView
             @currentMenuView = @inventoryControllerView
+        companyRender: ->
+            # first remove the previous view's subview (the content)
+            @currentMenuView.removeCurrentContentView()
+            # now reasign the currentMenuView
+            @currentMenuView = @companyControllerView
+            @currentMenuView.renderCompanyInitView()
         inventoryRender: ->
             # first remove the previous view's subview (the content)
             @currentMenuView.removeCurrentContentView()
@@ -38,6 +46,16 @@ jQuery ->
             @currentMenuView.renderPOSInitView()
         dashboardRender: ->
             @currentMenuView = @inventoryControllerView
+
+    class CompanyControllerView extends Backbone.View
+        el: '#company-main-content'
+        initialize: ->
+            @companyProfileView = @options.companyProfileView
+        renderCompanyInitView: ->
+            @currentCompanyView = @companyProfileView
+            @currentCompanyView.renderCompanyProfileView()
+        removeCurrentContentView: ->
+            @currentCompanyView.removeCurrentContentView()
 
     class POSControllerView extends Backbone.View
         # this controller keeps the format of the others in case we expand
@@ -108,3 +126,5 @@ jQuery ->
     @app.InventoryControllerView = InventoryControllerView
     @app.PeopleControllerView = PeopleControllerView
     @app.POSControllerView = POSControllerView
+    @app.CompanyControllerView = CompanyControllerView
+
