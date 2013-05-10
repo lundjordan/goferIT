@@ -44,6 +44,9 @@
           }),
           companyControllerView: new app.CompanyControllerView({
             companyProfileView: new app.CompanyProfileControllerView
+          }),
+          financeControllerView: new app.FinanceControllerView({
+            transactionControllerView: new app.TransactionsControllerView
           })
         });
       };

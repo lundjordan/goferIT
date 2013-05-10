@@ -4,7 +4,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var AppControllerView, CompanyControllerView, InventoryControllerView, POSControllerView, PeopleControllerView, _ref;
+    var AppControllerView, CompanyControllerView, FinanceControllerView, InventoryControllerView, POSControllerView, PeopleControllerView, _ref;
     AppControllerView = (function(_super) {
 
       __extends(AppControllerView, _super);
@@ -20,7 +20,8 @@
         'click #inventory-link': "inventoryRender",
         'click #people-link': "peopleRender",
         'click #company-link': "companyRender",
-        'click #pos-link': "posRender"
+        'click #pos-link': "posRender",
+        'click #finance-link': "financeRender"
       };
 
       AppControllerView.prototype.initialize = function() {
@@ -28,7 +29,14 @@
         this.peopleControllerView = this.options.peopleControllerView;
         this.posControllerView = this.options.posControllerView;
         this.companyControllerView = this.options.companyControllerView;
+        this.financeControllerView = this.options.financeControllerView;
         return this.currentMenuView = this.inventoryControllerView;
+      };
+
+      AppControllerView.prototype.financeRender = function() {
+        this.currentMenuView.removeCurrentContentView();
+        this.currentMenuView = this.financeControllerView;
+        return this.currentMenuView.renderTransactionsInitView();
       };
 
       AppControllerView.prototype.companyRender = function() {
@@ -170,6 +178,35 @@
       return PeopleControllerView;
 
     })(Backbone.View);
+    FinanceControllerView = (function(_super) {
+
+      __extends(FinanceControllerView, _super);
+
+      function FinanceControllerView() {
+        return FinanceControllerView.__super__.constructor.apply(this, arguments);
+      }
+
+      FinanceControllerView.prototype.el = '#finances-main-content';
+
+      FinanceControllerView.prototype.initialize = function() {
+        this.transactionControllerView = this.options.transactionControllerView;
+        return this.currentFinanceView = this.transactionControllerView;
+      };
+
+      FinanceControllerView.prototype.renderTransactionsInitView = function() {
+        this.currentFinanceView.removeCurrentContentView();
+        this.currentFinanceView = this.transactionControllerView;
+        $('#transactions-list-tab a').tab('show');
+        return this.currentFinanceView.renderFinancesListView();
+      };
+
+      FinanceControllerView.prototype.removeCurrentContentView = function() {
+        return this.currentFinanceView.removeCurrentContentView();
+      };
+
+      return FinanceControllerView;
+
+    })(Backbone.View);
     InventoryControllerView = (function(_super) {
 
       __extends(InventoryControllerView, _super);
@@ -217,7 +254,8 @@
     this.app.InventoryControllerView = InventoryControllerView;
     this.app.PeopleControllerView = PeopleControllerView;
     this.app.POSControllerView = POSControllerView;
-    return this.app.CompanyControllerView = CompanyControllerView;
+    this.app.CompanyControllerView = CompanyControllerView;
+    return this.app.FinanceControllerView = FinanceControllerView;
   });
 
 }).call(this);

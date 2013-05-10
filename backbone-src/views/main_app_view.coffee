@@ -9,12 +9,20 @@ jQuery ->
             'click #people-link': "peopleRender"
             'click #company-link': "companyRender"
             'click #pos-link': "posRender"
+            'click #finance-link': "financeRender"
         initialize: ->
             @inventoryControllerView = @options.inventoryControllerView
             @peopleControllerView = @options.peopleControllerView
             @posControllerView = @options.posControllerView
             @companyControllerView = @options.companyControllerView
+            @financeControllerView = @options.financeControllerView
             @currentMenuView = @inventoryControllerView
+        financeRender: ->
+            # first remove the previous view's subview (the content)
+            @currentMenuView.removeCurrentContentView()
+            # now reasign the currentMenuView
+            @currentMenuView = @financeControllerView
+            @currentMenuView.renderTransactionsInitView()
         companyRender: ->
             # first remove the previous view's subview (the content)
             @currentMenuView.removeCurrentContentView()
@@ -99,6 +107,19 @@ jQuery ->
         removeCurrentContentView: ->
             @currentPeopleView.removeCurrentContentView()
 
+    class FinanceControllerView extends Backbone.View
+        el: '#finances-main-content'
+        initialize: ->
+            @transactionControllerView = @options.transactionControllerView
+            @currentFinanceView = @transactionControllerView
+        renderTransactionsInitView: ->
+            @currentFinanceView.removeCurrentContentView()
+            @currentFinanceView = @transactionControllerView
+            $('#transactions-list-tab a').tab('show')
+            @currentFinanceView.renderFinancesListView()
+        removeCurrentContentView: ->
+            @currentFinanceView.removeCurrentContentView()
+
     class InventoryControllerView extends Backbone.View
         el: '#inventory-main-content'
         events:
@@ -127,4 +148,4 @@ jQuery ->
     @app.PeopleControllerView = PeopleControllerView
     @app.POSControllerView = POSControllerView
     @app.CompanyControllerView = CompanyControllerView
-
+    @app.FinanceControllerView = FinanceControllerView

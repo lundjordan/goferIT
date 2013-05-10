@@ -12,6 +12,7 @@ SaleSchema = new mongoose.Schema
         type: mongoose.Schema.Types.ObjectId
         ref: 'Customer'
         required: false
+    storeName: String
     products: [{
         serialID:
             type: String

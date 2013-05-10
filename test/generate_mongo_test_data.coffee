@@ -869,6 +869,7 @@ async.series [
             _company: companyArray[0].id
             _employee: employeeArray[0].id
             _customer: customerArray[0].id
+            storeName: companyArray[0].stores[0].name
             products: [
                 description:
                     brand: 'CCM'
@@ -907,6 +908,7 @@ async.series [
             _company: companyArray[0].id
             _employee: employeeArray[1].id
             _customer: customerArray[0].id
+            storeName: companyArray[0].stores[0].name
             products: [
                 description:
                     brand: 'Bauer'
@@ -929,6 +931,7 @@ async.series [
             _company: companyArray[0].id
             _employee: employeeArray[1].id
             _customer: customerArray[0].id
+            storeName: companyArray[0].stores[0].name
             products: [
                 description:
                     brand: 'Nike'
@@ -947,6 +950,7 @@ async.series [
         sale4 = new Sale
             _company: companyArray[0].id
             _employee: employeeArray[0].id
+            storeName: companyArray[0].stores[0].name
             products: [
                 description:
                     brand: 'Under Armor'
@@ -995,6 +999,7 @@ async.series [
             _company: companyArray[0].id
             _employee: employeeArray[0].id
             _customer: customerArray[2].id
+            storeName: companyArray[0].stores[1].name
             products: [
                 description:
                     brand: 'CCM'

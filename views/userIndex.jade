@@ -166,4 +166,18 @@ block content
           div#finances-main-content.tab-pane
             div.page-header
               h1 Finances <small> graphing every penny </small>
-            #finances-main-view
+            div
+              ul.nav.nav-pills
+                li#finance-menu-pill.active
+                  a(href='#products-main-view', data-toggle='tab') Sales
+              .tab-content
+                #finances-main-view.tab-pane.active
+                  .tabbable
+                    ul.nav.nav-tabs
+                      li#finance-list-tab.active
+                        a(href='#finances-list-view-content', data-toggle='tab') List
+                      li#finance-item-tab
+                        a(href='#finance-item-view-content', data-toggle='tab') View
+                    .tab-content
+                      #finances-list-view-content.tab-pane.active
+                      #finance-item-view-content.tab-pane
