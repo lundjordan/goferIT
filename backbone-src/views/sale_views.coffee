@@ -20,7 +20,9 @@ jQuery ->
                 @stopListening()
                 currentUserEmail = $("#current-user-email-id").text()
                 employeeModel = app.Employees.findWhere({email: currentUserEmail})
-                @currentSale = new app.Sale({_employeee: employeeModel.id})
+                @currentSale = new app.Sale
+                    _employee: employeeModel.id
+                    storeName: app.Companies.at(0).get('stores')[0].name
             @renderSalesConstructView()
         renderSalesConstructView: ->
             @listenTo @currentSale, 'change', @renderSalesConstructView
@@ -75,7 +77,7 @@ jQuery ->
             # then take the current selected payment method
             # TODO not implemented
             # save the currentSale to the Sales collection
-            app.Sales.add(@currentSale)
+            app.Sales.create(@currentSale.attributes)
             # finally render the sales init view with a success alert
             @renderInitSalesConstructView()
             message = "Sale created!"
@@ -225,7 +227,7 @@ jQuery ->
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
         events:
-            'change #store-name-select': 'productsListRender'
+            'change #store-name-select': 'setSaleStoreNameAndRenderProducts'
             'keyup #product-brand-search': 'productsListRender'
             'keyup #product-name-search': 'productsListRender'
             'keyup #customer-last-name-search': 'customerListRender'
@@ -249,6 +251,9 @@ jQuery ->
         addOneStoreNameToSelect: (storeName) ->
             @$('#store-name-select').append(
                 "<option value='#{storeName}'>#{storeName}</option>")
+        setSaleStoreNameAndRenderProducts: ->
+            @controller.getCurrentSale().set
+                storeName: @$('#store-name-select option:selected').val()
         productsListRender: ->
             productsList = new SaleProductList
                 collection: app.Products

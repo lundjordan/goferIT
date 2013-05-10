@@ -909,6 +909,7 @@ async.series [
             _employee: employeeArray[1].id
             _customer: customerArray[0].id
             storeName: companyArray[0].stores[0].name
+            dateCreated: new Date("5/10/2013").toISOString()
             products: [
                 description:
                     brand: 'Bauer'
@@ -932,6 +933,7 @@ async.series [
             _employee: employeeArray[1].id
             _customer: customerArray[0].id
             storeName: companyArray[0].stores[0].name
+            dateCreated: new Date("6/2/2013").toISOString()
             products: [
                 description:
                     brand: 'Nike'
@@ -951,6 +953,7 @@ async.series [
             _company: companyArray[0].id
             _employee: employeeArray[0].id
             storeName: companyArray[0].stores[0].name
+            dateCreated: new Date("1/1/2013").toISOString()
             products: [
                 description:
                     brand: 'Under Armor'

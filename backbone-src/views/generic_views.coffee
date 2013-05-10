@@ -9,17 +9,17 @@ jQuery ->
         events:
             'change #store-name-select': 'renderItemsTable'
         initialize: ->
-            @headView = @options.headView
+            @headView = @options.HeadView
             @itemControllerView = @options.itemControllerView
             # below is not the cleanest but it allows GenericItemsTable
             # to be overridden by a subclass. For example products does this
             # so that it can manage how products based on storename and
             # subquants are viewed
-            if @options.ItemsTableClass
-                @ItemsTableClass = @options.ItemsTableClass
+            if @options.ItemsTableView
+                @ItemsTableView = @options.ItemsTableView
             else
-                @ItemsTableClass = GenericItemsTable
-            @itemsTable = new @ItemsTableClass
+                @ItemsTableView = GenericItemsTable
+            @itemsTable = new @ItemsTableView
                 collection: @options.collection
                 template: @options.tableTemplate
                 tableListID: @options.tableListID
@@ -31,6 +31,7 @@ jQuery ->
             if @headView
                 headView = new @headView
                     itemControllerView: @itemControllerView
+                    itemsTable: @itemsTable # used by finance views
                 @$("#root-backbone-view-head").html headView.render().el
                 @itemsTable.setItemsToBeStoreSpecificBy(
                     @$('#store-name-select option:selected').val())

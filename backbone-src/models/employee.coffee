@@ -3,7 +3,7 @@
 class Employee extends Backbone.Model
     idAttribute: "_id"
     initialize: (attributes, options) ->
-        if !attributes.createdAt
+        if !attributes.dateCreated
             @attributes.dateCreated = (new Date).toISOString()
 
 

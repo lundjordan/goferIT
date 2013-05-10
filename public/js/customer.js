@@ -15,7 +15,7 @@
     Customer.prototype.idAttribute = "_id";
 
     Customer.prototype.initialize = function(attributes, options) {
-      if (!attributes.createdAt) {
+      if (!attributes.dateCreated) {
         return this.attributes.dateCreated = (new Date).toISOString();
       }
     };

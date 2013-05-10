@@ -4,7 +4,7 @@
 class Product extends Backbone.DeepModel
     idAttribute: "_id"
     initialize: (attributes, options) ->
-        if !attributes.createdAt
+        if !attributes.dateCreated
             @attributes.dateCreated = (new Date).toISOString()
         @_memento = null
     # this is for in sale if we want to cancel the current sale (and any

@@ -30,8 +30,8 @@ jQuery ->
                 tableListID: "#finances-table-list"
                 itemTrTemplate: "#finance-tr-template"
                 itemControllerView: @
-                headView: TransactionListHeadView
-                ItemsTableClass: TransactionListTable
+                HeadView: TransactionListHeadView
+                ItemsTableView: TransactionListTable
                 # this overrides GenericItemsTable
             $("#finances-list-view-content").html @currentView.render().el
         renderFinanceDefaultItemView: ->
@@ -87,9 +87,17 @@ jQuery ->
     # -> comes from ItemListVIew in # generic_views.coffee
     # ###############
     class TransactionListHeadView extends app.StoreSelectView
+        events:
+            'keyup #sale-id-search': 'setSearchFieldsAndRender'
+            'keyup #sale-employee-search': 'setSearchFieldsAndRender'
+            'keyup #sale-customer-search': 'setSearchFieldsAndRender'
+            'change #sale-timeframe-select': 'setSearchFieldsAndRender'
         template: _.template ($ '#sale-store-names-template').html()
         initialize: ->
             @itemControllerView = @options.itemControllerView
+            @itemsTable = @options.itemsTable
+        setSearchFieldsAndRender: ->
+            @itemsTable.setSearchFieldsAndRender()
 
     class TransactionListTable extends app.GenericItemsTable
         addBasedByStoreName: (transaction) ->
@@ -100,6 +108,61 @@ jQuery ->
                     itemControllerView: @itemControllerView
                     deleteModalTemplate: @deleteModalTemplate
                 (@$ @tableListID).append view.render().el
+        setSearchFieldsAndRender: ->
+            @idSearchVal = $("#sale-id-search").val()
+            @employeeSearchVal = $("#sale-employee-search").val()
+            @customerSearchVal = $("#sale-customer-search").val()
+            @timeFrameSearchVal = $("#sale-timeframe-select").val()
+            $("#root-backbone-view-body").html @render().el
+        addAll: -> # overriding super
+            if not @collection.length
+                return @noSaleAlert() # TODO IMPLEMENT THIS
+            saleResults = @filterResultsBySearchFields(@collection)
+            _.each saleResults, @addOne, @
+        filterResultsBySearchFields: (collection) ->
+            finalResults = collection.models
+            if @idSearchVal
+                finalResults = collection.filter (model) =>
+                    idString = model.get('_id').toLowerCase()
+                    idString.indexOf(@idSearchVal.toLowerCase()) isnt -1
+            if @employeeSearchVal
+                finalResults = finalResults.filter (model) =>
+                    employeeModel = app.Employees.findWhere
+                        _id: model.get('_employee')
+                    employeeEmail = employeeModel.get('email').toLowerCase()
+                    employeeEmail.indexOf(@employeeSearchVal.toLowerCase()) isnt -1
+            if @customerSearchVal
+                finalResults = finalResults.filter (model) =>
+                    customerModel = app.Customers.findWhere
+                        _id: model.get('_customer')
+                    if customerModel
+                        customerEmail = customerModel.get('email').toLowerCase()
+                        customerEmail.
+                            indexOf(@customerSearchVal.toLowerCase()) isnt -1
+                    else
+                        false
+            if @timeFrameSearchVal and @timeFrameSearchVal isnt "Anytime"
+                startTime = new Date("1/1/1900")
+                endTime = new Date("1/1/2200")
+                now = new Date()
+                if @timeFrameSearchVal is "Today"
+                    startTime = new Date(now.toDateString())
+                    endTime = new Date(
+                        now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
+                else if @timeFrameSearchVal is "This Month"
+                    startOfMonthString = "#{now.getMonth()+1}/1/#{now.getFullYear()}"
+                    endOfMonthString = "#{now.getMonth()+2}/1/#{now.getFullYear()}"
+                    startTime = new Date(startOfMonthString)
+                    endTime = new Date(endOfMonthString)
+                else
+                    startOfYearString = "1/1/#{now.getFullYear()}"
+                    endOfYearString = "1/1/#{now.getFullYear()+1}"
+                    startTime = new Date(startOfYearString)
+                    endTime = new Date(endOfYearString)
+                finalResults = finalResults.filter (model) =>
+                    Date.parse(startTime) <= Date.parse(model.get('dateCreated')) <= Date.parse(endTime)
+            finalResults
+
     class TransactionListItemView extends app.GenericSingleListItemView
         initialize: ->
             @template = _.template ($ @options.template).html()
@@ -121,6 +184,7 @@ jQuery ->
             @$el.html this.template tmlAttrs
             $(@el).find('i').hide()
             @
+
 
     class FinanceSingleView extends app.GenericSingleView
         events:

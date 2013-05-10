@@ -18,12 +18,12 @@ jQuery ->
             @removeCurrentContentView()
             @currentView = new app.GenericListView
                 collection: app.Products
-                headView: ProductsListHeadView
                 tableTemplate: '#products-table-template'
                 tableListID: '#products-table-list'
                 itemTrTemplate: '#product-tr-template'
                 deleteModalTemplate: '#product-view-delete-template'
-                ItemsTableClass: ProductsListTable # this overrides GenericItemsTable
+                HeadView: ProductsListHeadView
+                ItemsTableView: ProductsListTable # this overrides GenericItemsTable
                 itemControllerView: @
             $("#products-list-view-content").html @currentView.render().el
         renderProductDefaultItemView: ->

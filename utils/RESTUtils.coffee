@@ -28,7 +28,7 @@ exports.getCreateController = (model) ->
         m._company = req.user._company
         m.save (err) ->
             if not err
-                console.log m
+                console.log 'sale created:::', m
                 res.send m
             else
                 console.log errMsg(err)

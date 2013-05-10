@@ -15,7 +15,7 @@
     Product.prototype.idAttribute = "_id";
 
     Product.prototype.initialize = function(attributes, options) {
-      if (!attributes.createdAt) {
+      if (!attributes.dateCreated) {
         this.attributes.dateCreated = (new Date).toISOString();
       }
       return this._memento = null;

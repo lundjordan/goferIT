@@ -4,7 +4,7 @@
 class Sale extends Backbone.DeepModel
     idAttribute: "_id"
     initialize: (attributes, options) ->
-        if !attributes.createdAt
+        if !attributes.dateCreated
             @attributes.dateCreated = (new Date).toISOString()
         if !attributes.products
             @attributes.products = []
