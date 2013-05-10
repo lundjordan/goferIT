@@ -42,16 +42,16 @@
   </table>
 </script>
 <script type="text/template" id="customer-tr-template">
-  <td>
+  <td style="width: 20%">
     <a href='#' id='item-view-eye-link'><i class='icon-eye-open'></i><a>
     <a href='#' id='item-view-edit-link'><i class='icon-pencil'></i><a>
     <a href='#' id='item-view-delete-link'><i class='icon-trash'></i><a>
     <%= name.last %>
   </td>
-  <td><%= name.first %> </td>
-  <td><%= email %> </td>
-  <td><%= phone %> </td>
-  <td> <%= new Date(dateCreated).toDateString() %> </p> </td>
+  <td style="width: 20%"><%= name.first %> </td>
+  <td style="width: 30%"><%= email %> </td>
+  <td style="width: 15%"><%= phone %> </td>
+  <td style="width: 15%"> <%= new Date(dateCreated).toDateString() %> </p> </td>
 </script>
 <!--customer list view templates-->
 

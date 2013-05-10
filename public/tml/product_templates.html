@@ -58,16 +58,16 @@
   </table>
 </script>
 <script type="text/template" id="product-tr-template">
-  <td>
+  <td style="width: 30%">
     <a href='#' id='item-view-eye-link'><i class='icon-eye-open'></i><a>
     <a href='#' id='item-view-edit-link'><i class='icon-pencil'></i><a>
     <a href='#' id='item-view-delete-link'><i class='icon-trash'></i><a>
     <%= description.name %>
   </td>
-  <td><%= description.brand %> </td>
-  <td><%= category %> </td>
-  <td><%= price * 0.01 %> </td>
-  <td><%= storeQuantityCount %> </td>
+  <td style="width: 20%"><%= description.brand %> </td>
+  <td style="width: 25%"><%= category %> </td>
+  <td style="width: 15%"><%= price * 0.01 %> </td>
+  <td style="width: 10%"><%= storeQuantityCount %> </td>
 </script>
 <!--product list view templates-->
 
