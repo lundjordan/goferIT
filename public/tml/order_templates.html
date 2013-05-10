@@ -126,7 +126,7 @@
   <td> <%= description.name %> </td>
   <td><%= description.brand %> </td>
   <td><%= category %> </td>
-  <td><%= price * 0.01 %> </td>
+  <td><%= (price * 0.01).toFixed() %> </td>
   <td><%= individualProperties.length %></td>
 </script>
 <!--order single view templates-->
