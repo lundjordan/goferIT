@@ -276,6 +276,7 @@ jQuery ->
                     subQuantHTML = subQuantView.render(individualProducts,
                         @model.get('primaryMeasurementFactor')).el
                     @$('#sub-total-quantity-content').html subQuantHTML
+                    @$("#sub-total-header").append " <li class='pull-right'> <strong> <a id='add-sub-column' href='#' class='text-info'><i class='icon-plus'></i>Add Column</a> </strong> </li> "
             @
     class ProductCreateBodyView extends Backbone.View
         events:
@@ -285,6 +286,7 @@ jQuery ->
             "click #create-new-product-button": "checkValidityAndCreateNewProduct"
             "click #clear-new-product-button": "clearFields"
             "click #update-existing-product-button": "checkValidityAndUpdateProduct"
+            "click #add-sub-column": "addSubQuantColumn"
         initialize: ->
             @template = _.template ($ @options.template).html()
         render: ->
@@ -313,6 +315,9 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
+        addSubQuantColumn: ->
+            @$('#product-sub-quantity-thead-tr').append '<th><input class="input-mini" type="text" placeholder="type"></th>'
+            @$('#product-sub-quantity-tbody-td').append '<td><input class="input-mini" type="text" value="0"></td>'
         checkValidityAndUpdateProduct: (e) ->
             # TODO clean up this method and remove DRY code from this and
             # checkValidityAndCreateNewProduct()
@@ -320,6 +325,13 @@ jQuery ->
             $("#main-alert-div").html("")
             passesJQueryValidation = @$("#product-form").valid()
             if passesJQueryValidation
+                if parseFloat($("#cost-input").val()) > parseFloat($("#price-input").val())
+                    message = "Cost must be lower than price."
+                    alertWarningView = new app.AlertView
+                        alertType: 'warning'
+                    alertHTML = alertWarningView.render("alert-error", message).el
+                    $("#root-backbone-alert-view").html(alertHTML)
+                    return # not valid
                 if $("#grand-total-input").val() # only has grand total
                     @createOrUpdateProduct("Updated an existing product!") # valid
                 else
@@ -327,12 +339,21 @@ jQuery ->
                     subQuantTypes = []
                     subQuantValues = []
                     $("th").each ->
-                        subQuantTypes.push $(this).html()
+                        # this is an extra column
+                        thHasInputTag = $(this).find("input").val() or
+                            $(this).find("input").val() is ""
+                        if thHasInputTag
+                            if $(this).find("input").val() is ""
+                                subQuantTypes.push 'emptyType'
+                            else
+                                subQuantTypes.push $(this).find("input").val()
+                        else
+                            subQuantTypes.push $(this).html()
                     $("td").each ->
                         if $(this).html() isnt "Totals"
                             subQuantValues.push $(this).find("input").val()
 
-                    if not @subQuantTotalValid subQuantValues
+                    if not @subQuantTotalValid subQuantTypes, subQuantValues
                         return # not valid
                     return @createOrUpdateProduct "Updated an existing product!",
                         subQuantTypes: subQuantTypes
@@ -343,12 +364,20 @@ jQuery ->
             passesJQueryValidation = @$("#product-form").valid()
 
             if passesJQueryValidation
+                if parseFloat($("#cost-input").val()) > parseFloat($("#price-input").val())
+                    message = "Cost must be lower than price."
+                    alertWarningView = new app.AlertView
+                        alertType: 'warning'
+                    alertHTML = alertWarningView.render("alert-error", message).el
+                    $("#root-backbone-alert-view").html(alertHTML)
+                    return # not valid
+
                 isExistingProduct = app.Products.ifModelExists(
                     $('#name-input').val(), $('#brand-input').val())
                 hasSubQuants = $("#grand-total-quantity-content").is(":hidden")
 
                 if isExistingProduct
-                    message = "There is already have a product by this name. " +
+                    message = "There is already a product by this name. " +
                         "Please Change the product name and/or brand"
                     alertWarningView = new app.AlertView
                         alertType: 'warning'
@@ -361,7 +390,16 @@ jQuery ->
                     subQuantTypes = []
                     subQuantValues = []
                     $("th").each ->
-                        subQuantTypes.push $(this).html()
+                        # this is an extra column
+                        thHasInputTag = $(this).find("input").val() or
+                            $(this).find("input").val() is ""
+                        if thHasInputTag
+                            if $(this).find("input").val() is ""
+                                subQuantTypes.push 'emptyType'
+                            else
+                                subQuantTypes.push $(this).find("input").val()
+                        else
+                            subQuantTypes.push $(this).html()
                     $("td").each ->
                         if $(this).html() isnt "Totals"
                             subQuantValues.push $(this).find("input").val()
@@ -385,6 +423,9 @@ jQuery ->
             price = parseFloat($("#price-input").val(), 10) * 100
             cost = parseFloat($("#cost-input").val(), 10) * 100
             supplierName = $("#supplier-name-select").val()
+            supplierID = null
+            if supplierName
+                supplierID = app.Suppliers.findWhere({name: supplierName}).id
             storeName = $("#store-name-select").val()
             individualProperties = []
 
@@ -398,8 +439,7 @@ jQuery ->
                             individualProperties.push
                                 storeName: storeName
                                 sourceHistory:
-                                    _supplier: app.Suppliers.where(
-                                        {name: supplierName})[0].id or null
+                                    _supplier: supplierID
                                 measurements: [
                                     factor: primaryMeasurementFactor
                                     value: subQuants.subQuantTypes[i+1]
@@ -414,9 +454,7 @@ jQuery ->
                     individualProperties.push
                         storeName: storeName
                         sourceHistory:
-                            _supplier: app.Suppliers.where(
-                                {name: supplierName})[0].id or null
-
+                            _supplier: supplierID
             productModel =
                 description:
                     name: name
@@ -439,7 +477,8 @@ jQuery ->
             $("#root-backbone-alert-view").
                 html(alertWarning.render( "alert-success", message).el)
 
-        subQuantTotalValid: (values) ->
+        subQuantTotalValid: (factors, values) ->
+            console.log factors, values
             # check to see if table sub quants are valid
             oneValueMoreThan0 = false
             anyValuesLessThan0 = false
@@ -457,6 +496,15 @@ jQuery ->
                 $("#root-backbone-alert-view").
                     html(alertWarning.render("alert-error alert-block", message).el)
                 return false
+            for type in factors
+                if type is "emptyType"
+                    message = "All columns must have a value in the first row."
+                    alertWarningView = new app.AlertView
+                        alertType: 'warning'
+                    alertHTML = alertWarningView.
+                        render("alert-error", message).el
+                    $("#root-backbone-alert-view").html(alertHTML)
+                    return false
             return true
         quantityOptionInput: (e) ->
             if $(e.currentTarget).val() == "sub-total-selected"
@@ -488,6 +536,7 @@ jQuery ->
                     quantity: '<input class="input-mini" type="text" value="0">'
             $('#sub-total-quantity-content')
                 .html (new ProductItemSubQuantityView()).render(productSubQuants, measurementType).el
+            $("#sub-total-header").append " <li class='pull-right'> <strong> <a id='add-sub-column' href='#' class='text-info'><i class='icon-plus'></i>Add Column</a> </strong> </li> "
 
 
     # ###############

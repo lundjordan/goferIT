@@ -516,7 +516,7 @@ jQuery ->
             totalDue = 0
             totalInCurrency = 0
             totalTaxesDue = 0
-            taxRate = parseInt(app.Companies.at(0).get 'taxRate')
+            taxRate = parseFloat(app.Companies.at(0).get 'taxRate')
             currentSale = @controller.getCurrentSale().attributes
             for product in currentSale.products
                 totalDue += product.price * product.individualProperties.length

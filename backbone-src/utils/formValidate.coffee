@@ -1,6 +1,6 @@
 jQuery ->
     $.validator.addMethod "decimalTwo", (value, element) ->
-          this.optional(element) || /^(\d{1,3})(\.\d{2})$/.test(value)
+          this.optional(element) || /^(\d{1,15})(\.\d{2})$/.test(value)
     , "Must be in currency format 0.99"
 
     _.extend Backbone.View.prototype,

@@ -135,19 +135,24 @@
     <% } %>
   </div>
 </script>
-<script type="text/template" id='product-view-sub-quantity-template'>
-    <strong> Sub Totals </strong><br>
-    <table class="table table-bordered table-hover">
-      <thead>
-          <tr id='product-sub-quantity-thead-tr'>
-          </tr>
-      </thead>
-      <tbody id="inventory-table-list">
-        <tr id="product-sub-quantity-tbody-td"></tr>
-      </tbody>
-    </table>
-</script>
 <!--product single view templates-->
+
+<script type="text/template" id='product-view-sub-quantity-template'>
+  <ul class="unstyled inline" id='sub-total-header'>
+    <li>
+      <strong> Sub Totals </strong><br>
+    </li>
+  </ul>
+  <table class="table table-bordered table-hover">
+    <thead>
+        <tr id='product-sub-quantity-thead-tr'>
+        </tr>
+    </thead>
+    <tbody id="inventory-table-list">
+      <tr id="product-sub-quantity-tbody-td"></tr>
+    </tbody>
+  </table>
+</script>
 
 
 <!--product create view templates-->
