@@ -36,6 +36,8 @@ jQuery ->
             #stop listening  when in this view so we don't render anything from
             #renderSalesConstructView
             @stopListening()
+            @currentSale.set
+                storeName: @$('#store-name-select option:selected').val()
             if @currentSale.get('products').length
                 if @currentView
                     @currentView.remove()
@@ -227,7 +229,7 @@ jQuery ->
     class SalesConstructControllerView extends Backbone.View
         template: _.template ($ '#root-backbone-content-template').html()
         events:
-            'change #store-name-select': 'setSaleStoreNameAndRenderProducts'
+            'change #store-name-select': 'productsListRender'
             'keyup #product-brand-search': 'productsListRender'
             'keyup #product-name-search': 'productsListRender'
             'keyup #customer-last-name-search': 'customerListRender'
@@ -251,9 +253,6 @@ jQuery ->
         addOneStoreNameToSelect: (storeName) ->
             @$('#store-name-select').append(
                 "<option value='#{storeName}'>#{storeName}</option>")
-        setSaleStoreNameAndRenderProducts: ->
-            @controller.getCurrentSale().set
-                storeName: @$('#store-name-select option:selected').val()
         productsListRender: ->
             productsList = new SaleProductList
                 collection: app.Products
@@ -367,18 +366,20 @@ jQuery ->
         addAll: ->
             if not app.Products.length
                 return @noProductsAlert()
+            productResults = @filterResultsBySearchFields(@collection)
+            _.each productResults, @addOne, @
+        filterResultsBySearchFields: (collection) ->
+            finalResults = collection.models
             if @nameSearch or @brandSearch
                 if @nameSearch
-                    productResults = @collection.filter (model) =>
+                    finalResults = finalResults.filter (model) =>
                         nameString = model.get('description.name').toLowerCase()
                         nameString.indexOf(@nameSearch.toLowerCase()) isnt -1
                 if @brandSearch
-                    productResults = @collection.filter (model) =>
+                    finalResults = finalResults.filter (model) =>
                         brandString = model.get('description.brand').toLowerCase()
                         brandString.indexOf(@brandSearch.toLowerCase()) isnt -1
-                _.each productResults, @addOne, @
-            else
-                @collection.each @addOne, @
+            finalResults
 
     class ProductListItemView extends Backbone.View
         template: _.template ($ '#sale-product-tr-template').html()

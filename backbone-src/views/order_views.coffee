@@ -6,7 +6,7 @@ jQuery ->
         events:
             'click #orders-list-tab': 'renderOrdersListView'
             'click #order-item-tab': 'renderOrderDefaultItemView'
-            'click #order-create-tab': 'renderOrderCreateView'
+            'click #order-create-tab': 'renderCreateView'
         initialize: ->
             @currentView = null
         renderOrdersListView: ->
@@ -34,7 +34,6 @@ jQuery ->
                     model: model
                 $("#order-products-list").html((orderProductsTable.render()).el)
                 orderProductsTable.addAll()
-
         renderSpecificItemView: (model) ->
             @removeCurrentContentView()
             $('#order-item-tab a').tab('show')
@@ -49,8 +48,9 @@ jQuery ->
                 model: model
             $("#order-products-list").html (orderProductsTable.render()).el
             orderProductsTable.addAll()
-        renderOrderCreateView: ->
+        renderCreateView: ->
             @removeCurrentContentView()
+            $('#order-create-tab a').tab('show')
             @currentView = new OrderCreateView
                 template: '#order-create-template'
             $("#order-create-view-content").html @currentView.render().el
