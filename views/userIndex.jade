@@ -49,16 +49,17 @@ block content
             li#inventory-link
               a(href='#inventory-main-content', data-toggle='tab')
                 <i class='icon-tags'></i> Inventory
-            li.nav-header Management
-            li#company-link
-              a(href='#company-main-content', data-toggle='tab')
-                <i class='icon-home'></i> Company
-            li#people-link
-              a(href='#people-main-content', data-toggle='tab')
-                <i class='icon-user'></i> People
-            li#finance-link
-              a(href='#finances-main-content', data-toggle='tab')
-                <i class='icon-book'></i> Finance
+            if user.title === 'admin'
+              li.nav-header Management
+              li#company-link
+                a(href='#company-main-content', data-toggle='tab')
+                  <i class='icon-home'></i> Company
+              li#people-link
+                a(href='#people-main-content', data-toggle='tab')
+                  <i class='icon-user'></i> People
+              li#finance-link
+                a(href='#finances-main-content', data-toggle='tab')
+                  <i class='icon-book'></i> Finance
       div.span10
         div#main-window-main-content.tab-content.active
           div#dashboard-main-content.tab-pane.active
