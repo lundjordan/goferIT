@@ -4,9 +4,6 @@
 jQuery ->
 
     class GoferRouter extends Backbone.Router
-        routes:
-            '': 'dashboard'
-            'inventory': 'inventory'
         initialize: ->
             app.Companies.fetch()
             app.Customers.fetch()
@@ -29,15 +26,19 @@ jQuery ->
                     companyProfileView: new app.CompanyProfileControllerView
                 financeControllerView: new app.FinanceControllerView
                     transactionControllerView: new app.TransactionsControllerView
-        dashboard: ->
-            # console.log 'WIP :('
-        inventory: ->
-            $("#root-backbone-view-head").remove()
-            $("#root-backbone-view-body").remove()
-            app.appControllerView.inventoryRender()
 
     @app.GoferRouter = GoferRouter
 
     @app.router = new app.GoferRouter
     Backbone.history.start()
+
+    window.setInterval ->
+        app.Companies.fetch()
+        app.Customers.fetch()
+        app.Employees.fetch()
+        app.Suppliers.fetch()
+        app.Orders.fetch()
+        app.Products.fetch()
+        app.Sales.fetch()
+    , 10000
 

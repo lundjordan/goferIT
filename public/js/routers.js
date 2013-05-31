@@ -16,11 +16,6 @@
         return GoferRouter.__super__.constructor.apply(this, arguments);
       }
 
-      GoferRouter.prototype.routes = {
-        '': 'dashboard',
-        'inventory': 'inventory'
-      };
-
       GoferRouter.prototype.initialize = function() {
         app.Companies.fetch();
         app.Customers.fetch();
@@ -51,20 +46,21 @@
         });
       };
 
-      GoferRouter.prototype.dashboard = function() {};
-
-      GoferRouter.prototype.inventory = function() {
-        $("#root-backbone-view-head").remove();
-        $("#root-backbone-view-body").remove();
-        return app.appControllerView.inventoryRender();
-      };
-
       return GoferRouter;
 
     })(Backbone.Router);
     this.app.GoferRouter = GoferRouter;
     this.app.router = new app.GoferRouter;
-    return Backbone.history.start();
+    Backbone.history.start();
+    return window.setInterval(function() {
+      app.Companies.fetch();
+      app.Customers.fetch();
+      app.Employees.fetch();
+      app.Suppliers.fetch();
+      app.Orders.fetch();
+      app.Products.fetch();
+      return app.Sales.fetch();
+    }, 10000);
   });
 
 }).call(this);

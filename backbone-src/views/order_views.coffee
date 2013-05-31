@@ -200,6 +200,7 @@ jQuery ->
     class OrderCreateView extends Backbone.View
         events:
             "click #add-new-order-product": "renderAddNewOrderProductForm"
+            "click #add-existing-order-product": "renderAddExistingOrderProductForm"
             "click #create-new-order-product": "checkValidityAndAddNewOrderProduct"
             "click #cancel-new-order-product": "renderOrderProductSummaryView"
             "click #create-new-order-button": "checkValidityAndCreateNewOrder"
@@ -213,8 +214,6 @@ jQuery ->
                 ($ '#order-create-store-names-template').html())
             @supplierSelectView = new SupplierSelectView
             @orderProductsView = new OrderProductSummaryView
-            # @singleOrderProductView = new SingleOrderProductView
-            # @orderProductSummaryView = new OrderProductSummaryView
             @currentOrderProducts = []
         render: ->
             @$el.html this.template({})
@@ -227,11 +226,20 @@ jQuery ->
             @renderOrderProductSummaryView()
             @
         renderOrderProductSummaryView: ->
+            if @orderProductsView
+                @orderProductsView.remove()
             @orderProductsView = new OrderProductSummaryView
             @$("#order-products-div").html(
                 @orderProductsView.render(
                     @currentOrderProducts.length).el)
+        renderAddExistingOrderProductForm: ->
+            if @orderProductsView
+                @orderProductsView.remove()
+            @orderProductsView = new SingleOrderProductExistingView
+            @$("#order-products-div").html @orderProductsView.render().el
         renderAddNewOrderProductForm: ->
+            if @orderProductsView
+                @orderProductsView.remove()
             @orderProductsView = new SingleOrderProductView
             @$("#order-products-div").
                 html @orderProductsView.render().el
@@ -335,6 +343,81 @@ jQuery ->
                 alertType: 'warning'
             alertHTML = alertWarningView.render("alert-error", message).el
             $("#root-backbone-alert-view").html(alertHTML)
+
+    class SingleOrderProductExistingView extends Backbone.View
+        template: _.template ($ '#order-existing-product-template').html()
+        render: ->
+            @$el.html @template({})
+            productListView = new ProductExistingListView
+                collection: app.Products
+            @$("#products-existing-table").html productListView.render().el
+            @
+
+    class ProductExistingListView extends Backbone.View
+        template: _.template ($ '#sale-products-table-template').html()
+        initialize: ->
+            @nameSearch = @options.nameSearch
+            @brandSearch = @options.brandSearch
+            @controller = @options.controller
+        render: ->
+            @$el.html @template({})
+            @addAll()
+            @
+        addOne: (product) ->
+            view = new ProductListItemView
+                model: product
+                controller: @controller
+            (@$ "#products-table-list").append view.render().el
+        noProductsAlert: ->
+            message = "You have no existing products yet." +
+            alertWarning = new app.AlertView
+                alertType: 'info'
+            @$el.append alertWarning.render( "alert-info", message).el
+        addAll: ->
+            if not app.Products.length
+                return @noProductsAlert()
+            productResults = @filterResultsBySearchFields(@collection)
+            _.each productResults, @addOne, @
+        filterResultsBySearchFields: (collection) ->
+            finalResults = collection.models
+            if @nameSearch or @brandSearch
+                if @nameSearch
+                    finalResults = finalResults.filter (model) =>
+                        nameString = model.get('description.name').toLowerCase()
+                        nameString.indexOf(@nameSearch.toLowerCase()) isnt -1
+                if @brandSearch
+                    finalResults = finalResults.filter (model) =>
+                        brandString = model.get('description.brand').toLowerCase()
+                        brandString.indexOf(@brandSearch.toLowerCase()) isnt -1
+            finalResults
+    class ProductListItemView extends Backbone.View
+        template: _.template ($ '#sale-product-tr-template').html()
+        tagName: 'tr'
+        events:
+            'mouseover': 'showItemOptions'
+            'mouseout': 'hideItemOptions'
+            'click #product-purchase-link': 'productSelected'
+        initialize: ->
+            @controller = @options.controller
+        render: ->
+            renderObject = @model.attributes
+            @$el.html this.template renderObject
+            $(@el).find('i').hide()
+            @
+        showItemOptions: (event) ->
+            $(@el).find('i').show()
+        hideItemOptions: (event) ->
+            $(@el).find('i').hide()
+        productSelected: (e) ->
+            console.log 'made it here'
+            # @addToTransaction = new AddToTransactionModal
+            #     model: @model
+            #     controller: @controller
+            # $("#root-backbone-view-body").
+            #     append @addToTransaction.render().el
+            # $("#add-to-transaction-modal").modal 'show'
+            # $('#add-to-transaction-modal').on 'hidden', =>
+            #     @addToTransaction.remove()
     class SingleOrderProductView extends Backbone.View
         # TODO combine this code from the following class
         # implementation to improve DRY: ProductCreateView
@@ -491,6 +574,7 @@ jQuery ->
         render: (productsLength) ->
             @$el.html this.template({productsTotal: productsLength})
             @
+
     # ###############
 
 
