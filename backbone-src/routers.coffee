@@ -32,13 +32,13 @@ jQuery ->
     @app.router = new app.GoferRouter
     Backbone.history.start()
 
-    window.setInterval ->
-        app.Companies.fetch()
-        app.Customers.fetch()
-        app.Employees.fetch()
-        app.Suppliers.fetch()
-        app.Orders.fetch()
-        app.Products.fetch()
-        app.Sales.fetch()
-    , 10000
+    # window.setInterval ->
+    #     app.Companies.fetch()
+    #     app.Customers.fetch()
+    #     app.Employees.fetch()
+    #     app.Suppliers.fetch()
+    #     app.Orders.fetch()
+    #     app.Products.fetch()
+    #     app.Sales.fetch()
+    # , 10000
 

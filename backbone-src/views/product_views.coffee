@@ -478,7 +478,6 @@ jQuery ->
                 html(alertWarning.render( "alert-success", message).el)
 
         subQuantTotalValid: (factors, values) ->
-            console.log factors, values
             # check to see if table sub quants are valid
             oneValueMoreThan0 = false
             anyValuesLessThan0 = false

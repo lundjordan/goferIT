@@ -30,8 +30,7 @@ OrderSchema = new mongoose.Schema
         ]
     ]
     shippingInfo:
-        company:
-            type: String, required: true
+        company: String
         travelType: String
         cost: Number
     estimatedArrivalDate: Date

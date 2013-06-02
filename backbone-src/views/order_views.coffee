@@ -144,13 +144,13 @@ jQuery ->
                         'description.name': orderProduct.description.name
                         'description.brand': orderProduct.description.brand
                     )[0]
-                    newIndividualProperties =
+                    existingIndividualProperties =
                         existingProduct.get "individualProperties"
                     newPossibleValues = null
 
                     # now concat the existing and new product indi properties
                     for orderProductProperty in orderProduct.individualProperties
-                        newIndividualProperties.push orderProductProperty
+                        existingIndividualProperties.push orderProductProperty
 
                     # find the union of existing and new product possibleValues
                     if existingProduct.get("primaryMeasurementFactor") isnt null
@@ -162,7 +162,7 @@ jQuery ->
                             orderProductPossibleValues)
                     existingProduct.save
                         measurementPossibleValues: newPossibleValues
-                        individualProperties: newIndividualProperties
+                        individualProperties: existingIndividualProperties
                 else
                     # product does not exist so create a whole new one
                     app.Products.create orderProduct
@@ -272,7 +272,7 @@ jQuery ->
                     if $(this).html() isnt "Quantity"
                         quantities.push $(this).find("input").val()
             else
-                quantities.push $('td.grand-total-quantity').val()
+                quantities.push $('td.grand-total-quantity').find("input").val()
             if not alltypesHaveValue
                 return @measurementTypeIsNullAlert()
             existingProductValid = @quantsValid quantities
@@ -285,6 +285,7 @@ jQuery ->
             # check to see if table sub quants are valid
             oneValueMoreThan0 = false
             anyValuesLessThan0 = false
+            console.log quants
             for value in quants
                 if parseInt(value, 10) > 0
                     oneValueMoreThan0 = true
@@ -385,7 +386,7 @@ jQuery ->
             app.Orders.create order
             @orderCreatedAlert()
         orderExistsAlert: -> # alerts!!! TODO all these cleaner
-            message = "There is already have a order by this reference " +
+            message = "There is already an order by this reference " +
                 "Number. Please Change the order name and/or brand"
             alertWarningView = new app.AlertView
                 alertType: 'warning'
@@ -435,9 +436,26 @@ jQuery ->
                 prodExistController: @
             @$("#products-existing-table").html productQuantity.render().el
         addExistingProductOrder: (quants, types) ->
-            console.log @productToUpdate
-            console.log "quants", quants
-            console.log "types", types
+            indiProds = []
+            if types.length
+                for quant, index in quants
+                    if quant isnt "0"
+                        indiProds.push
+                            measurements: [
+                                factor: types[index]
+                                value: quant
+                            ]
+            else
+                console.log 'made it here'
+                for quant in [1..parseInt(quants[0])]
+                    indiProds.push
+                        storeName: "" # hackish to populate indiprops
+                        # and corrected in markOrderArrived()
+            orderProduct = @productToUpdate.attributes
+            @productToUpdate = null
+            delete orderProduct._id
+            orderProduct.individualProperties = indiProds
+            return orderProduct
 
     class ProductExistingQuantitySelectView extends Backbone.View
         template: _.template ($ '#sale-products-exist-quantity-template').html()
