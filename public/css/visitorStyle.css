@@ -7,6 +7,17 @@ body {
   color: #5a5a5a;
 }
 
+/* line 5498 */
+.popover.bottom .arrow:after {
+  border-bottom-color: rgb(20, 20, 20);
+}
+
+/* line 5377 */
+.popover {
+  background-color: rgb(20, 20, 20);
+  color: rgb(199, 199, 199);
+}
+
 /* label { */
 /*     color: white; */
 /* } */

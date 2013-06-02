@@ -203,6 +203,11 @@ jQuery ->
             "click #add-existing-order-product": "renderAddExistingOrderProductForm"
             "click #create-new-order-product": "checkValidityAndAddNewOrderProduct"
             "click #cancel-new-order-product": "renderOrderProductSummaryView"
+
+            "click #create-exist-order-product":
+                "checkValidityAndUpdateExistOrderProduct"
+            "click #cancel-exist-order-product": "renderOrderProductSummaryView"
+
             "click #create-new-order-button": "checkValidityAndCreateNewOrder"
             "click #clear-new-order-button": "clearNewOrderForm"
         template: _.template ($ '#root-backbone-content-template').html()
@@ -235,7 +240,7 @@ jQuery ->
         renderAddExistingOrderProductForm: ->
             if @orderProductsView
                 @orderProductsView.remove()
-            @orderProductsView = new SingleOrderProductExistingView
+            @orderProductsView = new SingleOrderProductExistingView()
             @$("#order-products-div").html @orderProductsView.render().el
         renderAddNewOrderProductForm: ->
             if @orderProductsView
@@ -243,6 +248,53 @@ jQuery ->
             @orderProductsView = new SingleOrderProductView
             @$("#order-products-div").
                 html @orderProductsView.render().el
+        checkValidityAndUpdateExistOrderProduct: ->
+            existingProductValid = false
+            subQuantTypes = []
+            quantities = []
+            alltypesHaveValue = true
+            hasSubQuants = $("#add-sub-column").html()
+            if hasSubQuants
+                # first get the values for all the subquant table cells
+                $("th.measurement-size").each ->
+                    # this is an extra column
+                    if $(this).html() isnt "Size"
+                        thHasInputTag = $(this).find("input").val() or
+                            $(this).find("input").val() is ""
+                        if thHasInputTag
+                            if $(this).find("input").val() is ""
+                                alltypesHaveValue = false
+                            else
+                                subQuantTypes.push $(this).find("input").val()
+                        else
+                            subQuantTypes.push $(this).html()
+                $("td.measurement-quantity").each ->
+                    if $(this).html() isnt "Quantity"
+                        quantities.push $(this).find("input").val()
+            else
+                quantities.push $('td.grand-total-quantity').val()
+            if not alltypesHaveValue
+                return @measurementTypeIsNullAlert()
+            existingProductValid = @quantsValid quantities
+            if existingProductValid
+                productAdded = @orderProductsView.addExistingProductOrder(
+                    quantities, subQuantTypes)
+                @currentOrderProducts.push productAdded
+                @renderOrderProductSummaryView()
+        quantsValid: (quants) ->
+            # check to see if table sub quants are valid
+            oneValueMoreThan0 = false
+            anyValuesLessThan0 = false
+            for value in quants
+                if parseInt(value, 10) > 0
+                    oneValueMoreThan0 = true
+                if parseInt(value, 10) < 0
+                    anyValuesLessThan0 = true
+            if not oneValueMoreThan0 or anyValuesLessThan0
+                @quantsNotValidAlert()
+                return false
+            else
+                return true
         checkValidityAndAddNewOrderProduct: (e) ->
             e.preventDefault()
             productAdded = @orderProductsView.
@@ -256,6 +308,22 @@ jQuery ->
                 @currentOrderProducts)
         clearNewOrderForm: ->
             $("#order-create-tab").click()
+        quantsNotValidAlert: ->
+            message = "For quantities, there must be at" +
+                " least one value higher than: 0. Only positive numbers are" +
+                " accepted."
+            alertWarning = new app.AlertView
+                alertType: 'warning'
+            $("#root-backbone-alert-view").
+                html(alertWarning.render("alert-error alert-block", message).el)
+        measurementTypeIsNullAlert: ->
+            message = "All sizes must have a value"
+            alertWarningView = new app.AlertView
+                alertType: 'warning'
+            alertHTML = alertWarningView.
+                render("alert-error", message).el
+            $("#root-backbone-alert-view").html(alertHTML)
+
     class OrderCreateBodyView extends Backbone.View
         initialize: ->
             @template = _.template ($ @options.template).html()
@@ -346,11 +414,47 @@ jQuery ->
 
     class SingleOrderProductExistingView extends Backbone.View
         template: _.template ($ '#order-existing-product-template').html()
+        events:
+            "click #add-sub-column": "addSubQuantColumn"
+        initialize: ->
+            @productToUpdate = null
         render: ->
             @$el.html @template({})
             productListView = new ProductExistingListView
                 collection: app.Products
+                prodExistController: @
             @$("#products-existing-table").html productListView.render().el
+            @
+        addSubQuantColumn: ->
+            @$('#product-exist-quantity-thead-tr').append '<th class="measurement-size"><input class="input-mini" type="text" placeholder="type"></th>'
+            @$('#product-exist-quantity-tbody-td').append '<td class="measurement-quantity"><input class="input-mini" type="text" value="0"></td>'
+        chooseExistingProductQuantity: (product) ->
+            @productToUpdate = product
+            productQuantity = new ProductExistingQuantitySelectView
+                model: product
+                prodExistController: @
+            @$("#products-existing-table").html productQuantity.render().el
+        addExistingProductOrder: (quants, types) ->
+            console.log @productToUpdate
+            console.log "quants", quants
+            console.log "types", types
+
+    class ProductExistingQuantitySelectView extends Backbone.View
+        template: _.template ($ '#sale-products-exist-quantity-template').html()
+        initialize: ->
+            @prodExistController = @options.prodExistController
+        render: ->
+            @$el.html @template({})
+            if @model.get "primaryMeasurementFactor"
+                @$("#sub-total-header").append " <li class='pull-right'> <strong> <a id='add-sub-column' href='#' class='text-info'><i class='icon-plus'></i>Add Column</a> </strong> </li> "
+                for size in @model.get "measurementPossibleValues"
+                    @$("#product-exist-quantity-thead-tr").append "<th class='measurement-size'>#{size}</th>"
+                    @$("#product-exist-quantity-tbody-td").append(
+                        "<td class='measurement-quantity'><input class='input-mini' value='0'></input></td>")
+            else
+                @$("#product-exist-quantity-thead-tr").html "<th>Total</th>"
+                @$("#product-exist-quantity-tbody-td").append(
+                    "<td class='grand-total-quantity'><input class='input-mini' value='0'></input></td>")
             @
 
     class ProductExistingListView extends Backbone.View
@@ -358,7 +462,7 @@ jQuery ->
         initialize: ->
             @nameSearch = @options.nameSearch
             @brandSearch = @options.brandSearch
-            @controller = @options.controller
+            @prodExistController = @options.prodExistController
         render: ->
             @$el.html @template({})
             @addAll()
@@ -366,20 +470,20 @@ jQuery ->
         addOne: (product) ->
             view = new ProductListItemView
                 model: product
-                controller: @controller
+                prodExistController: @prodExistController
             (@$ "#products-table-list").append view.render().el
         noProductsAlert: ->
-            message = "You have no existing products yet." +
+            message = "You have no existing products yet."
             alertWarning = new app.AlertView
                 alertType: 'info'
             @$el.append alertWarning.render( "alert-info", message).el
         addAll: ->
             if not app.Products.length
                 return @noProductsAlert()
-            productResults = @filterResultsBySearchFields(@collection)
+            productResults = @filterResultsBySearchFields()
             _.each productResults, @addOne, @
-        filterResultsBySearchFields: (collection) ->
-            finalResults = collection.models
+        filterResultsBySearchFields: ->
+            finalResults = @collection.models
             if @nameSearch or @brandSearch
                 if @nameSearch
                     finalResults = finalResults.filter (model) =>
@@ -398,7 +502,7 @@ jQuery ->
             'mouseout': 'hideItemOptions'
             'click #product-purchase-link': 'productSelected'
         initialize: ->
-            @controller = @options.controller
+            @prodExistController = @options.prodExistController
         render: ->
             renderObject = @model.attributes
             @$el.html this.template renderObject
@@ -408,16 +512,9 @@ jQuery ->
             $(@el).find('i').show()
         hideItemOptions: (event) ->
             $(@el).find('i').hide()
-        productSelected: (e) ->
-            console.log 'made it here'
-            # @addToTransaction = new AddToTransactionModal
-            #     model: @model
-            #     controller: @controller
-            # $("#root-backbone-view-body").
-            #     append @addToTransaction.render().el
-            # $("#add-to-transaction-modal").modal 'show'
-            # $('#add-to-transaction-modal').on 'hidden', =>
-            #     @addToTransaction.remove()
+        productSelected: ->
+            @prodExistController.chooseExistingProductQuantity @model
+
     class SingleOrderProductView extends Backbone.View
         # TODO combine this code from the following class
         # implementation to improve DRY: ProductCreateView

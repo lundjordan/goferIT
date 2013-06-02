@@ -236,7 +236,7 @@
   </div>
   <div class="span6">
     <button class="btn btn-info btn-large" id='add-new-order-product' type="button">
-      Add A Product
+      Add A New Product
     </button>
     <button class="btn btn-success btn-large" id='add-existing-order-product' type="button">
       Add An Existing Product
@@ -262,7 +262,37 @@
       </div>
     </li>
   </ul>
-  <div id="products-existing-table"> </div>
+  <div id="products-existing-table" class="row-fluid"> </div>
+  <div class="row-fluid">
+    <a href="#" id="cancel-exist-order-product" class="btn pull-right">
+      Cancel
+    </a>
+    <a href="#" id='create-exist-order-product'
+      class="btn btn-info pull-right">
+      Add Product To Order
+    </a>
+  </div>
+</script>
+
+<script type="text/template" id="sale-products-exist-quantity-template">
+    <ul class="unstyled inline" id='sub-total-header'>
+      <li>
+        <strong> Choose Quantity </strong><br>
+      </li>
+    </ul>
+    <table class="table table-bordered table-hover">
+      <thead>
+          <tr id='product-exist-quantity-thead-tr'>
+            <th>Size</th>
+          </tr>
+      </thead>
+      <tbody id="inventory-table-list">
+        <tr id="product-exist-quantity-tbody-td">
+          <td>Quantity</td>
+        </tr>
+      </tbody>
+    </table>
+
 </script>
 
 <script type="text/template" id="single-order-product-template">

@@ -26,15 +26,15 @@ block content
                         fieldset
                           label Username
                           // input.span2(id="username", type="text", name="username", placeholder="Email")
-                          input.span2(id="username", type="text", name="username", value='nadroj@gmail.com')
+                          input.span2(id="username", type="text", name="username", placeholder='foo@gmail.com')
                           label Password
                           // input.span2(id="password", type="password", name="password", placeholder="Password")
-                          input.span2(id="password", type="password", name="password", value='password')
+                          input.span2(id="password", type="password", name="password", placeholder='topSecret')
                           button#login-button.btn(type="submit") Login
               ul.nav
                 li
-                  a#demo-button(href="#") Demo
-
+                  a#demo-button(href="#", data-toggle="popover",
+                  data-placement="bottom", data-content="Take Gofer for a spin") Try A Demo
 
   //Backbone Section: Sidebar and Main Content
   div#homepage.carousel.slide
@@ -82,7 +82,9 @@ block content
         p Manage the people who work for you and record the ones who buy from you.
       div.span3
         h2 The Power Of The Browser
-        p Use any computer or tablet you like, no installations or updates necessary, back up everything in the cloud, and <strong> even work offline </strong>
+        p Use any computer or tablet you like, no installations or updates
+        necessary, back up everything in the cloud, and <strong> everything in
+        one page </strong>
 
   div.modal.hide.fade.in(id='register', style='display:none;')
     div.modal-header
