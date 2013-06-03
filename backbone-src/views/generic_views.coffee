@@ -173,7 +173,7 @@ jQuery ->
             @itemControllerView = @options.itemControllerView
             @currentModelView = null
         render: (currentModel) ->
-            @$el.html this.template({})
+            @$el.html this.template(currentModel.attributes)
             if currentModel
                 @renderSingleContent(currentModel)
             else

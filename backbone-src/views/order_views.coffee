@@ -108,6 +108,8 @@ jQuery ->
             $("#order-products-list").html (orderProductsTable.render()).el
             orderProductsTable.addAll()
         markOrderArrived: () ->
+            if @currentModel.get 'dateArrived'
+                return # this product already arrived
             # first we need to set the order as arrived with a date
             # doing so fires an event to re render the single view template
             # and alert user that order's products have been put in stock
@@ -117,6 +119,7 @@ jQuery ->
             # now we need to add the products in the order to our existing
             # stock
             for orderProduct in @currentModel.get("products")
+                console.log 'orderProduct', orderProduct
                 # first delete the _id property of this orderProduct
                 # as it will just confuse mongo on creation 
                 delete orderProduct._id
@@ -139,6 +142,7 @@ jQuery ->
                     orderProduct.description.brand
                 )
                 if isExistingProduct
+                    console.log 'this product exists'
                     # grab that existing product in our stock
                     existingProduct = app.Products.where(
                         'description.name': orderProduct.description.name
@@ -153,13 +157,14 @@ jQuery ->
                         existingIndividualProperties.push orderProductProperty
 
                     # find the union of existing and new product possibleValues
-                    if existingProduct.get("primaryMeasurementFactor") isnt null
+                    if existingProduct.get("primaryMeasurementFactor")
                         existingPossibleValues =
                             existingProduct.get("measurementPossibleValues")
                         orderProductPossibleValues =
                             orderProduct.measurementPossibleValues
                         newPossibleValues = _.union(existingPossibleValues,
                             orderProductPossibleValues)
+                    console.log 'existProduct', existingProduct
                     existingProduct.save
                         measurementPossibleValues: newPossibleValues
                         individualProperties: existingIndividualProperties
@@ -279,6 +284,7 @@ jQuery ->
             if existingProductValid
                 productAdded = @orderProductsView.addExistingProductOrder(
                     quantities, subQuantTypes)
+                console.log productAdded
                 @currentOrderProducts.push productAdded
                 @renderOrderProductSummaryView()
         quantsValid: (quants) ->
@@ -383,6 +389,7 @@ jQuery ->
                     company: shipCompany
                     cost: cost
                 estimatedArrivalDate: estArrival
+            console.log currentProducts
             app.Orders.create order
             @orderCreatedAlert()
         orderExistsAlert: -> # alerts!!! TODO all these cleaner
@@ -440,21 +447,24 @@ jQuery ->
             if types.length
                 for quant, index in quants
                     if quant isnt "0"
-                        indiProds.push
-                            measurements: [
-                                factor: types[index]
-                                value: quant
-                            ]
+                        for indiProd in [1..parseInt(quant, 10)]
+                            indiProds.push
+                                measurements: [
+                                    factor: @productToUpdate.get(
+                                        'primaryMeasurementFactor')
+                                    value: types[index]
+                                ]
             else
-                console.log 'made it here'
-                for quant in [1..parseInt(quants[0])]
+                for quant in [1..parseInt(quants[0], 10)]
                     indiProds.push
                         storeName: "" # hackish to populate indiprops
                         # and corrected in markOrderArrived()
-            orderProduct = @productToUpdate.attributes
-            @productToUpdate = null
+            orderProduct = _.extend({}, @productToUpdate.attributes)
             delete orderProduct._id
             orderProduct.individualProperties = indiProds
+            orderProduct.measurementPossibleValues = _.union(
+                types, orderProduct.measurementPossibleValues)
+            console.log @productToUpdate.attributes
             return orderProduct
 
     class ProductExistingQuantitySelectView extends Backbone.View

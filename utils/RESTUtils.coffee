@@ -23,15 +23,12 @@ exports.getListController = (model) ->
 #
 exports.getCreateController = (model) ->
     return (req, res) ->
-        console.log 'create', req.body
         m = new model req.body
         m._company = req.user._company
         m.save (err) ->
             if not err
-                console.log 'sale created:::', m
                 res.send m
             else
-                console.log errMsg(err)
                 res.send (errMsg err)
 
 #------------------------------
@@ -39,7 +36,6 @@ exports.getCreateController = (model) ->
 #
 exports.getReadController = (model) ->
     return (req, res) ->
-        #console.log('read', req.body);
         model.findById req.params.id, (err, result) ->
             if not err
                 res.send result
@@ -51,18 +47,14 @@ exports.getReadController = (model) ->
 #
 exports.getUpdateController = (model) ->
     return (req, res) ->
-        console.log('updating with', req.body)
         model.findById req.params.id, (err, result) ->
             for key, value of req.body
-                # console.log("req.body key: " + key)
                 result[key] = value
 
             result.save (err) ->
                 if not err
-                    console.log result
                     res.send result
                 else
-                    console.log(errMsg err)
                     res.send (errMsg err)
 
 #------------------------------
@@ -70,7 +62,6 @@ exports.getUpdateController = (model) ->
 #
 exports.getDeleteController = (model) ->
     return (req, res) ->
-        #console.log('delete', req.body);
         model.findById req.params.id, (err, result) ->
             if err
                 res.send (errMsg err)
@@ -78,8 +69,6 @@ exports.getDeleteController = (model) ->
                 result.remove()
                 result.save (err) ->
                     if not err
-                        console.log result
                         res.send {}
                     else
-                        console.log(errMsg err)
                         res.send (errMsg err)

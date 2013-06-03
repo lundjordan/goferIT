@@ -18,6 +18,7 @@ restifyProducts = (app, restify, model) ->
                     res.send (errMsg err)
 
     app.post path, (req, res) ->
+        console.log '####> creating a new product'
         (model.findOne {_company: req.user._company})
             .exec (err, stock) ->
                 if not err
@@ -29,31 +30,26 @@ restifyProducts = (app, restify, model) ->
                     ,
                         (err, stock) ->
                             if not err
-                                console.log 'NO ERROR', stock.products
                                 res.send stock
                             else
-                                console.log 'BIG ERROR'
                                 res.send (errMsg err)
                 else
                     res.send (errMsg err)
 
-    # app.post path, (restify.getCreateController model)
     app.get pathWithId, (restify.getReadController model)
 
     app.put pathWithId, (req, res) ->
+        console.log '####> updating an existing product'
         (model.findOne {_company: req.user._company})
             .exec (err, stock) ->
                 if not err
-                    console.log 'req.body: ', req.body
                     product = stock.products.id req.params.id
                     for key, value of req.body
                         product[key] = value
                     stock.save (err) ->
                         if not err
-                            console.log 'stock: ', stock.products.id req.params.id
                             res.send stock.products.id req.params.id
                         else
-                            console.log(errMsg err)
                             res.send (errMsg err)
 
     app.del pathWithId, (req, res) ->
@@ -61,13 +57,10 @@ restifyProducts = (app, restify, model) ->
             .exec (err, stock) ->
                 if not err
                     product = stock.products.id(req.params.id).remove()
-                    console.log 'item to be deleted: product'
                     stock.save (err) ->
                         if not err
-                            console.log stock
                             res.send stock
                         else
-                            console.log(errMsg err)
                             res.send (errMsg err)
 
 
