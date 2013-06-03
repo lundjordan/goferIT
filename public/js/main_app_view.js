@@ -196,7 +196,7 @@
       FinanceControllerView.prototype.renderTransactionsInitView = function() {
         this.currentFinanceView.removeCurrentContentView();
         this.currentFinanceView = this.transactionControllerView;
-        $('#transactions-list-tab a').tab('show');
+        $('#finances-list-tab a').tab('show');
         return this.currentFinanceView.renderFinancesListView();
       };
 

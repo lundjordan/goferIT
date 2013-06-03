@@ -96,17 +96,19 @@ jQuery ->
             orderProductsTable.addAll()
             @orderMarkedAsArrivedAlert()
         renderSingleItemPrevView: (event) ->
-            super()
-            orderProductsTable = new OrderProductsTable
-                model: @currentModel
-            $("#order-products-list").html (orderProductsTable.render()).el
-            orderProductsTable.addAll()
+            if @currentModel
+                super()
+                orderProductsTable = new OrderProductsTable
+                    model: @currentModel
+                $("#order-products-list").html (orderProductsTable.render()).el
+                orderProductsTable.addAll()
         renderSingleItemNextView: (event) ->
-            super()
-            orderProductsTable = new OrderProductsTable
-                model: @currentModel
-            $("#order-products-list").html (orderProductsTable.render()).el
-            orderProductsTable.addAll()
+            if @currentModel
+                super()
+                orderProductsTable = new OrderProductsTable
+                    model: @currentModel
+                $("#order-products-list").html (orderProductsTable.render()).el
+                orderProductsTable.addAll()
         markOrderArrived: () ->
             if @currentModel.get 'dateArrived'
                 return # this product already arrived
@@ -423,25 +425,35 @@ jQuery ->
     class SingleOrderProductExistingView extends Backbone.View
         template: _.template ($ '#order-existing-product-template').html()
         events:
+            'keyup #product-brand-search': 'renderProductsList'
+            'keyup #product-name-search': 'renderProductsList'
             "click #add-sub-column": "addSubQuantColumn"
         initialize: ->
             @productToUpdate = null
+            @productExistListView = null
+            @productExistQuantityView = null
         render: ->
             @$el.html @template({})
-            productListView = new ProductExistingListView
+            @productExistListView = new ProductExistingListView
                 collection: app.Products
                 prodExistController: @
-            @$("#products-existing-table").html productListView.render().el
+            @$("#products-existing-table").html @productExistListView.render().el
             @
+        renderProductsList: ->
+            @productExistListView.setSearchFields()
+            @$("#products-existing-table").html @productExistListView.render().el
+
         addSubQuantColumn: ->
             @$('#product-exist-quantity-thead-tr').append '<th class="measurement-size"><input class="input-mini" type="text" placeholder="type"></th>'
             @$('#product-exist-quantity-tbody-td').append '<td class="measurement-quantity"><input class="input-mini" type="text" value="0"></td>'
         chooseExistingProductQuantity: (product) ->
             @productToUpdate = product
-            productQuantity = new ProductExistingQuantitySelectView
+            @productExistQuantityView  = new ProductExistingQuantitySelectView
                 model: product
                 prodExistController: @
-            @$("#products-existing-table").html productQuantity.render().el
+            @$("#exist-product-search-fields").hide()
+            @$("#products-existing-table").
+                html @productExistQuantityView.render().el
         addExistingProductOrder: (quants, types) ->
             indiProds = []
             if types.length
@@ -488,8 +500,8 @@ jQuery ->
     class ProductExistingListView extends Backbone.View
         template: _.template ($ '#sale-products-table-template').html()
         initialize: ->
-            @nameSearch = @options.nameSearch
-            @brandSearch = @options.brandSearch
+            @nameSearch = null
+            @brandSearch = null
             @prodExistController = @options.prodExistController
         render: ->
             @$el.html @template({})
@@ -500,6 +512,9 @@ jQuery ->
                 model: product
                 prodExistController: @prodExistController
             (@$ "#products-table-list").append view.render().el
+        setSearchFields: ->
+            @nameSearch = $("#product-name-search")
+            @brandSearch = $("#product-brand-search")
         noProductsAlert: ->
             message = "You have no existing products yet."
             alertWarning = new app.AlertView

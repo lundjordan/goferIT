@@ -158,13 +158,15 @@ jQuery ->
             @currentModel = @collection.findNext @currentModel
             @singleView.render @currentModel
         renderSpecificEditView: (model) ->
-            @itemControllerView.renderSpecificEditView @currentModel
+            if @currentModel
+                @itemControllerView.renderSpecificEditView @currentModel
         renderSpecificDeleteView: ->
-            @deleteView =  new ConfirmDeleteModal
-                model: @currentModel
-                template: @deleteModalTemplate
-            $("#root-backbone-view-body").append @deleteView.render().el
-            $("#delete-item-modal").modal 'show'
+            if @currentModel
+                @deleteView =  new ConfirmDeleteModal
+                    model: @currentModel
+                    template: @deleteModalTemplate
+                $("#root-backbone-view-body").append @deleteView.render().el
+                $("#delete-item-modal").modal 'show'
     # Single Item View Section
     class ItemLayoutView extends Backbone.View
         initialize: ->
@@ -173,10 +175,11 @@ jQuery ->
             @itemControllerView = @options.itemControllerView
             @currentModelView = null
         render: (currentModel) ->
-            @$el.html this.template(currentModel.attributes)
             if currentModel
+                @$el.html this.template(currentModel.attributes)
                 @renderSingleContent(currentModel)
             else
+                @$el.html this.template()
                 message = "It looks like you don't have anything for this yet. " +
                     "Click on the 'create/edit' tab to start populating your" +
                     " company with everything it cares about."

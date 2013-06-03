@@ -115,7 +115,7 @@ jQuery ->
         renderTransactionsInitView: ->
             @currentFinanceView.removeCurrentContentView()
             @currentFinanceView = @transactionControllerView
-            $('#transactions-list-tab a').tab('show')
+            $('#finances-list-tab a').tab('show')
             @currentFinanceView.renderFinancesListView()
         removeCurrentContentView: ->
             @currentFinanceView.removeCurrentContentView()

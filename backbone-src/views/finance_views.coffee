@@ -162,6 +162,11 @@ jQuery ->
                 finalResults = finalResults.filter (model) =>
                     Date.parse(startTime) <= Date.parse(model.get('dateCreated')) <= Date.parse(endTime)
             finalResults
+        noSaleAlert: ->
+            message = "You have no existing finances yet."
+            alertWarning = new app.AlertView
+                alertType: 'info'
+            @$el.append alertWarning.render( "alert-info", message).el
 
     class TransactionListItemView extends app.GenericSingleListItemView
         initialize: ->

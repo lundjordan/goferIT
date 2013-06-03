@@ -175,15 +175,17 @@ jQuery ->
             @model = app.Products.findNext @model
             @productView.render @model
         renderSpecificEditView: (model) ->
-            @itemControllerView.renderSpecificEditView @model
+            if @model
+                @itemControllerView.renderSpecificEditView @model
         renderSpecificDeleteView: ->
-            @deleteView =  new app.ConfirmDeleteModal
-                model: @model
-                template: '#product-view-delete-template'
-            $("#root-backbone-view-body").append @deleteView.render().el
-            $('#delete-item-modal').on 'hidden', =>
-                @deleteView.remove()
-            $("#delete-item-modal").modal 'show'
+            if @model
+                @deleteView =  new app.ConfirmDeleteModal
+                    model: @model
+                    template: '#product-view-delete-template'
+                $("#root-backbone-view-body").append @deleteView.render().el
+                $('#delete-item-modal').on 'hidden', =>
+                    @deleteView.remove()
+                $("#delete-item-modal").modal 'show'
     # Product Item View Section
     class ProductItemBodyView extends Backbone.View
         # el: '#product-item-view-body'
