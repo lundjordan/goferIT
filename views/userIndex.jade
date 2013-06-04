@@ -11,7 +11,7 @@ block content
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        a.brand(href="#") Gofer
+        a.brand(href="#about-gofer", role="button", data-toggle="modal") Gofer
         div.nav-collapse
           ul.nav.pull-right
             li
@@ -20,9 +20,24 @@ block content
             li.divider-vertical
             li
               p#current-user-email-id.navbar-text.pull-right #{user.email}
-          ul.nav
-            li
-              a.nav-a-tag(href="https://docs.google.com/document/d/1xzg_vWwYZ5r9C7F0gQLOBNNWQhhc8T698xatHS-lTq0/edit") About | Docs
+
+  // about Modal
+  #about-gofer.modal.hide.fade(tabindex="-1", role="dialog",
+    aria-labelledby="myModalLabel", aria-hidden="true")
+    .modal-header
+      button(type="button", class="close", data-dismiss="modal",
+      aria-hidden="true")×
+      h3#myModalLabel GoferIT is a student pursuit
+    .modal-body
+      p.lead Unfortunetly, it is not intended for commercial use...
+      p For an explanation of the motivation, technologies, and implementation,
+      check out the docs and presentation:
+      .span3.offset2
+        .btn-group
+          a.btn.btn-large.btn-primary(href="https://docs.google.com/document/d/1xzg_vWwYZ5r9C7F0gQLOBNNWQhhc8T698xatHS-lTq0") Docs
+          a.btn.btn-large.btn-success(href="https://docs.google.com/presentation/d/1IQ8qjhQYVh53EUxQ8as4icyUv7e7W3pdUWLe46Atq8E") Presentation
+    .modal-footer
+      button.btn(data-dismiss="modal", aria-hidden="true") Close
 
   if info_alert != ''
     div.alert.alert-success

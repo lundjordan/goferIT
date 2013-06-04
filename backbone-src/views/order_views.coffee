@@ -121,7 +121,6 @@ jQuery ->
             # now we need to add the products in the order to our existing
             # stock
             for orderProduct in @currentModel.get("products")
-                console.log 'orderProduct', orderProduct
                 # first delete the _id property of this orderProduct
                 # as it will just confuse mongo on creation 
                 delete orderProduct._id
@@ -144,7 +143,6 @@ jQuery ->
                     orderProduct.description.brand
                 )
                 if isExistingProduct
-                    console.log 'this product exists'
                     # grab that existing product in our stock
                     existingProduct = app.Products.where(
                         'description.name': orderProduct.description.name
@@ -166,7 +164,6 @@ jQuery ->
                             orderProduct.measurementPossibleValues
                         newPossibleValues = _.union(existingPossibleValues,
                             orderProductPossibleValues)
-                    console.log 'existProduct', existingProduct
                     existingProduct.save
                         measurementPossibleValues: newPossibleValues
                         individualProperties: existingIndividualProperties
@@ -240,10 +237,9 @@ jQuery ->
         renderOrderProductSummaryView: ->
             if @orderProductsView
                 @orderProductsView.remove()
-            @orderProductsView = new OrderProductSummaryView
+            @orderProductsView = new OrderProductSummaryView()
             @$("#order-products-div").html(
-                @orderProductsView.render(
-                    @currentOrderProducts.length).el)
+                @orderProductsView.render(@currentOrderProducts).el)
         renderAddExistingOrderProductForm: ->
             if @orderProductsView
                 @orderProductsView.remove()
@@ -256,6 +252,8 @@ jQuery ->
             @$("#order-products-div").
                 html @orderProductsView.render().el
         checkValidityAndUpdateExistOrderProduct: ->
+            if $("#exist-product-order-table").html()
+                return @existProductNotSelected()
             existingProductValid = false
             subQuantTypes = []
             quantities = []
@@ -286,14 +284,12 @@ jQuery ->
             if existingProductValid
                 productAdded = @orderProductsView.addExistingProductOrder(
                     quantities, subQuantTypes)
-                console.log productAdded
                 @currentOrderProducts.push productAdded
                 @renderOrderProductSummaryView()
         quantsValid: (quants) ->
             # check to see if table sub quants are valid
             oneValueMoreThan0 = false
             anyValuesLessThan0 = false
-            console.log quants
             for value in quants
                 if parseInt(value, 10) > 0
                     oneValueMoreThan0 = true
@@ -317,6 +313,12 @@ jQuery ->
                 @currentOrderProducts)
         clearNewOrderForm: ->
             $("#order-create-tab").click()
+        existProductNotSelected: ->
+            message = "You must select an existing product or cancel adding an existing product to the order"
+            alertWarning = new app.AlertView
+                alertType: 'warning'
+            $("#root-backbone-alert-view").
+                html(alertWarning.render("alert-error", message).el)
         quantsNotValidAlert: ->
             message = "For quantities, there must be at" +
                 " least one value higher than: 0. Only positive numbers are" +
@@ -391,7 +393,6 @@ jQuery ->
                     company: shipCompany
                     cost: cost
                 estimatedArrivalDate: estArrival
-            console.log currentProducts
             app.Orders.create order
             @orderCreatedAlert()
         orderExistsAlert: -> # alerts!!! TODO all these cleaner
@@ -440,7 +441,9 @@ jQuery ->
             @$("#products-existing-table").html @productExistListView.render().el
             @
         renderProductsList: ->
-            @productExistListView.setSearchFields()
+            @productExistListView = new ProductExistingListView
+                collection: app.Products
+                prodExistController: @
             @$("#products-existing-table").html @productExistListView.render().el
 
         addSubQuantColumn: ->
@@ -476,7 +479,6 @@ jQuery ->
             orderProduct.individualProperties = indiProds
             orderProduct.measurementPossibleValues = _.union(
                 types, orderProduct.measurementPossibleValues)
-            console.log @productToUpdate.attributes
             return orderProduct
 
     class ProductExistingQuantitySelectView extends Backbone.View
@@ -498,10 +500,10 @@ jQuery ->
             @
 
     class ProductExistingListView extends Backbone.View
-        template: _.template ($ '#sale-products-table-template').html()
+        template: _.template ($ '#order-products-table-template').html()
         initialize: ->
-            @nameSearch = null
-            @brandSearch = null
+            @nameSearch = $("#product-name-search").val()
+            @brandSearch = $("#product-brand-search").val()
             @prodExistController = @options.prodExistController
         render: ->
             @$el.html @template({})
@@ -512,9 +514,6 @@ jQuery ->
                 model: product
                 prodExistController: @prodExistController
             (@$ "#products-table-list").append view.render().el
-        setSearchFields: ->
-            @nameSearch = $("#product-name-search")
-            @brandSearch = $("#product-brand-search")
         noProductsAlert: ->
             message = "You have no existing products yet."
             alertWarning = new app.AlertView
@@ -538,12 +537,12 @@ jQuery ->
                         brandString.indexOf(@brandSearch.toLowerCase()) isnt -1
             finalResults
     class ProductListItemView extends Backbone.View
-        template: _.template ($ '#sale-product-tr-template').html()
+        template: _.template ($ '#order-exist-product-tr-template').html()
         tagName: 'tr'
         events:
             'mouseover': 'showItemOptions'
             'mouseout': 'hideItemOptions'
-            'click #product-purchase-link': 'productSelected'
+            'click #order-product-exist-link': 'productSelected'
         initialize: ->
             @prodExistController = @options.prodExistController
         render: ->
@@ -589,9 +588,21 @@ jQuery ->
                 grandTotal:
                     required: true
                     min: 1
+        productExistsAlert: ->
+            message = "There is already a product by this name. " +
+                "Please Change the product name and/or brand"
+            alertWarningView = new app.AlertView
+                alertType: 'warning'
+            alertHTML = alertWarningView.render("alert-error", message).el
+            $("#medium-backbone-alert-view").html(alertHTML)
+            return # not valid
         checkValidityAndAddNewOrderProduct: ->
             passesJQueryValidation = @$("#order-product-form").valid()
             if passesJQueryValidation
+                isExistingProduct = app.Products.ifModelExists(
+                    $('#name-input').val(), $('#brand-input').val())
+                if isExistingProduct
+                    return @productExistsAlert()
                 # TODO add check to see if we have already added
                 # this product to the order
                 hasSubQuants = $("#grand-total-quantity-content").
@@ -711,9 +722,32 @@ jQuery ->
             $("#root-backbone-alert-view").html(alertHTML)
     class OrderProductSummaryView extends Backbone.View
         template: _.template ($ '#order-product-summary-template').html()
-        render: (productsLength) ->
-            @$el.html this.template({productsTotal: productsLength})
+        render: (products) ->
+            @$el.html this.template()
+            @addAll products
             @
+        addAll: (products) ->
+            if products.length
+                _.each products, @addOne
+            else
+                message = "There are no products in this order yet"
+                alertWarning = new app.AlertView
+                    alertType: 'info'
+                @$("#empty-order-product-alert").
+                    append alertWarning.render( "alert-info", message).el
+        addOne: (prod) =>
+            orderProductTR = new OrderProductTRView()
+            console.log orderProductTR.render(prod).el
+            @$("#order-products-table-body").append orderProductTR.render(prod).el
+    class OrderProductTRView extends Backbone.View
+        template: _.template ($ '#order-products-table-body-tr').html()
+        tagName: "tr"
+        render: (product) ->
+            console.log product
+            @$el.html this.template(product)
+            @
+
+
 
     # ###############
 

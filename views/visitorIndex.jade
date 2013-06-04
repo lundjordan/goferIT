@@ -12,7 +12,7 @@ block content
               span.icon-bar
               span.icon-bar
               span.icon-bar
-            a.brand(href="#") Gofer
+            a.brand(href="#about-gofer", role="button", data-toggle="modal") Gofer
             div.nav-collapse
               ul.nav.pull-right
                 li
@@ -33,8 +33,26 @@ block content
                           button#login-button.btn(type="submit") Login
               ul.nav
                 li
-                  a#demo-button(href="#", data-toggle="popover",
-                  data-placement="bottom", data-content="Take Gofer for a spin") Try A Demo
+                  a#demo-button(href="#", data-toggle="popover", data-placement="bottom", data-content="Take Gofer for a spin") Try The Demo
+                li
+
+  // about Modal
+  #about-gofer.modal.hide.fade(tabindex="-1", role="dialog",
+    aria-labelledby="myModalLabel", aria-hidden="true")
+    .modal-header
+      button(type="button", class="close", data-dismiss="modal",
+      aria-hidden="true")×
+      h3#myModalLabel GoferIT is a student pursuit
+    .modal-body
+      p.lead Unfortunetly, it is not intended for commercial use...
+      p For an explanation of the motivation, technologies, and implementation,
+      check out the docs and presentation:
+      .span3.offset2
+        .btn-group
+          a.btn.btn-large.btn-primary(href="https://docs.google.com/document/d/1xzg_vWwYZ5r9C7F0gQLOBNNWQhhc8T698xatHS-lTq0") Docs
+          a.btn.btn-large.btn-success(href="https://docs.google.com/presentation/d/1IQ8qjhQYVh53EUxQ8as4icyUv7e7W3pdUWLe46Atq8E") Presentation
+    .modal-footer
+      button.btn(data-dismiss="modal", aria-hidden="true") Close
 
   //Backbone Section: Sidebar and Main Content
   div#homepage.carousel.slide
@@ -82,9 +100,7 @@ block content
         p Manage the people who work for you and record the ones who buy from you.
       div.span3
         h2 The Power Of The Browser
-        p Use any computer or tablet you like, no installations or updates
-        necessary, back up everything in the cloud, and <strong> everything in
-        one page </strong>
+        p Use any computer or tablet you like, no installations or updates necessary, back up everything in the cloud, and <strong>get everything done in a single page.</strong>
 
   div.modal.hide.fade.in(id='register', style='display:none;')
     div.modal-header
