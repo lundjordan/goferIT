@@ -76,20 +76,20 @@
   <div class="control-group">
     <label class="control-label" for="cash-given-input">Cash Given</label>
     <div class="controls">
-      <input type="text" id="cash-given-input" placeholder="0">
+      <input class="input-medium" type="text" id="cash-given-input" placeholder="0">
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="change-due-input">Change Due</label>
     <div class="controls">
-      <input type="text" id="change-due-input"
+      <input class="input-medium" type="text" id="change-due-input"
       value="0" disabled>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="total-due-input">Total</label>
     <div class="controls">
-      <input type="text" id="total-due-input"
+      <input class="input-medium" type="text" id="total-due-input"
       value="<%= (totalDue / 100).toFixed(2) %>" disabled>
     </div>
   </div>
@@ -123,20 +123,20 @@
                     <ul class='inline'>
                       <li>
                         <div class="input-append">
-                          <input class="input-medium" id="product-name-search"
+                          <input class="input-small" id="product-name-search"
                           type="text">
                           <button class="btn" type="button">Name</button>
                         </div>
                       </li>
                       <li>
                         <div class="input-append">
-                          <input class="input-medium" id="product-brand-search"
+                          <input class="input-small" id="product-brand-search"
                           type="text">
                           <button class="btn" type="button">Brand</button>
                         </div>
                       </li>
                       <li>
-                        <select id='store-name-select'>
+                        <select class="input-medium" id='store-name-select'>
                         </select>
                       </li>
                     </ul>
@@ -155,7 +155,7 @@
                     <ul class='inline'>
                       <li>
                         <div class="input-append">
-                          <input class="input-medium" id="customer-last-name-search"
+                          <input class="input-small" id="customer-last-name-search"
                           type="text">
                           <button class="btn" type="button">Last Name</button>
                         </div>

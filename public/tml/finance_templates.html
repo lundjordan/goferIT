@@ -31,33 +31,33 @@
     <ul class='inline'>
       <li>
         <div class="input-append">
-          <input class="input-medium" id="sale-id-search"
+          <input class="input-small" id="sale-id-search"
           type="text">
           <button class="btn" type="button">ID</button>
         </div>
       </li>
       <li>
         <div class="input-append">
-          <input class="input-medium" id="sale-employee-search"
+          <input class="input-small" id="sale-employee-search"
           type="text">
-          <button class="btn" type="button">Employee</button>
+          <button class="btn" type="button">Emp</button>
         </div>
       </li>
       <li>
         <div class="input-append">
-          <input class="input-medium" id="sale-customer-search"
+          <input class="input-small" id="sale-customer-search"
           type="text">
-          <button class="btn" type="button">Customer</button>
+          <button class="btn" type="button">Cust</button>
         </div>
       </li>
       <li>
-        <select id='sale-timeframe-select'>
+        <select class="input-small" id='sale-timeframe-select'>
           <option> Anytime </option>
           <option> Today </option>
           <option> This Month </option>
           <option> This Year </option>
         </select>
-      <li> <select id='store-name-select'> </select> </li>
+      <li> <select class="input-medium" id='store-name-select'> </select> </li>
     </ul>
   </div>
 </script>
@@ -68,13 +68,13 @@
 <script type="text/template" id="finance-view-template">
   <div class="container-fluid">
     <div class="row-fluid">
-      <div class="span2">
+      <div class="span3">
         <ul class="pager">
           <li id='single-item-prev-link'><a href="#">Prev</a></li>
           <li id='single-item-next-link'><a href="#">Next</a></li>
         </ul>
       </div>
-      <div id='single-item-view-content' class="span10">
+      <div id='single-item-view-content' class="span9">
       </div>
     </div>
   </div>
@@ -82,25 +82,19 @@
 <script type="text/template" id="finance-view-content-template">
   <div class="row-fluid">
     <ul class="unstyled inline">
-      <li> <h3> RefNum: </h3> </li>
-      <li><p class="lead"><%= _id %></p> </li>
-      <li class='pull-right'>
-        <p class="lead"><strong>Date Made:</strong>
-        <%= new Date(dateCreated).toDateString() %> </p>
-      </li>
-    <ul class="unstyled inline">
       <li>
-        <p class="lead"><strong>Employee:</strong> <%= employeeEmail %>  </p>
+       <h3> RefNum: </h3>
       </li>
-      <li><h4>|</h4></li>
       <li>
-        <p class="lead"><strong>Customer:</strong> <%= customerEmail %>  </p>
+      <p class="lead"><%= _id %></p>
       </li>
     </ul>
+      <p><strong>Employee:</strong> <%= employeeEmail %>  </p>
+      <p><strong>Customer:</strong> <%= customerEmail %>  </p>
   </div>
   <div class="row-fluid">
     <hr />
-    <div class="span2">
+    <div class="span3">
       <p class='lead'>Totals</p>
       <div class="well">
         <ul class="unstyled inline">

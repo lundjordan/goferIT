@@ -25,16 +25,16 @@
     <a href='#' id='item-view-delete-link'><i class='icon-trash'></i><a>
     <%= referenceNum %>
   </td>
-  <td><%= supplierName %> </td>
-  <td><%= shippingInfo.company %> </td>
-  <td><%= products.length %> </td>
-  <td><%= new Date(dateCreated).toDateString()  %> </td>
+  <td style="width: 15%"><%= supplierName %> </td>
+  <td style="width: 10%"><%= shippingInfo.company %> </td>
+  <td style="width: 5%"><%= products.length %> </td>
+  <td style="width: 25%"><%= new Date(dateCreated).toDateString()  %> </td>
   <% if (dateArrived) { %>
-    <td>
+    <td style="width: 25%">
       Arrived: <%= new Date(dateArrived).toDateString() %>
     </td>
   <% } else { %>
-    <td>
+    <td style="width: 25%">
       Estimated: <%= new Date(estimatedArrivalDate).toDateString() %>
     </td>
   <% } %>
@@ -45,7 +45,7 @@
 <script type="text/template" id="order-view-template">
   <div class="container-fluid">
     <div class="row-fluid">
-      <div class="span2">
+      <div class="span3">
         <ul class="nav nav-list well">
           <li class="nav-header">Tools</li>
           <% if (obj) { %>
@@ -74,7 +74,7 @@
           <li id='single-item-next-link'><a href="#">Next</a></li>
         </ul>
       </div>
-      <div id='single-item-view-content' class="span10">
+      <div id='single-item-view-content' class="span9">
       </div>
     </div>
   </div>
@@ -139,7 +139,7 @@
 <script type="text/template" id="order-create-template">
   <form id='order-form'>
     <div class="row-fluid">
-      <div class="span3">
+      <div class="span4">
         <div class="control-group">
           <label class="control-label">Reference Number</label>
           <div class="controls">
@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="span9 well">
+      <div class="span8 well">
         <div class="row-fluid" id="order-products-div">
         </div>
       </div>
@@ -255,8 +255,7 @@
 </script>
 
 <script type="text/template" id="order-product-summary-template">
-  <div class="span3"> </div>
-  <div class="span6 btn-group">
+  <div class="btn-group offset2">
     <button class="btn btn-info btn-medium" id='add-new-order-product'
       type="button">
       Add A New Product
@@ -267,23 +266,20 @@
     </button>
   <hr />
   </div>
-  <div class="span3"> </div>
   <div class="row-fluid">
-    <div class="span8 offset2">
-      <table id="order-products-table" class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Brand</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody id='order-products-table-body'>
-        </tbody>
-      </table>
-    </div>
+    <table id="order-products-table" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Brand</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody id='order-products-table-body'>
+      </tbody>
+    </table>
   </div>
-  <div id="empty-order-product-alert" class='span7 offset2'> </div>
+  <div id="empty-order-product-alert" </div>
 </script>
 
 <script type="text/template" id="order-existing-product-template">

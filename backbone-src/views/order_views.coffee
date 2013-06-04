@@ -747,8 +747,6 @@ jQuery ->
             @$el.html this.template(product)
             @
 
-
-
     # ###############
 
 

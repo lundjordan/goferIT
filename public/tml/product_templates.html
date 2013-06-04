@@ -76,7 +76,7 @@
 <script type="text/template" id="product-view-template">
   <div class="container-fluid">
     <div class="row-fluid">
-      <div class="span2">
+      <div class="span3">
         <ul class="nav nav-list well">
           <li class="nav-header">Tools</li>
           <li>
@@ -96,7 +96,7 @@
           <li id='product-item-next-link'><a href="#">Next</a></li>
         </ul>
       </div>
-      <div id='product-view-content' class="span10">
+      <div id='product-view-content' class="span9">
       </div>
     </div>
   </div>
@@ -159,66 +159,66 @@
 <script type="text/template" id="product-create-template">
   <form id='product-form'>
     <div class="row-fluid">
-      <div class="span3 ">
-        <div class="control-group">
-          <label class="control-label" for="name-input">Name</label>
-          <div class="controls">
-            <input type="text" name="productName" id="name-input" placeholder="Nexus 4">
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Brand</label>
-          <div class="controls">
-            <input type="text" id="brand-input" name='brand' placeholder="Google">
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Category</label>
-          <div class="controls">
-            <input type="text" id="category-input" name='category' placeholder="Smart Phones">
-          </div>
-        </div>
-      </div>
-      <div class="span3">
-        <div id="product-create-store-names"></div>
-        <div id="product-create-supplier-names"></div>
-        <div class="control-group">
-          <label class="control-label">Price</label>
-          <div class="controls">
-            <input type="text" id='price-input' name='price' placeholder="299.99">
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Cost</label>
-          <div class="controls">
-            <input type="text" id='cost-input' name="cost" placeholder="199.99">
-          </div>
-        </div>
-      </div>
-      <div class="span6">
-        <div id="grand-total-quantity-content">
+        <div class="span3">
           <div class="control-group">
-            <label class="control-label">Grand Total Quantity</label>
+            <label class="control-label" for="name-input">Name</label>
             <div class="controls">
-              <input type="text" id='grand-total-input' name="grandTotal" placeholder="9">
+              <input type="text" class="input-medium" name="productName" id="name-input" placeholder="Nexus 4">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Brand</label>
+            <div class="controls">
+              <input type="text" class="input-medium" id="brand-input" name='brand' placeholder="Google">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Category</label>
+            <div class="controls">
+              <input type="text" class="input-medium" id="category-input" name='category' placeholder="Smart Phones">
             </div>
           </div>
         </div>
-        <div id="sub-total-quantity-content"> </div>
-        <hr />
-        <label class="radio">
-          <input type="radio" name="totalOptionsRadio" id="total-quantity-radio"
-          value="grand-total-selected" checked>
-          by grand total
-        </label>
-        <label class="radio">
-          <input type="radio" name="totalOptionsRadio" id="sub-quantity-radio"
-          value="sub-total-selected">
-          by sub totals
-        </label>
-        <span class="help-block">Store quantity based on total amount
-          <strong>or</strong> by size, length, color, etc</span>
-      </div>
+        <div class="span3">
+          <div id="product-create-store-names"></div>
+          <div id="product-create-supplier-names"></div>
+          <div class="control-group">
+            <label class="control-label">Price</label>
+            <div class="controls">
+              <input type="text" class="input-medium" id='price-input' name='price' placeholder="299.99">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Cost</label>
+            <div class="controls">
+              <input type="text" class="input-medium" id='cost-input' name="cost" placeholder="199.99">
+            </div>
+          </div>
+        </div>
+        <div class="span6">
+          <div id="grand-total-quantity-content">
+            <div class="control-group">
+              <label class="control-label">Grand Total Quantity</label>
+              <div class="controls">
+                <input type="text" id='grand-total-input' name="grandTotal" placeholder="9">
+              </div>
+            </div>
+          </div>
+          <div id="sub-total-quantity-content"> </div>
+          <hr />
+          <label class="radio">
+            <input type="radio" name="totalOptionsRadio" id="total-quantity-radio"
+            value="grand-total-selected" checked>
+            by grand total
+          </label>
+          <label class="radio">
+            <input type="radio" name="totalOptionsRadio" id="sub-quantity-radio"
+            value="sub-total-selected">
+            by sub totals
+          </label>
+          <span class="help-block">Store quantity based on total amount
+            <strong>or</strong> by size, length, color, etc</span>
+        </div>
     </div>
     <hr />
     <div class="row-fluid">
@@ -230,6 +230,7 @@
       </div>
     </div>
   </form>
+
   <div id="sub-total-quantity-modal" class="modal hide fade">
     <div class="modal-header">
       <button type="button" class="close"
@@ -266,13 +267,13 @@
   <label>
     Store
   </label>
-  <select id='store-name-select'> </select>
+  <select class="input-medium" id='store-name-select'> </select>
 </script>
 <script type="text/template" id="product-create-supplier-names-template">
   <label>
     Supplier
   </label>
-  <select id='supplier-name-select'><option></option> </select>
+  <select class="input-medium" id='supplier-name-select'><option></option> </select>
 </script>
 <!--product create view templates-->
 
